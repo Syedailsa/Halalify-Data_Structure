@@ -735,6 +735,7 @@ async function searchByCompany(company, category) {
   const must = category 
     ? [{ key: "category_l1", match: { value: category } }] 
     : [];
+    console.log("filters",must)
 
   let results = await qdrant.search(COLLECTION_PRODUCTS, {
     vector: vec,
@@ -775,6 +776,8 @@ async function searchByProduct(product, category, company = null) {
   const must = [];
   if (category) must.push({ key: "category_l1", match: { value: category } });
   if (company) must.push({ key: "companies", match: { text: company.toLowerCase() } });
+    console.log("filters",must)
+
   
   return qdrant.search(COLLECTION_PRODUCTS, {
     vector: vec, limit: TOP_K, with_payload: true,
@@ -817,7 +820,14 @@ async function searchByCategory(category, hint) {
     vector: vec,
     limit: TOP_K,
     with_payload: true,
-    filter: { must: [{ key: "category_l1", match: { value: mapped } }] }
+    // filter: { must: [{ key: "category_l1", match: { value: mapped } }] }
+    // Primary search mein:
+filter: {
+  must: [
+    { key: "category_l1", match: { value: mapped } },
+    { key: "halal_status", match: { value: "Halal" } }  // ✅ ADD
+  ]
+}
   });
 
   // Fallback: broad search → filter by category_l1 (no keyword guessing)
@@ -861,6 +871,60 @@ async function webSearch(q) {
 // =============================================================================
 // FORMAT RESPONSE — turns raw Qdrant results into readable chat output
 // =============================================================================
+// function formatResults(results, queryType, extra = {}) {
+//   const today = new Date().toISOString().slice(0,10).replace(/-/g,"/");
+
+//   if (!results.length) return null;
+
+//   // For E-number (Type 3) direct lookup — special compact format
+//   if (queryType === 3) {
+//     const p = results[0].payload;
+//     const lines = [
+//       `\n┌─ E-Number Result ───────────────────────────────────`,
+//       `│  Code:    ${extra.e_code}`,
+//       `│  Name:    ${p.norm_name}`,
+//       `│  Status:  ${statusBadge(p.halal_status)}`,
+//       `│  Category: ${p.category_l1} / ${p.category_l2}`,
+//     ];
+//     if (p.health_info?.length) lines.push(`│  Info:    ${p.health_info[0].slice(0,80)}`);
+//     if (p.typical_uses?.length) lines.push(`│  Uses:    ${p.typical_uses.slice(0,3).join(", ")}`);
+//     lines.push(`│  Sources: ${(p.source_files||[]).join(", ")}`);
+//     lines.push(`└────────────────────────────────────────────────────`);
+//     return lines.join("\n");
+//   }
+
+//   // For product/company/category results — show each match
+//   // const passing = results.filter(r => r.score >= SCORE_THRESHOLD);
+//   // const passing = results.filter(r => r.score >= (extra.threshold ?? SCORE_THRESHOLD));
+//   // if (!passing.length) return null;
+
+//    const passing = results.filter(r => {
+//   if (r.score < (extra.threshold ?? SCORE_THRESHOLD)) return false;
+//   if (r.payload.norm_name?.toLowerCase() === "n/a") return false;
+//   if (r.payload.cert_expiry && r.payload.cert_expiry < today) return false; // ✅ expired hata do
+//   return true;
+// });
+
+//   const lines = [`\n┌─ Found ${passing.length} result(s) ─────────────────────────────`];
+
+//   for (const r of passing) {
+//     const p = r.payload;
+//     const expired = p.cert_expiry && p.cert_expiry < today;
+//     lines.push(`│`);
+//     lines.push(`│  ${statusBadge(p.halal_status)}  ${p.norm_name}`);
+//     lines.push(`│  Category:  ${p.category_l1} / ${p.category_l2}`);
+//     if (p.companies?.length)    lines.push(`│  Company:   ${p.companies.slice(0,2).join(", ")}`);
+//     if (p.cert_bodies?.length)  lines.push(`│  Certified: ${p.cert_bodies.join(", ")}`);
+//     if (p.cert_expiry)          lines.push(`│  Expires:   ${p.cert_expiry}${expired ? "  ⚠ EXPIRED" : ""}`);
+//     if (p.sold_in?.length)      lines.push(`│  Sold in:   ${p.sold_in.slice(0,4).join(", ")}`);
+//     if (p.marketplace?.length)  lines.push(`│  Channel:   ${p.marketplace.slice(0,3).join(", ")}`);
+//     lines.push(`│  Score:     ${r.score.toFixed(3)}`);
+//   }
+
+//   lines.push(`└────────────────────────────────────────────────────`);
+//   return lines.join("\n");
+// }
+
 function formatResults(results, queryType, extra = {}) {
   const today = new Date().toISOString().slice(0,10).replace(/-/g,"/");
 
@@ -869,11 +933,20 @@ function formatResults(results, queryType, extra = {}) {
   // For E-number (Type 3) direct lookup — special compact format
   if (queryType === 3) {
     const p = results[0].payload;
+
+    // ✅ Fix 4: Status consistency
+    let status = p.halal_status;
+    if (status === "Halal" && p.health_info?.some(i =>
+      i.toLowerCase().includes("mushbooh") || i.toLowerCase().includes("doubtful")
+    )) {
+      status = "Mushbooh";
+    }
+
     const lines = [
       `\n┌─ E-Number Result ───────────────────────────────────`,
       `│  Code:    ${extra.e_code}`,
       `│  Name:    ${p.norm_name}`,
-      `│  Status:  ${statusBadge(p.halal_status)}`,
+      `│  Status:  ${statusBadge(status)}`,  // ✅ fixed status use karo
       `│  Category: ${p.category_l1} / ${p.category_l2}`,
     ];
     if (p.health_info?.length) lines.push(`│  Info:    ${p.health_info[0].slice(0,80)}`);
@@ -883,24 +956,28 @@ function formatResults(results, queryType, extra = {}) {
     return lines.join("\n");
   }
 
-  // For product/company/category results — show each match
-  // const passing = results.filter(r => r.score >= SCORE_THRESHOLD);
-  const passing = results.filter(r => r.score >= (extra.threshold ?? SCORE_THRESHOLD));
+  // ✅ Fix 2: Expired + n/a filter
+  const passing = results.filter(r => {
+    if (r.score < (extra.threshold ?? SCORE_THRESHOLD)) return false;
+    if (r.payload.norm_name?.toLowerCase() === "n/a") return false;
+    if (r.payload.cert_expiry && r.payload.cert_expiry < today) return false;
+    return true;
+  });
+
   if (!passing.length) return null;
 
   const lines = [`\n┌─ Found ${passing.length} result(s) ─────────────────────────────`];
 
   for (const r of passing) {
     const p = r.payload;
-    const expired = p.cert_expiry && p.cert_expiry < today;
     lines.push(`│`);
     lines.push(`│  ${statusBadge(p.halal_status)}  ${p.norm_name}`);
     lines.push(`│  Category:  ${p.category_l1} / ${p.category_l2}`);
-    if (p.companies?.length)    lines.push(`│  Company:   ${p.companies.slice(0,2).join(", ")}`);
-    if (p.cert_bodies?.length)  lines.push(`│  Certified: ${p.cert_bodies.join(", ")}`);
-    if (p.cert_expiry)          lines.push(`│  Expires:   ${p.cert_expiry}${expired ? "  ⚠ EXPIRED" : ""}`);
-    if (p.sold_in?.length)      lines.push(`│  Sold in:   ${p.sold_in.slice(0,4).join(", ")}`);
-    if (p.marketplace?.length)  lines.push(`│  Channel:   ${p.marketplace.slice(0,3).join(", ")}`);
+    if (p.companies?.length)   lines.push(`│  Company:   ${p.companies.slice(0,2).join(", ")}`);
+    if (p.cert_bodies?.length) lines.push(`│  Certified: ${p.cert_bodies.join(", ")}`);
+    if (p.cert_expiry)         lines.push(`│  Expires:   ${p.cert_expiry}`);  // ✅ expired pehle hi filter ho gaya
+    if (p.sold_in?.length)     lines.push(`│  Sold in:   ${p.sold_in.slice(0,4).join(", ")}`);
+    if (p.marketplace?.length) lines.push(`│  Channel:   ${p.marketplace.slice(0,3).join(", ")}`);
     lines.push(`│  Score:     ${r.score.toFixed(3)}`);
   }
 
@@ -958,13 +1035,33 @@ async function handleQuery(userInput) {
     let results = [];
 
     switch (classified.type) {
-      // case 1:
-      //   results = await searchByCompany(resolvedCompany, resolvedCategory);
-      //   break;
+      
+  //     case 1:
+  // results = await searchByCompany(resolvedCompany, resolvedCategory);
+  
+  // // ✅ Agar koi bhi result company se match nahi karta → web search
+  // if (results.length) {
+  //   const hasMatch = results.some(r =>
+  //     r.payload.companies?.some(c =>
+  //       c.toLowerCase().includes(resolvedCompany.toLowerCase()) ||
+  //       resolvedCompany.toLowerCase().includes(c.toLowerCase())
+  //     )
+  //   );
+  //   if (!hasMatch) {
+  //     console.log(`\n  ℹ️  "${resolvedCompany}" hamare database mein nahi hai.`);
+  //     console.log(`  🌐  Web se check karte hain...\n`);
+  //     const webResults = await webSearch(q);
+  //     console.log(`  Web results for "${q}":`);
+  //     console.log(webResults);
+  //     console.log(`\n  ⚠️  Yeh unverified web results hain.`);
+  //     return;
+  //   }
+  // }
+  // break;
+    
       case 1:
   results = await searchByCompany(resolvedCompany, resolvedCategory);
-  
-  // ✅ Agar koi bhi result company se match nahi karta → web search
+
   if (results.length) {
     const hasMatch = results.some(r =>
       r.payload.companies?.some(c =>
@@ -981,11 +1078,14 @@ async function handleQuery(userInput) {
       console.log(`\n  ⚠️  Yeh unverified web results hain.`);
       return;
     }
+
+    // ✅ Summary add karo
+    const halal    = results.filter(r => r.payload.halal_status === "Halal").length;
+    const haram    = results.filter(r => r.payload.halal_status === "Haraam").length;
+    const mushbooh = results.filter(r => r.payload.halal_status === "Mushbooh").length;
+    console.log(`\n  📊 ${resolvedCompany} summary: ✅ Halal: ${halal}  ❌ Haraam: ${haram}  ⚠️ Mushbooh: ${mushbooh}`);
   }
   break;
-      // case 2:
-      //   results = await searchByProduct(classified.product || q, resolvedCategory);
-      //   break;
   
 //   case 2: {
 //   const productQuery = classified.product || q;
