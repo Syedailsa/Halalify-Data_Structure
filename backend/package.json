@@ -1,0 +1,29 @@
+{
+  "name": "scrapped_data",
+  "version": "1.0.0",
+  "description": "",
+  "main": "halal_normalizer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "node server.js",
+    "chatbot": "node chat/chatbot.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@langchain/core": "^1.1.39",
+    "@langchain/groq": "^1.2.0",
+    "@langchain/openai": "^1.4.3",
+    "@langchain/qdrant": "^1.0.1",
+    "@qdrant/js-client-rest": "^1.17.0",
+    "cors": "^2.8.6",
+    "csv-parse": "^6.2.1",
+    "dotenv": "^17.4.1",
+    "express": "^5.2.1",
+    "fastest-levenshtein": "^1.0.16",
+    "langchain": "^1.3.1"
+  }
+}

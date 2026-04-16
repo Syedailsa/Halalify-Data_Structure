@@ -1,0 +1,11 @@
+# Ignore the heavy data files that break GitHub limits
+backend/output/*.json
+backend/data/*.csv
+backend/data/*.json
+
+# Ignore environment variables
+.env
+.env.local
+
+# Ignore node modules
+node_modules/
