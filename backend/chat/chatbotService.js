@@ -37,12 +37,12 @@ const COLLECTION_ENUMBERS = "halal_enumbers";
 // JSON DATA PATHS
 const PRODUCTS_PATH =
   process.env.PRODUCTS_PATH ||
-  path.join(__dirname, "./output/canonical_products.json") ||
+  path.join(__dirname, "../output/canonical_products.json") ||
   path.join(__dirname, "canonical_products.json");
 
 const ENUMBERS_PATH =
   process.env.ENUMBERS_PATH ||
-  path.join(__dirname, "./output/e_numbers_lookup.json") ||
+  path.join(__dirname, "../output/e_numbers_lookup.json") ||
   path.join(__dirname, "e_numbers_lookup.json");
 
 // =============================================================================

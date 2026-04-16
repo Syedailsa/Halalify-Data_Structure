@@ -32,7 +32,7 @@ dotenv.config({ path: path.join(__dirname, ".env.local") });
 // =============================================================================
 // CONFIG
 // =============================================================================
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 const HOST = process.env.HOST || "localhost";
 
 // =============================================================================
@@ -67,10 +67,10 @@ app.use((err, req, res, next) => {
 // =============================================================================
 
 // Health check endpoint
-app.get("/api/health", (req, res) => {
+app.get("/api/halal", (req, res) => {
   res.json({
     success: true,
-    status: "healthy",
+    status: "Halal",
     initialized: isInitialized,
     companiesLoaded: knownCompanies.length,
     timestamp: new Date().toISOString(),
@@ -402,7 +402,7 @@ async function startServer() {
   } else {
     console.log(`✅ Loaded ${knownCompanies.length} companies`);
   }
-
+ 
   // Start listening
   app.listen(PORT, HOST, () => {
     console.log(`
@@ -412,7 +412,7 @@ async function startServer() {
 ║  Server running at: http://${HOST}:${PORT}         ║
 ║                                                      ║
 ║  Available endpoints:                                ║
-║  • GET  /api/health                                 ║
+║  • GET  /api/halal                               ║
 ║  • GET  /api/companies                              ║
 ║  • GET  /api/categories                             ║
 ║  • POST /api/query                                  ║
