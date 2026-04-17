@@ -1181,10 +1181,19 @@ case 2: {
     results = await searchByCategory(resolvedCategory, q);
   }
   break;
-  default:
+  // default:
 
-        // Type 5 — try a broad semantic search first
-        results = await searchByProduct(q, resolvedCategory);
+  //       // Type 5 — try a broad semantic search first
+  //       results = await searchByProduct(q, resolvedCategory);
+  default: {
+  // Type 5 — seedha web search karo, database use mat karo
+  console.log(`\n  🌐  Web se check karte hain...\n`);
+  const webResults = await webSearch(q);
+  console.log(`  Web results for "${q}":`);
+  console.log(webResults);
+  console.log(`\n  ⚠️  Yeh unverified web results hain.`);
+  return;
+}
         break;
     }
 
