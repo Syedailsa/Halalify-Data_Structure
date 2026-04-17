@@ -1,4 +1,4 @@
-// File: C:\Users\HP 440 G6\Downloads\halalify-nextjs\halalify\app\chat\page.tsx
+// File: C:\matz\hallify\Halalify-Data_Structure\frontend\app\chat\page.tsx
 import * as entry from '../../../../app/chat/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

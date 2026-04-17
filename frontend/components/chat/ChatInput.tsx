@@ -78,9 +78,9 @@ export default function ChatInput() {
     <div className="w-11 h-11 rounded-full bg-green-600 flex items-center justify-center">
       <div className="flex items-end gap-[2px]">
         <span className="w-[2px] h-2 bg-white rounded animate-wave"></span>
-        <span className="w-[2px] h-4 bg-white rounded animate-wave delay-75"></span>
-        <span className="w-[2px] h-6 bg-white rounded animate-wave delay-150"></span>
-        <span className="w-[2px] h-4 bg-white rounded animate-wave delay-200"></span>
+        <span className="w-[2px] h-3 bg-white rounded animate-wave delay-75"></span>
+        <span className="w-[2px] h-4 bg-white rounded animate-wave delay-150"></span>
+        <span className="w-[2px] h-3 bg-white rounded animate-wave delay-200"></span>
         <span className="w-[2px] h-2 bg-white rounded animate-wave delay-300"></span>
       </div>
     </div>

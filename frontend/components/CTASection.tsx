@@ -154,13 +154,13 @@ export default function CTASection() {
 export function Footer() {
   return (
     <footer style={{
-      background: '#0D1F17',
+      background: 'rgba(248,246,246,1)',
       color: 'rgba(255,255,255,0.5)',
       textAlign: 'center',
       padding: '24px',
       fontSize: '13px',
     }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto' ,color:'black'}}>
         © 2024 Halalify. All rights reserved.
       </div>
     </footer>

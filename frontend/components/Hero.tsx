@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import mockup from '../assests/mokeup.png'
+import mockup from '../assests/mokeup1.png'
 
 export default function Hero() {
   const [visible, setVisible] = useState(false)
@@ -51,7 +51,9 @@ export default function Hero() {
         width: '100%',
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
-        gap: '60px',
+        gap: '0px',
+        marginRight:0,
+        paddingRight:0,
         alignItems: 'center',
       }} className="hero-grid">
         {/* Left Content */}
@@ -175,6 +177,7 @@ export default function Hero() {
     style={{
       width: '100%',
       maxWidth: '880px',
+      
     }}
   >
     <img
