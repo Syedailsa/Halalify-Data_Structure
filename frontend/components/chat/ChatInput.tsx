@@ -1,79 +1,15 @@
-// import { Mic, Image as ImageIcon, Camera, Send } from 'lucide-react'
-
-// export default function ChatInput() {
-//   return (
-//     <div className="border-t bg-white">
-//       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        
-//         <div className="flex items-center gap-3">
-          
-//           {/* Voice Agent Button (LEFT) */}
-      
-
-//           {/* Input Box */}
-//           <div className="flex-1 bg-gray-100 rounded-full flex items-center px-4 py-3 gap-3">
-            
-//             <input
-//               type="text"
-//               placeholder="Type product name or ask anything..."
-//               className="flex-1 bg-transparent outline-none text-sm"
-//             />
-
-//             {/* Right Icons */}
-//             <div className="flex items-center gap-2 text-gray-500">
-              
-//               <button className="hover:text-black transition">
-//                 <ImageIcon size={18} />
-//               </button>
-
-//               <button className="hover:text-black transition">
-//                 <Camera size={18} />
-//               </button>
-// {/* 
-//               <button className="hover:text-black transition">
-//                 <Mic size={18} />
-//               </button> */}
-
-//             </div>
-            
-//           </div>
-
-//           {/* Send Button */}
-//           <button className="w-10 h-10 flex items-center justify-center rounded-full bg-green-600 text-white hover:bg-green-700 transition">
-//             <Send size={18} />
-//           </button>
-
-//         </div>
-
-//       </div>
-//     </div>
-//   )
-// }
-
-
-
-
-
-
-
-
-
-
-
 'use client'
 
 import { useState } from 'react'
 import { Mic, Image as ImageIcon, Camera, Send } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
+interface ChatInputProps {
+  onSend: (message: string) => void
+  disabled?: boolean
+}
 
-
-
-
-
-export default function ChatInput() {
-
- function VoiceButton() {
+function VoiceButton() {
   return (
     <div className="w-11 h-11 rounded-full bg-green-600 flex items-center justify-center">
       <div className="flex items-end gap-[2px]">
@@ -87,10 +23,24 @@ export default function ChatInput() {
   )
 }
 
-
+export default function ChatInput({ onSend, disabled = false }: ChatInputProps) {
   const [text, setText] = useState('')
 
   const isTyping = text.trim().length > 0
+
+  function handleSend() {
+    const trimmed = text.trim()
+    if (!trimmed || disabled) return
+    onSend(trimmed)
+    setText('')
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSend()
+    }
+  }
 
   return (
     <div className="border-t bg-white">
@@ -104,9 +54,11 @@ export default function ChatInput() {
             <input
               value={text}
               onChange={(e) => setText(e.target.value)}
+              onKeyDown={handleKeyDown}
               type="text"
               placeholder="Ask anything or scan product..."
               className="flex-1 bg-transparent outline-none text-sm"
+              disabled={disabled}
             />
 
             {/* Right Icons */}
@@ -123,32 +75,32 @@ export default function ChatInput() {
             </div>
           </div>
 
-          {/* Dynamic Button (Mic ↔ Send) */}
+          {/* Dynamic Button (Mic / Send) */}
           <div className="w-12 h-12 flex items-center justify-center">
 
             <AnimatePresence mode="wait">
 
               {!isTyping ? (
-                // 🎤 VOICE MODE
                 <motion.button
                   key="mic"
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.8, opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="w-11 h-11 flex items-center justify-center rounded-full  bg-green-600 text-white hover:bg-green-700"
+                  className="w-11 h-11 flex items-center justify-center rounded-full bg-green-600 text-white hover:bg-green-700"
                 >
                   <VoiceButton />
                 </motion.button>
               ) : (
-                // 🚀 SEND MODE
                 <motion.button
                   key="send"
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.8, opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="w-11 h-11 flex items-center justify-center rounded-full bg-green-600 text-white hover:bg-green-700"
+                  onClick={handleSend}
+                  disabled={disabled}
+                  className="w-11 h-11 flex items-center justify-center rounded-full bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
                 >
                   <Send size={18} />
                 </motion.button>
@@ -164,4 +116,3 @@ export default function ChatInput() {
     </div>
   )
 }
-
