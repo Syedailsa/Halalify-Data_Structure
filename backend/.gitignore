@@ -1,4 +1,2 @@
-output/*.json
-data/*.csv
 node_modules/
-.env.local
+.env
