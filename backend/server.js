@@ -408,7 +408,7 @@ async function startServer() {
 ╔══════════════════════════════════════════════════════╗
 ║         HALAL PRODUCT API SERVER                    ║
 ║                                                      ║
-║  Server running at: http://${HOST}:${PORT}         ║
+║  Server is running successfully!         ║
 ║                                                      ║
 ║  Available endpoints:                                ║
 ║  • GET  /api/halal                               ║
