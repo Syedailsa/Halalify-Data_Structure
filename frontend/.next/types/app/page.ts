@@ -1,4 +1,4 @@
-// File: C:\Users\CZ 3\Downloads\scrapped_data\frontend\app\page.tsx
+// File: C:\matz\hallify\Halalify-Data_Structure\frontend\app\page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

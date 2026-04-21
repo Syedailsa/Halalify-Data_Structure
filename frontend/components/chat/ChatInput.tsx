@@ -3,9 +3,16 @@
 import { useState } from 'react'
 import { Mic, Image as ImageIcon, Camera, Send } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import BarcodeScanner from './Scanner'
+
+// interface ChatInputProps {
+//   onSend: (message: string) => void
+//   disabled?: boolean
+// }
 
 interface ChatInputProps {
   onSend: (message: string) => void
+  onBarcodeScan: (code: string) => void  // ⭐ yeh add karo
   disabled?: boolean
 }
 
@@ -23,8 +30,9 @@ function VoiceButton() {
   )
 }
 
-export default function ChatInput({ onSend, disabled = false }: ChatInputProps) {
+export default function ChatInput({ onSend, disabled = false , onBarcodeScan }: ChatInputProps) {
   const [text, setText] = useState('')
+  const [scannerOpen, setScannerOpen] = useState(false)
 
   const isTyping = text.trim().length > 0
 
@@ -41,6 +49,8 @@ export default function ChatInput({ onSend, disabled = false }: ChatInputProps) 
       handleSend()
     }
   }
+
+  
 
   return (
     <div className="border-t bg-white">
@@ -68,9 +78,17 @@ export default function ChatInput({ onSend, disabled = false }: ChatInputProps) 
                 <ImageIcon size={18} />
               </button>
 
-              <button className="hover:text-black transition">
+              {/* <button className="hover:text-black transition">
                 <Camera size={18} />
-              </button>
+              </button> */}
+
+              <button
+  onClick={() => setScannerOpen(true)}
+  className="hover:text-black transition"
+>
+  <Camera size={18} />
+</button>
+
 
             </div>
           </div>
@@ -113,6 +131,22 @@ export default function ChatInput({ onSend, disabled = false }: ChatInputProps) 
         </div>
 
       </div>
+
+      {scannerOpen && (
+  <BarcodeScanner
+    onScan={(code) => {
+      setScannerOpen(false)
+      console.log(code)
+      // onSend(code)
+       onBarcodeScan(code) 
+    }}
+    onClose={() => setScannerOpen(false)}
+  />
+)}
+
     </div>
+
+    
   )
+  
 }

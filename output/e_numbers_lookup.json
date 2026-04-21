@@ -1,0 +1,5110 @@
+[
+  {
+    "canonical_id": "halal_000001",
+    "norm_name": "e100 curcurmin (1,7-bis(4-hydroxy-3-methoxyphenyl-1,6-heptadiene-3,5-dione; turmeric yellow; diferuloylmethane; c.i. 75300)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "Vegetable extract – orange yellow colour. | has many beneficial health effects, may cause skin irritation, moderately toxic by injection"
+    ],
+    "typical_uses": [
+      "Curry powder",
+      "fish fingers",
+      "margarine",
+      "confectionery",
+      "processed cheese",
+      "savoury rice"
+    ],
+    "source_ids": [
+      "enumbers_E100",
+      "sanha_e100"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000002",
+    "norm_name": "e101 riboflavin (lactoflavin, vitamin b2; vitamin g)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "Microbiological; Synthetic | safe in food use, has beneficial effects in the body"
+    ],
+    "typical_uses": [
+      "Baby cereals",
+      "enriched breads",
+      "peanut butter",
+      "breakfast cereals"
+    ],
+    "source_ids": [
+      "enumbers_E101",
+      "sanha_e101"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000003",
+    "norm_name": "e102 tartrazine (fd&c yellow 5; c.i. 19140; c.i. food yellow 4; c.i. acid yellow 23; hydrazine yellow)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "Synthetic | Asthma, hives, dermatitis, headache, hay fever, concentration difficulties, depression, skin rash, learning difficulties, behavioural problems, swelling of lips and tongue, hyperactivity, aggressive behaviour, insomnia, confusion, anaphylaxis, aspiri"
+    ],
+    "typical_uses": [
+      "Confectionery",
+      "sweet corn",
+      "cheese crackers",
+      "soft drinks",
+      "mint sauce",
+      "mint jelly",
+      "fruit juice cordial",
+      "canned peas",
+      "marzipan",
+      "pickles",
+      "brown sauce",
+      "packet dessert topping",
+      "jams",
+      "cereal",
+      "packaged soups."
+    ],
+    "source_ids": [
+      "enumbers_E102",
+      "sanha_e102"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000004",
+    "norm_name": "e104 quinoline yellow (c.i. 47005; c.i. acid yellow 3; d&c yellow no. 10; food yellow 13)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "Synthetic | Asthma, hives, skin rash, hyperactivity, anaphylaxis, aspirin sensitive people may wish to avoid, carcinogenic"
+    ],
+    "typical_uses": [
+      "Beverages",
+      "processed foods"
+    ],
+    "source_ids": [
+      "enumbers_E104",
+      "sanha_e104"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000005",
+    "norm_name": "e110 sunset yellow fcf (uses:fruit juice cordial, marzipan, packet soup, cereal, confectionery, dry drink powder, canned fishother uses: cosmetics, hair rinses)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "Synthetic | Asthma, hives, abdominal pain, eczema, hyperactivity, aspirin sensitive people may wish to avoid, carcinogenic"
+    ],
+    "typical_uses": [
+      "Fruit juice cordial",
+      "marzipan",
+      "packet soup",
+      "cereal",
+      "confectionery",
+      "dry drink powder",
+      "canned fish"
+    ],
+    "source_ids": [
+      "enumbers_E110",
+      "sanha_e110"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000006",
+    "norm_name": "e120 cochineal / carminic acid",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Haraam",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E120"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000007",
+    "norm_name": "e122 carmoisine (uses:confectionery, sweets, marzipan, brown sauce, jelly crystals)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "Synthetic; not permitted in Norway, Sweden, USA, Japan. | Asthma, hyperactivity, aspirin sensitive people may wish to avoid, animal carcinogen"
+    ],
+    "typical_uses": [
+      "Confectionery",
+      "sweets",
+      "Marzipan",
+      "brown sauce",
+      "jelly crystals"
+    ],
+    "source_ids": [
+      "enumbers_E122",
+      "sanha_e122"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000008",
+    "norm_name": "e123 amaranth (uses:packet cake mix, packet trifle mix, jelly crystals, cereal, soft drinks, blackcurrant productsother uses: lipstick, rouge and other cosmetics)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "synthetic chemical, not the grain. FD and C Red No2, coal tar and azo dye – not permitted in Norway or USA. | Hyperactivity, hives, asthma, rhinitis, aspirin sensitive pple may wish to avoid, may affect reproduction, liver, kidneys, birth defects, carcinogenic, teratogen"
+    ],
+    "typical_uses": [
+      "Packet cake mix",
+      "packet trifle mix",
+      "jelly crystals",
+      "cereal",
+      "soft drinks",
+      "blackcurrant products"
+    ],
+    "source_ids": [
+      "enumbers_E123",
+      "sanha_e123"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000009",
+    "norm_name": "e124 ponceau 4r (uses:packet trifle mix, jelly crystals, jam, packet cake mix, dessert toppings, tomato soup)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "synthetic chemical. | Asthma, hay fever, hives, aspirin sensitive people may wish to avoid, hyperactivity, carcinogenic"
+    ],
+    "typical_uses": [
+      "Packet trifle mix",
+      "jelly crystals",
+      "jam",
+      "packet cake mix",
+      "dessert toppings",
+      "tomato soup"
+    ],
+    "source_ids": [
+      "enumbers_E124",
+      "sanha_e124"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000010",
+    "norm_name": "e127 erythrosine (uses:canned fruit cocktail, biscuits, glace cherries, packet trifle mix, canned red cherries, mar-aschino cherries, sausage casingsother uses: toothpaste, dental disclosing tablets, rouge, medications)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "synthetic chemical. | Asthma, hyperactivity, learning difficulties, light sensitivity, may affect liver, heart, thyroid, reproduction, stomach, carcinogenic"
+    ],
+    "typical_uses": [
+      "Canned fruit cocktail",
+      "biscuits",
+      "glace cherries",
+      "packet trifle mix",
+      "canned red cherries",
+      "mar-aschino cherries",
+      "sausage casings"
+    ],
+    "source_ids": [
+      "enumbers_E127",
+      "sanha_e127"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000011",
+    "norm_name": "e131 patent blue v (uses:scotch eggs?other uses: medical diagnostic dye)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "synthetic chemical. | Asthma, gastrointestinal symptoms, anaphylaxis, hives, hyperactivity, allergic reaction, aspirin sensitive people may wish to avoid"
+    ],
+    "typical_uses": [
+      "Scotch eggs?"
+    ],
+    "source_ids": [
+      "enumbers_E131",
+      "sanha_e131"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000012",
+    "norm_name": "e132 indigo carmine (uses:bottled soft drinks, sweets, biscuits, confectionery, ice cream, bakery productsother uses: hair rinses, dye in kidney function tests, tablets and capsules)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "synthetic chemical. | Asthma, allergic reactions, hyperactivity, heart problems, NRC, carcinogenic, see Coal Tar"
+    ],
+    "typical_uses": [
+      "Bottled soft drinks",
+      "sweets",
+      "biscuits",
+      "confectionery",
+      "ice cream",
+      "bakery products"
+    ],
+    "source_ids": [
+      "enumbers_E132",
+      "sanha_e132"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000013",
+    "norm_name": "e140 chlorophyll (uses:soups, sauces, olive oil, soybean oilother uses: antiperspirant, deodorant, mouthwash)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "plants. Check if it contains alcohol. | safe in food use, cancause a sensitivity to light"
+    ],
+    "typical_uses": [
+      "Soups",
+      "sauces",
+      "olive oil",
+      "soybean oil"
+    ],
+    "source_ids": [
+      "enumbers_E140",
+      "sanha_e140"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000014",
+    "norm_name": "e141 copper phaeophytins (uses:soup, sauce, natural fruits in liquid)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "Chlorophyll. | safe in food use"
+    ],
+    "typical_uses": [
+      "Soup",
+      "sauce",
+      "natural fruits in liquid"
+    ],
+    "source_ids": [
+      "enumbers_E141",
+      "sanha_e141"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000015",
+    "norm_name": "e142 green s (uses:canned peas, mint sauce, packet cheesecake mixother uses: textile industry)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "synthetic chemical. | Hyperactivity, asthma, skin rashes, insomnia, see Coal Tar"
+    ],
+    "typical_uses": [
+      "Canned peas",
+      "mint sauce",
+      "packet cheesecake mix"
+    ],
+    "source_ids": [
+      "enumbers_E142",
+      "sanha_e142"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000016",
+    "norm_name": "e150(a-d) caramel color/with chemicals",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E150(a-d)"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000017",
+    "norm_name": "e151 black pn (uses:blackcurrant cake mix, brown sauce, eggnog, drinking yoghurt)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "synthetic chemical | asthma, hyperactivity, may affect kidneys, stomach, NRC, carcinogenic"
+    ],
+    "typical_uses": [
+      "Blackcurrant cake mix",
+      "brown sauce",
+      "eggnog",
+      "drinking yoghurt"
+    ],
+    "source_ids": [
+      "enumbers_E151",
+      "sanha_e151"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000018",
+    "norm_name": "e153 carbon black / vegetable carbon (charcoal)",
+    "category_l1": "Food",
+    "category_l2": "Fresh Produce",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E153"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000019",
+    "norm_name": "e160a alpha, beta, gamma",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E160a"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000020",
+    "norm_name": "e160b annatto, bixin, norbixin",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E160b"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000021",
+    "norm_name": "e160c capsanthin / capsorbin",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E160c"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000022",
+    "norm_name": "e160d lycopene",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E160d"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000023",
+    "norm_name": "e160e beta-apo-8-carotenal",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E160e"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000024",
+    "norm_name": "e160f ethyl ester of beta-apo-8-cartonoic acid",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E160f"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000025",
+    "norm_name": "e161(a) flavoxanthin",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 8,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E161a",
+      "enumbers_E161d",
+      "enumbers_E161e",
+      "enumbers_E161f",
+      "sanha_e161-a",
+      "sanha_e161-d",
+      "sanha_e161-e",
+      "sanha_e161-f"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000026",
+    "norm_name": "e161b lutein",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E161b"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000027",
+    "norm_name": "e161c cryptoxanthin",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E161c"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000028",
+    "norm_name": "e161g canthaxanthin",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 3,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E161g",
+      "sanha_e161h",
+      "sanha_e161j"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000029",
+    "norm_name": "e162 beetroot red (betanin; betanidin)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "Beetroot extract | safe in food use, contains nitrates so NRC"
+    ],
+    "typical_uses": [
+      "Desserts",
+      "jellies",
+      "jams",
+      "liquorice",
+      "sweets"
+    ],
+    "source_ids": [
+      "enumbers_E162",
+      "sanha_e162"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000030",
+    "norm_name": "e163 anthocyanins (uses:soft drinks, jams, ice cream, wines, yoghurt, sweets, preservesother uses: vitamin tablets)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "grape skin; red cabbage. | safe in food use, considered to have protective effects in the body"
+    ],
+    "typical_uses": [
+      "Soft drinks",
+      "jams",
+      "ice cream",
+      "wines",
+      "yoghurt",
+      "sweets",
+      "preserves"
+    ],
+    "source_ids": [
+      "enumbers_E163",
+      "sanha_e163"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000031",
+    "norm_name": "e170 calcium carbonate (uses:bread, biscuits, confectionery, ice cream, cakes, sweets, canned fruit and vegetablesother uses: cosmetics, face powder, bleaches, vitamin tablets, cigarettes)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "minerals argonite, calcite & vaterite. | safe in food use at low levels, excess can cause abdominal pain, constipation"
+    ],
+    "typical_uses": [
+      "Bread",
+      "biscuits",
+      "confectionery",
+      "ice cream",
+      "cakes",
+      "sweets",
+      "canned fruit and vegetables"
+    ],
+    "source_ids": [
+      "enumbers_E170",
+      "sanha_e170"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000032",
+    "norm_name": "e171 titanium dioxide (uses:pan sugar coated confectionery, sweets, chewing gum, icing sugar, jam, jelliesother uses: bath powder, face powder, ointment, sunscreen, marker ink, paints)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "mineral | safe in food use, skin contact can cause irritation, limited evidence of cancer in animal studies, see Nanoparticles"
+    ],
+    "typical_uses": [
+      "Pan sugar coated confectionery",
+      "sweets",
+      "chewing gum",
+      "icing sugar",
+      "jam",
+      "jellies"
+    ],
+    "source_ids": [
+      "enumbers_E171",
+      "sanha_e171"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000033",
+    "norm_name": "e172 iron oxides & iron hydroxides (uses:salmon and shrimp paste or spread, cake and dessert mixes, meat pasteother uses: pet foods, dying egg shells, face powder, eye make-up)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "mineral. | Iron is potentially toxic in all forms, excess can lead to increased risk of numerous health conditions"
+    ],
+    "typical_uses": [
+      "Salmon and shrimp paste or spread",
+      "cake and dessert mixes",
+      "meat paste"
+    ],
+    "source_ids": [
+      "enumbers_E172",
+      "sanha_e172"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000034",
+    "norm_name": "e173 aluminium (uses:external decoration on cakes, etc.other uses: cosmetics, cooking pots and pans, antiperspirant, silver finish to pills and tablets)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "mineral | Ingestion or inhalation can aggravate kidney & lung disorders, cardiovascular, reproductive and neurotoxicity, evidence of a link with Alzheimer's, European Parliament said aluminium additives should be banned"
+    ],
+    "typical_uses": [
+      "External decoration on cakes",
+      "etc."
+    ],
+    "source_ids": [
+      "enumbers_E173",
+      "sanha_e173"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000035",
+    "norm_name": "e174 silver (uses:external decoration on cakes, silver dragees, silver coloured almondsother uses: cosmetics, nail polish)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "mineral. | Toxic in very large doses, should not be consumed, accumulates in tissues, argyria (blue grey skin), kidney damage"
+    ],
+    "typical_uses": [
+      "External decoration on cakes",
+      "silver dragees",
+      "silver coloured almonds"
+    ],
+    "source_ids": [
+      "enumbers_E174",
+      "sanha_e174"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000036",
+    "norm_name": "e175 gold (uses:external decoration on chocolate confectioneryother uses: cosmetics)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "mineral. | safe in food use, rare allergic reactions, neutrotoxicity"
+    ],
+    "typical_uses": [
+      "External decoration on chocolate confectionery"
+    ],
+    "source_ids": [
+      "enumbers_E175",
+      "sanha_e175"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000037",
+    "norm_name": "e180 pigment rubine (uses:rind on hard cheeses such as edamother uses: cosmetics, pharamaceutical preparations)",
+    "category_l1": "Additive",
+    "category_l2": "Colorant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "synthetic chemical. | Asthma, hives, hay fever, gastrointestinal symptoms, insomnia, hyperactivity"
+    ],
+    "typical_uses": [
+      "Rind on hard cheeses such as Edam"
+    ],
+    "source_ids": [
+      "enumbers_E180",
+      "sanha_e180"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000038",
+    "norm_name": "e200 sorbic acid (uses:frozen pizza, pie fillings, cheese, cheesecake, cheese spread, chocolate syrupother uses: cosmetics, mouthwash, toothpaste, ointments, dental cream)",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "berries; synthetically. | Allergic reactions, asthma, contact dermatitis, erythema, skin irritation, behavioural problems"
+    ],
+    "typical_uses": [
+      "Frozen pizza",
+      "pie fillings",
+      "cheese",
+      "cheesecake",
+      "cheese spread",
+      "chocolate syrup"
+    ],
+    "source_ids": [
+      "enumbers_E200",
+      "sanha_e200"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000039",
+    "norm_name": "e203 calcium sorbate (n/a)",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 4,
+    "health_info": [
+      "sorbic acid. | Contact hives, skin irritation, asthma, allergic reactions, behavioural problems"
+    ],
+    "typical_uses": [
+      "Bread",
+      "cheese spread",
+      "cottage cheese",
+      "soft drinks",
+      "chocolate syrup",
+      "cheesecake"
+    ],
+    "source_ids": [
+      "enumbers_E201",
+      "enumbers_E203",
+      "sanha_e201",
+      "sanha_e203"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000040",
+    "norm_name": "e202 potassium sorbate (uses:bread, cheese, baked goods, cheese cake, wine making, chocolateother uses: cosmetics, cigarettes)",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "sorbic acid. | Allergic reactions, asthma, skin irritation, behavioural problems"
+    ],
+    "typical_uses": [
+      "Bread",
+      "cheese",
+      "baked goods",
+      "cheese cake",
+      "wine making",
+      "chocolate"
+    ],
+    "source_ids": [
+      "enumbers_E202",
+      "sanha_e202"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000041",
+    "norm_name": "e210 benzoic acid (benzene carboxylic acid; phenylformic acid; dracyclic acid)",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "Synthetic | Asthma, hives, behavioural problems, hyperactivity, may affect lungs, eye and skin irritation, aspirin sensitive people may wish to avoid, neurotoxicity"
+    ],
+    "typical_uses": [
+      "Brewed soft drinks",
+      "cider",
+      "non-dairy dip",
+      "chewing gum",
+      "fruit juice",
+      "margarine",
+      "ice cream"
+    ],
+    "source_ids": [
+      "enumbers_E210",
+      "sanha_e210"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000042",
+    "norm_name": "e213 calcium benzoate (uses:brewed soft drinks, non-dairy dip, chewing gum, fruit juice, margarine, ice cream)",
+    "category_l1": "Food",
+    "category_l2": "General Food",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 4,
+    "health_info": [
+      "synthesis from benzoic acid | Asthma, hives, contact dermatitis, hay fever, mouth and skin irritation, hyperactivity, anaphylaxis, aspirin sensitive people may wish to avoid",
+      "benzoic acid | Asthma, hives, anaphylaxis, hyperactivity, behavioural problems, eczema, aspirin sensitive people may wish to avoid, NRC"
+    ],
+    "typical_uses": [
+      "Bottled soft drinks",
+      "fruit juice",
+      "jams",
+      "pickles",
+      "condiments",
+      "baked goods",
+      "tomato paste",
+      "Brewed soft drinks",
+      "non-dairy dip",
+      "chewing gum",
+      "margarine",
+      "ice cream"
+    ],
+    "source_ids": [
+      "enumbers_E211",
+      "enumbers_E213",
+      "sanha_e211",
+      "sanha_e213"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000043",
+    "norm_name": "e212 potassium benzoate (uses:low joule jams and spreads, chilli paste, glkace cherriesother uses: cosmetics)",
+    "category_l1": "Food",
+    "category_l2": "General Food",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "benzoic acid. | Asthma, hives, eczema, allergic reactions, gastric irritation, aspirin sensitive people may wish to avoid"
+    ],
+    "typical_uses": [
+      "Low joule jams and spreads",
+      "chilli paste",
+      "glkace cherries"
+    ],
+    "source_ids": [
+      "enumbers_E212",
+      "sanha_e212"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000044",
+    "norm_name": "e214 ethyl 4-hydroxybenzoate (uses:brewed soft drinks, ice cream, cider non-dairy dip, chewing gum, fruit juice, margarineother uses: cosmetic products)",
+    "category_l1": "Food",
+    "category_l2": "General Food",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India",
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 4,
+    "health_info": [
+      "benzoic acid. | Asthma, hives, allergic reactions, skin redness, itching and swelling, anaphylaxis"
+    ],
+    "typical_uses": [
+      "Brewed soft drinks",
+      "ice cream",
+      "cider non-dairy dip",
+      "chewing gum",
+      "fruit juice",
+      "margarine"
+    ],
+    "source_ids": [
+      "enumbers_E214",
+      "enumbers_E216",
+      "enumbers_E218",
+      "sanha_e214"
+    ],
+    "source_files": [
+      "halal_e_numbers_india",
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000045",
+    "norm_name": "e217 propyl 4-hydroxybenzoate, sodium salt",
+    "category_l1": "Food",
+    "category_l2": "General Food",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 3,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E215",
+      "enumbers_E217",
+      "enumbers_E219"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000046",
+    "norm_name": "e220 sulphur dioxide",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E220"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000047",
+    "norm_name": "e226 calcium sulphite",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E221",
+      "enumbers_E226"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000048",
+    "norm_name": "e227 calcium hydrogen sulphite",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E222",
+      "enumbers_E227"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000049",
+    "norm_name": "e224 potassium metabisulphite",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E223",
+      "enumbers_E224"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000050",
+    "norm_name": "e230 biphenyl / diphenyl",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E230"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000051",
+    "norm_name": "e231 2-hydroxybiphenyl",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E231"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000052",
+    "norm_name": "e232 sodium biphenyl-2-yl oxide",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E232"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000053",
+    "norm_name": "e233 2-(thiazol-4-yl) benzimidazole",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E233"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000054",
+    "norm_name": "e239 hexamine",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E239"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000055",
+    "norm_name": "e249 potassium nitrate",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E249"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000056",
+    "norm_name": "e250 sodium nitrite",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E250",
+      "enumbers_E251"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000057",
+    "norm_name": "e252 potassium nitrate(saltpetre)",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E252"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000058",
+    "norm_name": "e260 acetic acid",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E260"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000059",
+    "norm_name": "e261 potassium acetate",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E261"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000060",
+    "norm_name": "e262 potassium hydrogen diacetate",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E262"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000061",
+    "norm_name": "e263 calcium acetate",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E263"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000062",
+    "norm_name": "e270 lactic acid",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E270"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000063",
+    "norm_name": "e280 propionic acid",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E280"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000064",
+    "norm_name": "e283 potassium propionate",
+    "category_l1": "Additive",
+    "category_l2": "Preservative",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 3,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E281",
+      "enumbers_E282",
+      "enumbers_E283"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000065",
+    "norm_name": "e290 carbon dioxide",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E290"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000066",
+    "norm_name": "e300 l-ascorbic acid (vitamin c)",
+    "category_l1": "Additive",
+    "category_l2": "Antioxidant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E300"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000067",
+    "norm_name": "e302 calcium-l-ascorbate",
+    "category_l1": "Additive",
+    "category_l2": "Antioxidant",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E301",
+      "enumbers_E302"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000068",
+    "norm_name": "e304 ascorbyl palmitate",
+    "category_l1": "Additive",
+    "category_l2": "Antioxidant",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E304"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000069",
+    "norm_name": "e306 natural extracts rich in tocopherols",
+    "category_l1": "Additive",
+    "category_l2": "Antioxidant",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E306"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000070",
+    "norm_name": "e307 synthetic alpha-tocopherol",
+    "category_l1": "Additive",
+    "category_l2": "Antioxidant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 3,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E307",
+      "enumbers_E308",
+      "enumbers_E309"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000071",
+    "norm_name": "e310 propyl gallate",
+    "category_l1": "Additive",
+    "category_l2": "Antioxidant",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E310"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000072",
+    "norm_name": "e312 dodecyl gallate",
+    "category_l1": "Additive",
+    "category_l2": "Antioxidant",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E311",
+      "enumbers_E312"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000073",
+    "norm_name": "e320 butylated hydroxyanisole (bha)",
+    "category_l1": "Additive",
+    "category_l2": "Antioxidant",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E320",
+      "enumbers_E321"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000074",
+    "norm_name": "e322 lecithin",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E322"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000075",
+    "norm_name": "e327 calcium lactate",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E325",
+      "enumbers_E327"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000076",
+    "norm_name": "e326 potassium lactate",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E326"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000077",
+    "norm_name": "e330 citric acid",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E330"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000078",
+    "norm_name": "e333 calcium citrates",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 3,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E331",
+      "enumbers_E333",
+      "enumbers_E335"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000079",
+    "norm_name": "e332 potassium citrates",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E332"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000080",
+    "norm_name": "e334 tartaric acid",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E334"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000081",
+    "norm_name": "e336 potassium tartrates (cream of tartar)",
+    "category_l1": "Food",
+    "category_l2": "Dairy",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E336"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000082",
+    "norm_name": "e337 potassium sodium tartrates",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E337"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000083",
+    "norm_name": "e338 orthophosphoric acid",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E338"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000084",
+    "norm_name": "e339 sodium phosphates",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E339"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000085",
+    "norm_name": "e340 potassium phosphates",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E340",
+      "enumbers_E341"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000086",
+    "norm_name": "e400 alginic acid",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E400"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000087",
+    "norm_name": "e403 ammonium alginate",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 3,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E401",
+      "enumbers_E403",
+      "enumbers_E404"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000088",
+    "norm_name": "e402 potassium alginate",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E402"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000089",
+    "norm_name": "e405 propane-1,2-diol alginate",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E405"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000090",
+    "norm_name": "e406 agar",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E406"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000091",
+    "norm_name": "e407 carrageenan",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E407"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000092",
+    "norm_name": "e410 locust bean gum (carob gum)",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E410"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000093",
+    "norm_name": "e412 guar gum",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E412"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000094",
+    "norm_name": "e413 tragacanth",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E413"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000095",
+    "norm_name": "e414 gum acacia (gum arabic)",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E414"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000096",
+    "norm_name": "e415 xanthan gum",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E415"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000097",
+    "norm_name": "e420 sorbitol",
+    "category_l1": "Additive",
+    "category_l2": "Sweetener",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E420"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000098",
+    "norm_name": "e421 mannitol",
+    "category_l1": "Additive",
+    "category_l2": "Sweetener",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E421"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000099",
+    "norm_name": "e422 glycerol",
+    "category_l1": "Additive",
+    "category_l2": "Sweetener",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E422"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000100",
+    "norm_name": "e440a pectin",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E440a"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000101",
+    "norm_name": "e440b amidated pectin",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E440b"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000102",
+    "norm_name": "e450a,b,c sodium and potassium phosphates and polyphosphates",
+    "category_l1": "Non-food",
+    "category_l2": "Chemical",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E450a,b,c"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000103",
+    "norm_name": "e460 microcrystalline / powdered cellulose",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E460"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000104",
+    "norm_name": "e465 ethylmethylcellulose",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E461",
+      "enumbers_E465"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000105",
+    "norm_name": "e464 hydroxypropyl-methylcellulose",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E463",
+      "enumbers_E464"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000106",
+    "norm_name": "e466 carboxymethylcellulose, sodium salt",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E466"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000107",
+    "norm_name": "e470 sodium, potassium and calcium salts of fatty acids",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E470"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000108",
+    "norm_name": "e471 mono-and diglycerides of fatty acids",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E471"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000109",
+    "norm_name": "e472 various esters of mono-and diglycerides of fatty acids",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E472"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000110",
+    "norm_name": "e473 sucrose esters of fatty acids",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E473"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000111",
+    "norm_name": "e474 sucroglycerides",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E474"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000112",
+    "norm_name": "e475 polyglycerol esters of fatty acids",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E475"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000113",
+    "norm_name": "e477 propane-1,2-diol esters of fatty acids",
+    "category_l1": "Additive",
+    "category_l2": "Emulsifier",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E477"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000114",
+    "norm_name": "e482 calcium stearoyl-2-lactylate",
+    "category_l1": "Beverage",
+    "category_l2": "Tea & Coffee",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E481",
+      "enumbers_E482"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_000115",
+    "norm_name": "e483 stearyl tartrate",
+    "category_l1": "Beverage",
+    "category_l2": "Tea & Coffee",
+    "halal_status": "Mushbooh",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "HFCI India"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "enumbers_E483"
+    ],
+    "source_files": [
+      "halal_e_numbers_india"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007259",
+    "norm_name": "e101(a) riboflavin-5′-phosphate (riboflavin-5-)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "Soluble Riboflavin; Chemical using Riboflavin | safe in food use, has beneficial effects in the body"
+    ],
+    "typical_uses": [
+      "Baby cereals",
+      "enriched breads",
+      "peanut butter",
+      "breakfast cereals"
+    ],
+    "source_ids": [
+      "sanha_e101-a"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007260",
+    "norm_name": "e103 chrysoine resorcinol (tropaeolin o; c.i. acid orange 6; c.i. food yellow 8; c.i. 14270; yellow t; tropeolin o; tropaeolin r; gold yellow.)",
+    "category_l1": "Food",
+    "category_l2": "General Food",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e103"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007261",
+    "norm_name": "e105 fast yellow ab (tropaeolin oo; c.i. acid orange 5; diphenylamine orange; orange gs; orange n; orange iv; acid yellow d; c.i. 13080.)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "Synthetic chemical."
+    ],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e105"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007262",
+    "norm_name": "e106 riboflavin-5-sodium phosphate",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e106"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007263",
+    "norm_name": "e107 yellow 2g (food yellow 5)",
+    "category_l1": "Food",
+    "category_l2": "General Food",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "Synthetic"
+    ],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e107"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007264",
+    "norm_name": "e1103 invertase (uses:confectionery with soft centres)",
+    "category_l1": "Food",
+    "category_l2": "Snacks & Confectionery",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "microbiological from yeast. | GM enzymes have been linked to serious health concerns and even death"
+    ],
+    "typical_uses": [
+      "Confectionery with soft centres"
+    ],
+    "source_ids": [
+      "sanha_e1103"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007265",
+    "norm_name": "e1105 lysozyme (uses:cheese preparationother uses: cosmetics, tablets, lozenges, eye drops)",
+    "category_l1": "Food",
+    "category_l2": "Dairy",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "from hens egg white. | Chronic headaches, allergic reactions"
+    ],
+    "typical_uses": [
+      "Cheese preparation"
+    ],
+    "source_ids": [
+      "sanha_e1105"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007266",
+    "norm_name": "e111 orange ggn",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e111"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007267",
+    "norm_name": "e1200 polydextrose (uses:low calories foods, yoghurt, custard powder, ice cream, confectionery)",
+    "category_l1": "Food",
+    "category_l2": "Dairy",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "from glucose & sorbitol. | safe in food use at low levels, excess may have a laxative effect, NRC"
+    ],
+    "typical_uses": [
+      "Low calories foods",
+      "yoghurt",
+      "custard powder",
+      "ice cream",
+      "confectionery"
+    ],
+    "source_ids": [
+      "sanha_e1200"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007268",
+    "norm_name": "e1201 polyvinylpyrrolidone (uses:beer, wine and vinegar manufactureother uses: hairspray and lacquers, shampoo, sunscreen)",
+    "category_l1": "Food",
+    "category_l2": "Sauce & Paste",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "synthetic chemical. | Lung and kidney damage, gas, tumours, allergic contact dermatitis in sunscreen, skin sensitisation, carcinogenic"
+    ],
+    "typical_uses": [
+      "Beer",
+      "wine and vinegar manufacture"
+    ],
+    "source_ids": [
+      "sanha_e1201"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007269",
+    "norm_name": "e1202 polyvinylpolypyrrolidone (uses:used to clarify sparkling wine and vinegarother uses: hairspray)",
+    "category_l1": "Food",
+    "category_l2": "Sauce & Paste",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "synthetic chemical. | see Polyvinylpyrrolidone E1201"
+    ],
+    "typical_uses": [
+      "Used to clarify sparkling wine and vinegar"
+    ],
+    "source_ids": [
+      "sanha_e1202"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007270",
+    "norm_name": "e125 ponceau sx",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e125",
+      "sanha_e126"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007271",
+    "norm_name": "e128 red 2g (uses:cooked meat products, burger meats, sausages)",
+    "category_l1": "Food",
+    "category_l2": "Meat & Poultry",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "synthetic chemical. | Asthma, gastrointestinal symptoms, angioedema, hyperactivity, chronic hives, aspirin sensitive people may wish to avoid, carcinogenic"
+    ],
+    "typical_uses": [
+      "Cooked meat products",
+      "burger meats",
+      "sausages"
+    ],
+    "source_ids": [
+      "sanha_e128"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007272",
+    "norm_name": "e129 allura red ac (uses:packet cake mix, packet trifle mix, jelly crystals, cereals, chocolate biscuitsother uses: cosmetics, lipstick, medications)",
+    "category_l1": "Cosmetic",
+    "category_l2": "Makeup",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "synthetic chemical | asthma, hyperactivity, allergic reactions, hay fever, hives, aspirin, sensitive people may wish to avoid, adverse reproductive effects in animals, carcinogenic"
+    ],
+    "typical_uses": [
+      "Packet cake mix",
+      "packet trifle mix",
+      "jelly crystals",
+      "cereals",
+      "chocolate biscuits"
+    ],
+    "source_ids": [
+      "sanha_e129"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007273",
+    "norm_name": "e130 indanthrene blue rs",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e130"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007274",
+    "norm_name": "e133 brilliant blue fcf (uses:gelatine, canned processed peas, soft drinks, dairy products, cereals, cereals, dessertsother uses: toothpaste, cosmetics, hair dye, deodorant)",
+    "category_l1": "Cosmetic",
+    "category_l2": "Personal Care",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "synthetic chemical | Asthma, hives, hay fever, allergic reactions, NRC, aspirin sensitive people may wish to avoid, carcinogenic"
+    ],
+    "typical_uses": [
+      "Gelatine",
+      "canned processed peas",
+      "soft drinks",
+      "dairy products",
+      "cereals",
+      "desserts"
+    ],
+    "source_ids": [
+      "sanha_e133"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007275",
+    "norm_name": "e1400 dextrin",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e1400"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007276",
+    "norm_name": "e1401 modified starch",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e1401"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007277",
+    "norm_name": "e1402 alkaline modified starch",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e1402"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007278",
+    "norm_name": "e1403 bleached starch (n/a)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e1403"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007279",
+    "norm_name": "e1404 oxidised starch (n/a)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "Food starch oxidised with sodium hypochlorite. | Uncertainities exist about the safety of modified starches especially in infants"
+    ],
+    "typical_uses": [
+      "Casserolemix",
+      "batter mix",
+      "confectionery"
+    ],
+    "source_ids": [
+      "sanha_e1404"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007280",
+    "norm_name": "e1410 monostarch phosphate (n/a)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "Esterification of food starches with phosphates. | Uncertainities exist about the safety of modified starches especially in infants",
+      "Esterification of food starches with phosphates. | Uncertatinities exist about the safety of modified starches especially in infants"
+    ],
+    "typical_uses": [
+      "Various foods",
+      "Fruit pie fillings",
+      "instant puddings",
+      "instant desserts",
+      "sauces",
+      "soup mix"
+    ],
+    "source_ids": [
+      "sanha_e1410",
+      "sanha_e1412"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007281",
+    "norm_name": "e1414 acetylated distarch phosphate (n/a)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 2,
+    "health_info": [
+      "Esterification of food starches with phosphates & acetates. | Uncertainities exist about the safety of modified starches especially in infants",
+      "Esterification of food starches with adipic anhydride & acetic anhydride. | Uncertatinities exist about the safety of modified starches especially in infants"
+    ],
+    "typical_uses": [
+      "sauce",
+      "pickles",
+      "yoghurt",
+      "dry cake mix",
+      "canned fruits",
+      "pie fillings",
+      "sauces",
+      "dry cake",
+      "mix"
+    ],
+    "source_ids": [
+      "sanha_e1414",
+      "sanha_e1422"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007282",
+    "norm_name": "e1420 acetylated starch (uses:sauces, chutney, desserts, baked products, confectionery)",
+    "category_l1": "Food",
+    "category_l2": "Sauce & Paste",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "Esterification of food starches with acetates. | Uncertatinities exist about the safety of modified starches especially in infants"
+    ],
+    "typical_uses": [
+      "Sauces",
+      "chutney",
+      "desserts",
+      "baked products",
+      "confectionery"
+    ],
+    "source_ids": [
+      "sanha_e1420"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007283",
+    "norm_name": "e1421 acetylated starch (monostarch acetate)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e1421"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007284",
+    "norm_name": "e143 fast green fcf",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e143"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007285",
+    "norm_name": "e1440 hydroxypropyl starch (n/a)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "Esterification of food starches with propylene oxide. | Uncertainities exist about the safety of modified starches especially in infants"
+    ],
+    "typical_uses": [
+      "sauces",
+      "pickles",
+      "yoghurt",
+      "dry cake mix",
+      "canned fruits",
+      "pie fillings"
+    ],
+    "source_ids": [
+      "sanha_e1440"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007286",
+    "norm_name": "e1442 hydroxypropyl distarch phosphate (n/a)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "Esterification of food starches with phosphates & propylene oxide. | Uncertainities exist about the safety of modified starches especially in infants"
+    ],
+    "typical_uses": [
+      "Canned soups",
+      "frozen desserts",
+      "sauces",
+      "cake mix"
+    ],
+    "source_ids": [
+      "sanha_e1442"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007287",
+    "norm_name": "e1450 starch sodium octenyl succinate (uses:essence, salad dressing, beverage whitener)",
+    "category_l1": "Food",
+    "category_l2": "Sauce & Paste",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "Esterification of food starches with octenyl succinic anhydride. | Uncertainities exist about the safety of modified starches especially in infants"
+    ],
+    "typical_uses": [
+      "Essence",
+      "salad dressing",
+      "beverage whitener"
+    ],
+    "source_ids": [
+      "sanha_e1450"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007288",
+    "norm_name": "e1451 acetylated oxidised starch (n/a)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "Esterification of food starches with phosphates & acetates. | Uncertatinities exist about the safety of modified starches especially in infants"
+    ],
+    "typical_uses": [
+      "Canned food for infants and young children",
+      "confectionery"
+    ],
+    "source_ids": [
+      "sanha_e1451"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007289",
+    "norm_name": "e150 caramel colour (sulphite ammonia) (n/a)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "synthetic chemical. | Hyperactivity, soft to liquid stools & increased bowel movements, blood toxicity in rats, inhibits metabolism of B6 in rabbits, serious doubts exist on safety"
+    ],
+    "typical_uses": [
+      "Stout",
+      "cola drinks",
+      "chocolate",
+      "gravy browning",
+      "jams",
+      "confectionery"
+    ],
+    "source_ids": [
+      "sanha_e150"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007290",
+    "norm_name": "e150(a) caramel colour (plain-spirit) (n/a)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "synthetic chemical. | Gastrointestinal problems, needs to be tested for mutagenic, teratogenic, subacute and reproductive effects"
+    ],
+    "typical_uses": [
+      "Brown bread",
+      "cola drinks",
+      "chocolate",
+      "ice cream",
+      "jams",
+      "sweets"
+    ],
+    "source_ids": [
+      "sanha_e150-a"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007291",
+    "norm_name": "e150(b) caramel colour (caustic sulphite) (n/a)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "synthetic chemical. | Hyperactivity, may affect liver, stomach problems"
+    ],
+    "typical_uses": [
+      "Whisky",
+      "brandy",
+      "ice cream"
+    ],
+    "source_ids": [
+      "sanha_e150-b"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007292",
+    "norm_name": "e150(c) caramel colour (ammonia) (n/a)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "synthetic chemical | Hyperactivity, may affect liver, stomach, reproduction, caused convulsions in some animal tests, blood toxicity in rats"
+    ],
+    "typical_uses": [
+      "Soy sauce",
+      "oyster sauce",
+      "biscuits",
+      "jams",
+      "dark bread",
+      "pickles",
+      "chocolate",
+      "coatings"
+    ],
+    "source_ids": [
+      "sanha_e150-c"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007293",
+    "norm_name": "e150(d) sulphite ammonia caramel",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e150-d"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007294",
+    "norm_name": "e1505 triethyl citrate (uses:processed egg whites, smoke flavourother uses: nail polish, perfume base)",
+    "category_l1": "Cosmetic",
+    "category_l2": "Fragrance",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "Triethyl ester of citric acid. | Can provoke symptoms in those who react to MSG, citrates may interfere with the results of laboratory tests for blood, liver and pancreatic function"
+    ],
+    "typical_uses": [
+      "Processed egg whites",
+      "smoke flavour"
+    ],
+    "source_ids": [
+      "sanha_e1505"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007295",
+    "norm_name": "e1519 benzyl alcohol",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e1519"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007296",
+    "norm_name": "e152 black 7984",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e152"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007297",
+    "norm_name": "e1520 propylene glycol (uses:confectionery, baked goods, chocolate products, sweetened coconut, toppingsother uses: suntan lotion, toothpaste, lipstick, baby lotion, pesticides, antifreeze)",
+    "category_l1": "Cosmetic",
+    "category_l2": "Personal Care",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "synthetic chemical. | Contact dermatitis, lactic acidosis, dry skin, respiratory, immuno- and neurotoxicity, CNS depression and kidney damage in animals"
+    ],
+    "typical_uses": [
+      "Confectionery",
+      "baked goods",
+      "chocolate products",
+      "sweetened coconut",
+      "toppings"
+    ],
+    "source_ids": [
+      "sanha_e1520"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007298",
+    "norm_name": "e154 brown fk (uses:kippers, smoked and cured fish, cooked ham, potato chips)",
+    "category_l1": "Food",
+    "category_l2": "Snacks & Confectionery",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "mixture of synthetic dyes. | Asthma, allergic reactions, hives, may affect heart, kidneys, liver, thyroid, aspirin sensitive people may wish to avoid, NRC"
+    ],
+    "typical_uses": [
+      "Kippers",
+      "smoked and cured fish",
+      "cooked ham",
+      "potato chips"
+    ],
+    "source_ids": [
+      "sanha_e154"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007299",
+    "norm_name": "e155 brown ht (uses:chocolate cake mix, chocolate biscuits)",
+    "category_l1": "Food",
+    "category_l2": "Snacks & Confectionery",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "mixture of synthetic dyes. | Asthma, allergic reactions, hives, may affect heart, kidneys, NRC, aspirin sensitive people may wish to avoid, NRC"
+    ],
+    "typical_uses": [
+      "Chocolate cake mix",
+      "chocolate biscuits"
+    ],
+    "source_ids": [
+      "sanha_e155"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007300",
+    "norm_name": "e160(a) beta-carotene (uses:margarine, dairy blend, reduced fat spread, cakes, jams, cheeseother uses: cosmetics, animal feed, cigarettes)",
+    "category_l1": "Food",
+    "category_l2": "Dairy",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "Carrots. | safe in food use at low levels"
+    ],
+    "typical_uses": [
+      "Margarine",
+      "dairy blend",
+      "reduced fat spread",
+      "cakes",
+      "jams",
+      "cheese"
+    ],
+    "source_ids": [
+      "sanha_e160-a"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007301",
+    "norm_name": "e160(b) annatto (uses:margarine, baked goods, reduced fat spreads, dairy products, breakfast cerealsother uses: fabric dye, soap, varnish, body paints)",
+    "category_l1": "Food",
+    "category_l2": "Snacks & Confectionery",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "vegetable dye. | Anatto may cause irritability and head banging in children, hives, hypotension, pruritis, bixin and norbixin, under-going toxicity testing"
+    ],
+    "typical_uses": [
+      "Margarine",
+      "baked goods",
+      "reduced fat spreads",
+      "dairy products",
+      "breakfast cereals"
+    ],
+    "source_ids": [
+      "sanha_e160-b"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007302",
+    "norm_name": "e160(c) capsanthin (capsorubin; paprika extract; oleoresin)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "red pepper | safe in food use, may have beneficial effects"
+    ],
+    "typical_uses": [
+      "Cheese slices",
+      "chicken pies",
+      "condiments",
+      "soup"
+    ],
+    "source_ids": [
+      "sanha_e160-c"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007303",
+    "norm_name": "e160(d) lycopene (uses:nutritional bars, soups, yoghurt, beverages)",
+    "category_l1": "Food",
+    "category_l2": "Dairy",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "tomato extract. | safe in food use, may have beneficial effects on body"
+    ],
+    "typical_uses": [
+      "Nutritional bars",
+      "soups",
+      "yoghurt",
+      "beverages"
+    ],
+    "source_ids": [
+      "sanha_e160-d"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007304",
+    "norm_name": "e160(e) beta-apo-8-carotenal (c30; beta-8-apocarotenal)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "synthetic chemical. | safe in food use"
+    ],
+    "typical_uses": [
+      "Cream cheese spread",
+      "cheese slices",
+      "processed cheese"
+    ],
+    "source_ids": [
+      "sanha_e160-e"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007305",
+    "norm_name": "e160(f) beta apo-8-carotenoic acid ethyl ester (n/a)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "synthetic chemical. | safe in food use"
+    ],
+    "typical_uses": [
+      "Processed foods"
+    ],
+    "source_ids": [
+      "sanha_e160-f"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007306",
+    "norm_name": "e161(b) lutein (uses:processed foodsother uses: animal and poultry feed)",
+    "category_l1": "Food",
+    "category_l2": "General Food",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "egg yolk; nettles; algae; & petals of yellow flowers. | safe in food use at low levels"
+    ],
+    "typical_uses": [
+      "Processed foods"
+    ],
+    "source_ids": [
+      "sanha_e161-b"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007307",
+    "norm_name": "e161(c) cryptoxanthin (uses:cheese slices, chicken pies, condiments, soupother uses: poultry feed)",
+    "category_l1": "Food",
+    "category_l2": "Dairy",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [
+      "petals & berries. | safe in food use, may have beneficial effects"
+    ],
+    "typical_uses": [
+      "Cheese slices",
+      "chicken pies",
+      "condiments",
+      "soup"
+    ],
+    "source_ids": [
+      "sanha_e161-c"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007308",
+    "norm_name": "e161i citranaxanthin (n/a)",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e161i"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  },
+  {
+    "canonical_id": "halal_007309",
+    "norm_name": "e181 tannin",
+    "category_l1": "Additive",
+    "category_l2": "Food Additive",
+    "halal_status": "Halal",
+    "sold_in": [],
+    "marketplace": [],
+    "companies": [],
+    "cert_bodies": [
+      "SANHA South Africa"
+    ],
+    "cert_expiry": null,
+    "cert_issue": null,
+    "source_count": 1,
+    "health_info": [],
+    "typical_uses": [],
+    "source_ids": [
+      "sanha_e181"
+    ],
+    "source_files": [
+      "sanha_halal"
+    ],
+    "fda_numbers": [],
+    "barcodes": [],
+    "company_contact": []
+  }
+]

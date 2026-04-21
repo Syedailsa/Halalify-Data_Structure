@@ -390,6 +390,8 @@ async function searchByCategory(category, hint) {
       (r) => r.payload.category_l1?.toLowerCase() === mapped.toLowerCase()
     );
   }
+  console.log("📦 DB RESULTS LENGTH:", results.length);
+
 
   return results;
 }
@@ -398,6 +400,8 @@ async function searchByCategory(category, hint) {
 // STAGE 5 — WEB SEARCH FALLBACK
 // =============================================================================
 async function webSearch(q) {
+  console.log("🌐 WEB SEARCH TRIGGERED");
+
   if (!GOOGLE_API_KEY || !GOOGLE_CX) {
     return "⚠ Google Search not configured (add GOOGLE_SEARCH_API_KEY + GOOGLE_SEARCH_CX to .env.local)";
   }
@@ -490,6 +494,7 @@ function formatResults(results, queryType, extra = {}) {
 // =============================================================================
 // MAIN QUERY HANDLER
 // =============================================================================
+
 async function handleQuery(userInput) {
   const q = userInput.trim();
   if (!q) return { error: "Empty query" };
@@ -508,8 +513,6 @@ async function handleQuery(userInput) {
         if (match.dist > 0.05) {
           fuzzyWarning = `Matched company: "${match.matched}" (from "${classified.company}")`;
         }
-      } else {
-        resolvedCompany = null;
       }
     }
 
@@ -518,39 +521,12 @@ async function handleQuery(userInput) {
     let webResults = null;
     let notInDatabase = false;
 
+    // =========================
+    // 🔍 MAIN SEARCH SWITCH
+    // =========================
     switch (classified.type) {
       case 1:
         results = await searchByCompany(resolvedCompany, resolvedCategory);
-
-        if (results.length) {
-          const hasMatch = results.some((r) =>
-            r.payload.companies?.some(
-              (c) =>
-                c.toLowerCase().includes(resolvedCompany.toLowerCase()) ||
-                resolvedCompany.toLowerCase().includes(c.toLowerCase())
-            )
-          );
-          if (!hasMatch) {
-            notInDatabase = true;
-            webResults = await webSearch(q);
-          } else {
-            const halal = results.filter(
-              (r) => r.payload.halal_status === "Halal"
-            ).length;
-            const haram = results.filter(
-              (r) => r.payload.halal_status === "Haraam"
-            ).length;
-            const mushbooh = results.filter(
-              (r) => r.payload.halal_status === "Mushbooh"
-            ).length;
-            summary = {
-              company: resolvedCompany,
-              halal,
-              haram,
-              mushbooh,
-            };
-          }
-        }
         break;
 
       case 2: {
@@ -566,6 +542,7 @@ async function handleQuery(userInput) {
 
         if (resolvedCompany) {
           const b = resolvedCompany.toLowerCase().replace(/[^a-z0-9]/g, "");
+
           const companyFiltered = results.filter((r) =>
             r.payload.companies?.some((c) => {
               const a = c.toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -575,40 +552,117 @@ async function handleQuery(userInput) {
 
           if (companyFiltered.length) {
             results = companyFiltered;
-          } else {
-            notInDatabase = true;
-            webResults = await webSearch(q);
           }
         }
         break;
       }
+
       case 3:
         results = await searchByECode(classified.e_code);
         break;
+
       case 4:
-        if (!resolvedCategory) {
-          results = [];
-        } else {
+        if (resolvedCategory) {
           results = await searchByCategory(resolvedCategory, q);
         }
         break;
+
       default:
         results = await searchByProduct(q, resolvedCategory);
         break;
     }
 
-    const topScore = results[0]?.score ?? 0;
-    const isENumber = classified.type === 3;
-    const threshold = isENumber ? 0 : getAdaptiveThreshold(results);
-    const found = isENumber ? results.length > 0 : topScore >= threshold;
+    // =========================
+    // 🧹 CLEAN RESULTS (CRITICAL)
+    // =========================
+    const today = new Date().toISOString().slice(0, 10).replace(/-/g, "/");
 
-    let formatted = null;
-    if (found) {
-      formatted = formatResults(results, classified.type, {
-        e_code: classified.e_code,
-        threshold,
-      });
-    }
+    const cleanResults = results.filter((r) => {
+      const p = r.payload;
+      if (!p) return false;
+
+      if (!p.norm_name || p.norm_name.toLowerCase() === "n/a") return false;
+      if (!p.category_l1 || p.category_l1.toLowerCase() === "unknown") return false;
+
+      if (p.cert_expiry && p.cert_expiry < today) return false;
+
+      return true;
+    });
+
+    // =========================
+    // 🎯 SMART MATCH LOGIC (FIXED)
+    // =========================
+    // const isENumber = classified.type === 3;
+  
+    // const hasValidData = cleanResults.length > 0;
+
+    // const avgScore =
+    //   cleanResults.reduce((sum, r) => sum + (r.score || 0), 0) /
+    //   (cleanResults.length || 1);
+
+    // let found = false;
+
+    // if (isENumber) {
+    //   found = results.length > 0;
+    // } else {
+    //   found = hasValidData && (avgScore >= 0.72 || cleanResults.length >= 2);
+    // }
+
+    // 🎯 SIMPLE DB FIRST LOGIC (FIXED)
+
+const foundInDB = cleanResults.length > 0;
+
+let found = foundInDB;
+
+
+
+    // =========================
+    // 🚫 GARBAGE QUERY DETECTION
+    // =========================
+    const isGarbageQuery =
+      !/[a-zA-Z]{3,}/.test(q) ||
+      /^[0-9]+$/.test(q);
+
+    // =========================
+    // 🧠 REAL PRODUCT CHECK
+    // =========================
+    const hasRealProductMatch = cleanResults.some(r =>
+      r.payload?.norm_name &&
+      r.payload.norm_name !== "n/a" &&
+      r.payload.category_l1 !== "Unknown"
+    );
+
+    // =========================
+    // 🌐 WEB FALLBACK (FIXED)
+    // =========================
+    // if (!found && !isGarbageQuery && !hasRealProductMatch) {
+    //   notInDatabase = true;
+    //   webResults = await webSearch(q);
+    //   results = [];
+    // } else {
+    //   results = cleanResults;
+    //   webResults = null;
+    //   notInDatabase = false;
+
+    //   if (classified.type === 1 && resolvedCompany) {
+    //     const halal = results.filter(r => r.payload.halal_status === "Halal").length;
+    //     const haram = results.filter(r => r.payload.halal_status === "Haraam").length;
+    //     const mushbooh = results.filter(r => r.payload.halal_status === "Mushbooh").length;
+
+    //     summary = { company: resolvedCompany, halal, haram, mushbooh };
+    //   }
+    // }
+
+    if (!found) {
+  notInDatabase = true;
+  webResults = await webSearch(q);
+  results = [];
+} else {
+  notInDatabase = false;
+  webResults = null;
+  results = cleanResults;
+}
+
 
     return {
       success: true,
@@ -618,17 +672,17 @@ async function handleQuery(userInput) {
       resolvedCategory,
       fuzzyWarning,
       summary,
+
       results: results.map((r) => ({
         score: r.score,
         payload: r.payload,
       })),
-      formatted,
-      topScore,
-      threshold,
-      found,
-      notInDatabase,
+
       webResults,
+      fromWebSearch: notInDatabase,
+      notInDatabase,
     };
+
   } catch (err) {
     return {
       success: false,
@@ -637,6 +691,7 @@ async function handleQuery(userInput) {
     };
   }
 }
+
 
 // =============================================================================
 // EXPORTS

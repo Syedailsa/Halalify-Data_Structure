@@ -8,11 +8,14 @@
     "start": "next start"
   },
   "dependencies": {
+    "@zxing/browser": "^0.1.5",
     "framer-motion": "^11.2.0",
+    "html5-qrcode": "^2.3.8",
     "lucide-react": "^1.8.0",
     "next": "14.2.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-qr-barcode-scanner": "^2.1.25"
   },
   "devDependencies": {
     "@types/node": "^20",

@@ -54,9 +54,12 @@ export interface HalalQueryResponse {
   notInDatabase?: boolean
   webResults?: string | null
   error?: string
+    fromWebSearch?: boolean   // 🔥 ADD THIS
 }
 
-const API_BASE = "/api"
+// const API_BASE = "/api"
+const API_BASE = "http://localhost:8000/api"
+
 
 export async function queryHalal(query: string): Promise<HalalQueryResponse> {
   const res = await fetch(`${API_BASE}/query`, {
