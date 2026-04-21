@@ -33,7 +33,6 @@ dotenv.config({ path: path.join(__dirname, ".env.local") });
 // CONFIG
 // =============================================================================
 const PORT = process.env.PORT || 8000;
-const HOST = process.env.HOST || "localhost";
 
 // =============================================================================
 // EXPRESS APP SETUP
@@ -404,7 +403,7 @@ async function startServer() {
   }
  
   // Start listening
-  app.listen(PORT, HOST, () => {
+  app.listen(PORT, () => {
     console.log(`
 ╔══════════════════════════════════════════════════════╗
 ║         HALAL PRODUCT API SERVER                    ║
