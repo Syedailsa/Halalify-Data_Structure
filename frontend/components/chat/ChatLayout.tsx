@@ -526,7 +526,7 @@ async function handleBarcodeScan(scannedText: string) {
     // Clean search query
     searchQuery = `${searchQuery} halal or haram`
 
-    const res = await fetch('http://localhost:8000/api/websearch', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}/api/websearch`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query: searchQuery })
