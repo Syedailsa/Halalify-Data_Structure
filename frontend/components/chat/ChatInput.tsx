@@ -72,7 +72,8 @@ export default function ChatInput({ onSend, disabled = false, onBarcodeScan }: C
               </button>
 
               <button 
-               onClick={() => setScannerOpen(true)}         className="hover:text-black transition"
+               onClick={() => setScannerOpen(true)}         
+               className="hover:text-black transition"
               >
                 <Camera size={18} />
               </button>
