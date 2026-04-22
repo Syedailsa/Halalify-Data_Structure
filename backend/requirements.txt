@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+websockets
+pydantic
+pydantic-settings
+qdrant-client
+httpx
+python-Levenshtein
+langchain-groq
+langchain-core
+python-dotenv

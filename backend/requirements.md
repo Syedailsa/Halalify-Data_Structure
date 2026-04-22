@@ -1,3 +1,0 @@
-@langchain/groq
-cors 
-dotenv

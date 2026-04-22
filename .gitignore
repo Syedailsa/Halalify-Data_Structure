@@ -1,11 +1,29 @@
-# Ignore the heavy data files that break GitHub limits
-backend/output/*.json
-backend/data/*.csv
-backend/data/*.json
-
 # Ignore environment variables
 .env
 .env.local
 
 # Ignore node modules
 node_modules/
+.next/
+out/
+build/
+__pycache__/
+*.pyc
+
+# Web junk
+node_modules/
+**/node_modules/
+.next/
+**/ .next/
+out/
+build/
+
+# Python junk
+__pycache__/
+**/__pycache__/
+*.pyc
+.venv/
+env/
+
+# Data/Logs
+*.log
