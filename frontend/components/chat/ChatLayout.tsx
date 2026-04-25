@@ -18,6 +18,7 @@ interface Message {
   summary?: QuerySummary | null
   webResults?: string | null
   status?: 'thinking' | 'streaming' | 'complete'
+  imageThumbnail?: string
 }
 
 let nextId = 0
@@ -28,84 +29,84 @@ export default function ChatLayout() {
   const [thinkingText, setThinkingText] = useState<string | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const currentAiId = useRef<number | null>(null)
-  const { connected, sendMessage, setOnMessage } = useWebSocket()
+  const { connected, sendMessage, sendJson, setOnMessage, setOnDisconnect } = useWebSocket()
 
-  async function handleBarcodeScan(scannedText: string) {
-    const userMsg: Message = { 
-      id: nextId++, 
-      role: 'user', 
-      text: `📷 Scanned barcode` 
-    }
-    setMessages(prev => [...prev, userMsg])
-    setLoading(true)
+  // async function handleBarcodeScan(scannedText: string) {
+  //   const userMsg: Message = { 
+  //     id: nextId++, 
+  //     role: 'user', 
+  //     text: `📷 Scanned barcode` 
+  //   }
+  //   setMessages(prev => [...prev, userMsg])
+  //   setLoading(true)
 
-    try {
-      // ⭐ URL se product name nikalo, barcode number use karo
-      let searchQuery = scannedText
+  //   try {
+  //     // ⭐ URL se product name nikalo, barcode number use karo
+  //     let searchQuery = scannedText
 
-      // Agar URL hai to domain se brand nikalo
-      if (scannedText.startsWith('http')) {
-        const domain = new URL(scannedText).hostname
-          .replace('wap.', '')
-          .replace('www.', '')
-          .split('.')[0]  // "pepsi.co.uk" → "pepsi"
-        searchQuery = domain
-      }
+  //     // Agar URL hai to domain se brand nikalo
+  //     if (scannedText.startsWith('http')) {
+  //       const domain = new URL(scannedText).hostname
+  //         .replace('wap.', '')
+  //         .replace('www.', '')
+  //         .split('.')[0]  // "pepsi.co.uk" → "pepsi"
+  //       searchQuery = domain
+  //     }
 
-      // Clean search query
-      searchQuery = `${searchQuery} halal or haram`
+  //     // Clean search query
+  //     searchQuery = `${searchQuery} halal or haram`
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}/api/websearch`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: searchQuery })
-      })
-      const data = await res.json()
+  //     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}/api/websearch`, {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ query: searchQuery })
+  //     })
+  //     const data = await res.json()
 
-      // Web results parse karo
-      const rawText: string = data.results || ''
+  //     // Web results parse karo
+  //     const rawText: string = data.results || ''
       
-      // Results ko lines mein todo
-      const entries = rawText
-        .split(/\n\n/)
-        .map((block: string) => {
-          const lines = block.split('\n').map((l: string) => l.trim()).filter(Boolean)
-          const titleLine = lines.find((l: string) => /^\d+\./.test(l))
-          const urlLine = lines.find((l: string) => l.startsWith('http'))
-          const snippetLine = lines.find((l: string) => !(/^\d+\./.test(l)) && !l.startsWith('http'))
+  //     // Results ko lines mein todo
+  //     const entries = rawText
+  //       .split(/\n\n/)
+  //       .map((block: string) => {
+  //         const lines = block.split('\n').map((l: string) => l.trim()).filter(Boolean)
+  //         const titleLine = lines.find((l: string) => /^\d+\./.test(l))
+  //         const urlLine = lines.find((l: string) => l.startsWith('http'))
+  //         const snippetLine = lines.find((l: string) => !(/^\d+\./.test(l)) && !l.startsWith('http'))
           
-          return {
-            title: titleLine?.replace(/^\d+\.\s*/, '') || '',
-            url: urlLine || '',
-            snippet: snippetLine || ''
-          }
-        })
-        .filter(e => e.title && e.url)
+  //         return {
+  //           title: titleLine?.replace(/^\d+\.\s*/, '') || '',
+  //           url: urlLine || '',
+  //           snippet: snippetLine || ''
+  //         }
+  //       })
+  //       .filter(e => e.title && e.url)
 
-      setMessages(prev => [...prev, {
-        id: nextId++,
-        role: 'ai',
-        fromWebSearch: true,
-        text: `🔍 "${searchQuery.replace(' halal or haram', '')}" related web results:`,
-        // Parsed results as formatted string
-        webResults: entries.length > 0 
-          ? entries.map((e, i) => 
-              `  ${i+1}. ${e.title}\n     ${e.url}\n     ${e.snippet}`
-            ).join('\n\n')
-          : 'No relevant results found.'
-      }])
+  //     setMessages(prev => [...prev, {
+  //       id: nextId++,
+  //       role: 'ai',
+  //       fromWebSearch: true,
+  //       text: `🔍 "${searchQuery.replace(' halal or haram', '')}" related web results:`,
+  //       // Parsed results as formatted string
+  //       webResults: entries.length > 0 
+  //         ? entries.map((e, i) => 
+  //             `  ${i+1}. ${e.title}\n     ${e.url}\n     ${e.snippet}`
+  //           ).join('\n\n')
+  //         : 'No relevant results found.'
+  //     }])
 
-    } catch (err) {
-      setMessages(prev => [...prev, {
-        id: nextId++,
-        role: 'ai',
-        fromWebSearch: true,
-        text: 'Web search failed.'
-      }])
-    } finally {
-      setLoading(false)
-    }
-  }
+  //   } catch (err) {
+  //     setMessages(prev => [...prev, {
+  //       id: nextId++,
+  //       role: 'ai',
+  //       fromWebSearch: true,
+  //       text: 'Web search failed.'
+  //     }])
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
 
 
   useEffect(() => {
@@ -197,33 +198,103 @@ export default function ChatLayout() {
     setOnMessage(handleMessage)
   }, [handleMessage, setOnMessage])
 
-  function handleSend(text: string) {
+  // Reset in-flight state when the socket drops so input doesn't stay disabled
+  useEffect(() => {
+    setOnDisconnect(() => {
+      const aiId = currentAiId.current
+      if (aiId != null) {
+        setMessages(prev => prev.map(m => {
+          if (m.id !== aiId) return m
+          return {
+            ...m,
+            text: (m.text || '') + (m.text ? '\n\n' : '') + 'Connection lost. Please try again.',
+            status: 'complete',
+          }
+        }))
+        currentAiId.current = null
+      }
+      setLoading(false)
+      setThinkingText(null)
+    })
+  }, [setOnDisconnect])
+
+  function startAiMessage(imageThumbnail?: string) {
     if (!connected) {
       setMessages(prev => [...prev, {
-        id: nextId++,
-        role: 'ai',
+        id: nextId++, role: 'ai',
+        text: 'Not connected to server. Please wait or refresh.',
+        status: 'complete',
+      }])
+      return null
+    }
+    const aiId = nextId++
+    currentAiId.current = aiId
+    setMessages(prev => [...prev, { id: aiId, role: 'ai', text: '', status: 'thinking', imageThumbnail }])
+    setLoading(true)
+    return aiId
+  }
+
+  function handleSend(text: string) {
+    setMessages(prev => [...prev, { id: nextId++, role: 'user', text }])
+    const aiId = startAiMessage()
+    if (aiId == null) return
+    setThinkingText('Classifying your query...')
+    sendMessage(text)
+  }
+
+  // ── Barcode / QR scan ─────────────────────────────────────────────────────
+  function handleBarcodeScan(scannedText: string) {
+    setMessages(prev => [...prev, { id: nextId++, role: 'user', text: '📷 Scanned barcode' }])
+
+    if (!connected) {
+      setMessages(prev => [...prev, {
+        id: nextId++, role: 'ai',
         text: 'Not connected to server. Please wait or refresh.',
         status: 'complete',
       }])
       return
     }
 
-    // User message
-    setMessages(prev => [...prev, { id: nextId++, role: 'user', text }])
-
-    // Placeholder AI message
     const aiId = nextId++
     currentAiId.current = aiId
     setMessages(prev => [...prev, { id: aiId, role: 'ai', text: '', status: 'thinking' }])
     setLoading(true)
-    setThinkingText('Classifying your query...')
+    setThinkingText('Looking up product...')
 
-    sendMessage(text)
+    // type: "barcode" → handler.py skips DB and goes straight to web_search
+    sendJson({ type: 'barcode', content: scannedText })
+  }
+
+  function handleImageScan(base64DataUri: string) {
+    setMessages(prev => [...prev, {
+      id: nextId++,
+      role: 'user',
+      text: '📷 Sent an image for analysis',
+      imageThumbnail: base64DataUri,
+    }])
+
+    if (!connected) {
+      setMessages(prev => [...prev, {
+        id: nextId++, role: 'ai',
+        text: 'Not connected to server. Please wait or refresh.',
+        status: 'complete',
+      }])
+      return
+    }
+
+    const aiId = nextId++
+    currentAiId.current = aiId
+    setMessages(prev => [...prev, { id: aiId, role: 'ai', text: '', status: 'thinking' }])
+    setLoading(true)
+    setThinkingText('Analyzing image...')
+
+    // type: "image" → handler.py routes to vision_service.analyze_image
+    sendJson({ type: 'image', image: base64DataUri })
   }
 
   return (
     <div className="h-screen flex flex-col justify-between bg-gray-50">
-      <ChatHeader />
+      <ChatHeader connected={connected} />
 
       {/* CONTENT AREA */}
       <div className="flex-1 overflow-y-auto" ref={scrollRef}>
@@ -233,8 +304,20 @@ export default function ChatLayout() {
 
           {messages.map(msg => (
             <div key={msg.id}>
-              {msg.role === 'user' && msg.text && (
-                <ChatBubble message={msg.text} isUser />
+              {msg.role === 'user' && (
+                <>
+                  {msg.text && <ChatBubble message={msg.text} isUser />}
+                  {msg.imageThumbnail && (
+                    <div className="flex justify-end mt-1">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={msg.imageThumbnail}
+                        alt="uploaded"
+                        className="max-w-[200px] max-h-[200px] rounded-xl border border-gray-200 object-cover"
+                      />
+                    </div>
+                  )}
+                </>
               )}
 
               {msg.role === 'ai' && (
@@ -276,7 +359,12 @@ export default function ChatLayout() {
         </div>
       </div>
 
-      <ChatInput onSend={handleSend} onBarcodeScan={handleBarcodeScan} disabled={loading} />
+      <ChatInput 
+        onSend={handleSend} 
+        onBarcodeScan={handleBarcodeScan} 
+        onImageScan={handleImageScan} 
+        disabled={loading} 
+      />
     </div>
   )
 }

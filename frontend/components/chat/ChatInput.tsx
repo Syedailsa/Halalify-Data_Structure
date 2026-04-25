@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Mic, Image as ImageIcon, Camera, Send } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import BarcodeScanner from './Scanner'
@@ -8,6 +8,7 @@ import BarcodeScanner from './Scanner'
 interface ChatInputProps {
   onSend: (message: string) => void
   onBarcodeScan: (code: string) => void 
+  onImageScan: (base64DataUri: string) => void
   disabled?: boolean
 }
 
@@ -25,9 +26,10 @@ function VoiceButton() {
   )
 }
 
-export default function ChatInput({ onSend, disabled = false, onBarcodeScan }: ChatInputProps) {
+export default function ChatInput({ onSend, disabled = false, onBarcodeScan, onImageScan }: ChatInputProps) {
   const [text, setText] = useState('')
   const [scannerOpen, setScannerOpen] = useState(false)
+  const galleryInputRef = useRef<HTMLInputElement>(null)
 
   const isTyping = text.trim().length > 0
 
@@ -43,6 +45,34 @@ export default function ChatInput({ onSend, disabled = false, onBarcodeScan }: C
       e.preventDefault()
       handleSend()
     }
+  }
+
+  function handleScanResult(result: string, isImage = false) {
+    setScannerOpen(false)
+    if (isImage) {
+      onImageScan(result)
+    } else {
+      onBarcodeScan(result)
+    }
+  }
+
+  const MAX_IMAGE_BYTES = 8 * 1024 * 1024 // 8 MB
+
+  function handleGalleryPick(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (file.size > MAX_IMAGE_BYTES) {
+      alert('Image is too large (max 8 MB). Please pick a smaller photo.')
+      e.target.value = ''
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = () => onImageScan(reader.result as string)
+    reader.onerror = () => alert('Could not read the image file. Please try another.')
+    reader.readAsDataURL(file)
+    e.target.value = ''
   }
 
   return (
@@ -67,13 +97,26 @@ export default function ChatInput({ onSend, disabled = false, onBarcodeScan }: C
             {/* Right Icons */}
             <div className="flex items-center gap-2 text-gray-500">
 
-              <button className="hover:text-black transition">
+              {/* Gallery shortcut — opens file picker directly */}
+              <button
+                onClick={() => galleryInputRef.current?.click()}
+                className="hover:text-black transition"
+                title="Pick from gallery"
+              >
                 <ImageIcon size={18} />
               </button>
+              <input
+                ref={galleryInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleGalleryPick}
+              />
 
               <button 
                onClick={() => setScannerOpen(true)}         
                className="hover:text-black transition"
+               title="Scan or take photo"
               >
                 <Camera size={18} />
               </button>
@@ -122,12 +165,7 @@ export default function ChatInput({ onSend, disabled = false, onBarcodeScan }: C
 
       {scannerOpen && (
         <BarcodeScanner
-          onScan={(code) => {
-            setScannerOpen(false)
-            console.log(code)
-            // onSend(code)
-            onBarcodeScan(code)
-          }}
+          onScan={handleScanResult}
           onClose={() => setScannerOpen(false)}
         />
       )}

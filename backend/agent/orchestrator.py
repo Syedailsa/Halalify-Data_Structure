@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import re
 from datetime import date
@@ -540,7 +541,14 @@ async def run_agent(
         yield {"type": "thinking", "content": "Thinking..."}
 
         try:
-            response: AIMessage = await llm_with_tools.ainvoke(messages)
+            response: AIMessage = await asyncio.wait_for(
+                llm_with_tools.ainvoke(messages),
+                timeout=60.0,
+            )
+        except asyncio.TimeoutError:
+            yield {"type": "token", "content": "Sorry, the request timed out. Please try again."}
+            yield {"type": "done"}
+            return
         except Exception as exc:
             import traceback
             traceback.print_exc()

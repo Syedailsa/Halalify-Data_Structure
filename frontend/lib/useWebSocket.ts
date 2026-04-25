@@ -21,6 +21,7 @@ export function useWebSocket() {
   const reconnectTimer = useRef<ReturnType<typeof setTimeout>>()
   const reconnectDelay = useRef(1000)
   const onMessageRef = useRef<((msg: WSIncoming) => void) | null>(null)
+  const onDisconnectRef = useRef<(() => void) | null>(null)
 
   const connect = useCallback(() => {
     if (wsRef.current?.readyState === WebSocket.OPEN) return
@@ -35,6 +36,8 @@ export function useWebSocket() {
     ws.onclose = () => {
       setConnected(false)
       wsRef.current = null
+      // Notify consumers so they can reset in-flight state (e.g. loading)
+      onDisconnectRef.current?.()
       // Auto-reconnect with backoff
       reconnectTimer.current = setTimeout(() => {
         reconnectDelay.current = Math.min(reconnectDelay.current * 2, 10000)
@@ -72,9 +75,19 @@ export function useWebSocket() {
     }
   }, [])
 
+  const sendJson = useCallback((payload: object) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify(payload))
+    }
+  }, [])
+
   const setOnMessage = useCallback((handler: (msg: WSIncoming) => void) => {
     onMessageRef.current = handler
   }, [])
 
-  return { connected, sendMessage, setOnMessage }
+  const setOnDisconnect = useCallback((handler: () => void) => {
+    onDisconnectRef.current = handler
+  }, [])
+
+  return { connected, sendMessage, sendJson, setOnMessage, setOnDisconnect }
 }

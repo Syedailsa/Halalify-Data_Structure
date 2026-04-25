@@ -44,13 +44,17 @@ class QdrantService:
                     )
             qfilter = Filter(must=must)
 
-        response = await self.client.query_points(
-            collection_name=collection,
-            query=vector,
-            limit=limit,
-            with_payload=True,
-            query_filter=qfilter,
-        )
+        try:
+            response = await self.client.query_points(
+                collection_name=collection,
+                query=vector,
+                limit=limit,
+                with_payload=True,
+                query_filter=qfilter,
+            )
+        except Exception as e:
+            print(f"[QdrantService] search error on '{collection}': {e}")
+            return []
         return [
             {"score": point.score, "payload": point.payload}
             for point in response.points
@@ -72,12 +76,16 @@ class QdrantService:
             )
         qfilter = Filter(must=must)
 
-        points, _ = await self.client.scroll(
-            collection_name=collection,
-            scroll_filter=qfilter,
-            limit=limit,
-            with_payload=True,
-        )
+        try:
+            points, _ = await self.client.scroll(
+                collection_name=collection,
+                scroll_filter=qfilter,
+                limit=limit,
+                with_payload=True,
+            )
+        except Exception as e:
+            print(f"[QdrantService] scroll error on '{collection}': {e}")
+            return []
         return [{"score": 1.0, "payload": point.payload} for point in points]
 
     async def close(self) -> None:

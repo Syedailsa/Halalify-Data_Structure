@@ -17,7 +17,7 @@ async def web_search(q: str) -> str:
                 params={
                     "key": settings.GOOGLE_API_KEY,
                     "cx": settings.GOOGLE_CX_ID,
-                    "q": f"{q} halal certification",
+                    "q": f"{q} can muslims have it?",
                     "num": "3",
                 },
             )
