@@ -1,166 +1,93 @@
-'use client'
+"use client";
+import { useEffect, useRef } from "react";
 
-import { useEffect, useRef, useState } from 'react'
+const LABELS = [
+  {
+    name: "Halal", nameBg: "#f0fdf4", border: "#86efac",
+    titleColor: "#14532d", descColor: "#166534",
+    desc: "Verified safe and permissible for consumption according to Islamic law",
+    sealRing: "#16a34a", sealFill: "rgba(34,197,94,0.08)", arabic: "حلال", sub: "100% HALAL PRODUCTS",
+  },
+  {
+    name: "Haram", nameBg: "#fff1f2", border: "#fecaca",
+    titleColor: "#7f1d1d", descColor: "#991b1b",
+    desc: "Contains prohibited ingredients or substances not allowed in Islam",
+    sealRing: "#dc2626", sealFill: "rgba(239,68,68,0.07)", arabic: "حرام", sub: "100% HARAM PRODUCTS",
+  },
+  {
+    name: "Mashbooh", nameBg: "#fffbeb", border: "#fed7aa",
+    titleColor: "#78350f", descColor: "#92400e",
+    desc: "Doubtful status — requires verification from local certifying bodies",
+    sealRing: "#ea580c", sealFill: "rgba(249,115,22,0.07)", arabic: "مشبوه", sub: "100% MASHBOOH",
+  },
+];
 
-const statuses = [
-  {
-    icon: '✓',
-    label: 'Halal',
-    desc: 'Verified safe and permissible for consumption according to Islamic law',
-    bg: '#F0FFF4',
-    border: 'rgba(0,200,83,0.2)',
-    iconBg: '#E8F5E9',
-    iconColor: '#00C853',
-    badge: 'Permitted',
-    badgeColor: '#00C853',
-  },
-  {
-    icon: '✗',
-    label: 'Haram',
-    desc: 'Contains prohibited ingredients or substances not allowed in Islam',
-    bg: '#FFF5F5',
-    border: 'rgba(239,68,68,0.2)',
-    iconBg: '#FEE2E2',
-    iconColor: '#EF4444',
-    badge: 'Prohibited',
-    badgeColor: '#EF4444',
-  },
-  {
-    icon: '?',
-    label: 'Mashbooh',
-    desc: 'Doubtful status — requires verification from local certifying bodies',
-    bg: '#FFFBEB',
-    border: 'rgba(245,158,11,0.2)',
-    iconBg: '#FEF3C7',
-    iconColor: '#F59E0B',
-    badge: 'Doubtful',
-    badgeColor: '#F59E0B',
-  },
-]
+function Seal({ label }: { label: typeof LABELS[0] }) {
+  const r = label.sealRing;
+  return (
+    <svg viewBox="0 0 130 130" style={{ width: 130, height: 130, flexShrink: 0 }}>
+      {/* outer ring */}
+      <circle cx="65" cy="65" r="61" fill="none" stroke={r} strokeWidth="1.5" opacity="0.3"/>
+      {/* ticks */}
+      {Array.from({length:32}).map((_,i) => {
+        const a = (i*360/32)*Math.PI/180;
+        return <line key={i} x1={65+57*Math.cos(a)} y1={65+57*Math.sin(a)} x2={65+62*Math.cos(a)} y2={65+62*Math.sin(a)} stroke={r} strokeWidth="1.5" opacity="0.45"/>;
+      })}
+      {/* dashed inner */}
+      <circle cx="65" cy="65" r="53" fill="none" stroke={r} strokeWidth="1.5" strokeDasharray="3 3" opacity="0.4"/>
+      {/* fill */}
+      <circle cx="65" cy="65" r="48" fill={label.sealFill}/>
+      <circle cx="65" cy="65" r="48" fill="none" stroke={r} strokeWidth="1" opacity="0.25"/>
+      {/* arabic text */}
+      <text x="65" y="60" textAnchor="middle" fill={r} fontSize="20" fontWeight="700" fontFamily="serif">{label.arabic}</text>
+      <text x="65" y="75" textAnchor="middle" fill={r} fontSize="5.5" fontWeight="600" letterSpacing="0.5" fontFamily="sans-serif">100%</text>
+      <text x="65" y="84" textAnchor="middle" fill={r} fontSize="4.8" fontWeight="600" letterSpacing="0.3" fontFamily="sans-serif">{label.sub}</text>
+    </svg>
+  );
+}
 
 export default function StatusLabels() {
-  const [visible, setVisible] = useState(false)
-  const ref = useRef<HTMLElement>(null)
-
+  const ref = useRef<HTMLElement>(null);
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true) },
-      { threshold: 0.2 }
-    )
-    if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [])
+    const obs = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.isIntersecting) e.target.querySelectorAll(".reveal").forEach((el,i) => setTimeout(()=>el.classList.add("visible"), i*110)); });
+    }, { threshold: 0.15 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
 
   return (
-    <section
-      ref={ref}
-      style={{
-        padding: '100px 24px',
-        background: 'white',
-      }}
-    >
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-          <h2
-            style={{
-              fontSize: 'clamp(28px, 4vw, 40px)',
-              fontWeight: 800,
-              letterSpacing: '-0.02em',
-              color: '#0D1F17',
-              marginBottom: '12px',
-              opacity: visible ? 1 : 0,
-              transform: visible ? 'translateY(0)' : 'translateY(24px)',
-              transition: 'all 0.7s cubic-bezier(0.4,0,0.2,1)',
-            }}
-          >
+    <section ref={ref} className="status-section">
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 2.5rem" }}>
+        <div className="reveal" style={{ textAlign: "center", marginBottom: "3.5rem" }}>
+          <span style={{
+            fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase",
+            color: "#6b7280", border: "1px solid #e5e7eb", borderRadius: 999,
+            padding: "5px 14px", display: "inline-block", marginBottom: 16
+          }}>
+            Halal Status at a Glance with Clear, Reliable Labels
+          </span>
+          <h2 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 900, color: "#111", letterSpacing: "-0.02em" }}>
             Understanding Status Labels
           </h2>
         </div>
 
-        {/* Cards */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '20px',
-          }}
-          className="status-grid"
-        >
-          {statuses.map((s, i) => (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem" }}>
+          {LABELS.map((l, i) => (
             <div
-              key={i}
-              className="card-hover"
-              style={{
-                background: s.bg,
-                borderRadius: '20px',
-                padding: '32px 28px',
-                border: `1.5px solid ${s.border}`,
-                opacity: visible ? 1 : 0,
-                transform: visible ? 'translateY(0) scale(1)' : 'translateY(28px) scale(0.97)',
-                transition: `all 0.7s cubic-bezier(0.4,0,0.2,1) ${0.15 + i * 0.15}s`,
-              }}
+              key={l.name}
+              className="status-card reveal"
+              style={{ background: l.nameBg, borderColor: l.border, transitionDelay: `${i*100}ms` }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(-6px)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 40px rgba(0,0,0,0.1)"; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = ""; (e.currentTarget as HTMLElement).style.boxShadow = ""; }}
             >
-              {/* Icon */}
-              <div style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: '12px',
-                background: s.iconBg,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '20px',
-                fontSize: '20px',
-                fontWeight: 700,
-                color: s.iconColor,
-              }}>
-                {s.icon}
-              </div>
-
-              {/* Label row */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                <h3 style={{ fontWeight: 700, fontSize: '17px', color: '#0D1F17' }}>
-                  {s.label}
-                </h3>
-                <span style={{
-                  fontSize: '10px',
-                  fontWeight: 700,
-                  letterSpacing: '0.05em',
-                  color: s.badgeColor,
-                  background: `${s.badgeColor}18`,
-                  padding: '2px 8px',
-                  borderRadius: '100px',
-                  textTransform: 'uppercase',
-                }}>
-                  {s.badge}
-                </span>
-              </div>
-
-              <p style={{
-                fontSize: '13px',
-                lineHeight: 1.65,
-                color: '#6B7280',
-              }}>
-                {s.desc}
-              </p>
+              <Seal label={l} />
+              <h3 style={{ fontSize: "1.5rem", fontWeight: 900, color: l.titleColor, marginTop: "1rem", marginBottom: "0.5rem" }}>{l.name}</h3>
+              <p style={{ fontSize: "0.88rem", color: "#4b5563", lineHeight: 1.65 }}>{l.desc}</p>
             </div>
           ))}
         </div>
       </div>
-
-      <style jsx>{`
-        @media (max-width: 768px) {
-          .status-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-        @media (min-width: 769px) and (max-width: 1024px) {
-          .status-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-      `}</style>
     </section>
-  )
+  );
 }

@@ -1,168 +1,71 @@
-'use client'
-
-import { useEffect, useRef, useState } from 'react'
+"use client";
+import Image from "next/image";
+import { useEffect, useRef } from "react";
+import hero from "../assests/hero2.png";
 
 export default function CTASection() {
-  const [visible, setVisible] = useState(false)
-  const ref = useRef<HTMLElement>(null)
-
+  const ref = useRef<HTMLElement>(null);
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true) },
-      { threshold: 0.25 }
-    )
-    if (ref.current) observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [])
+    const obs = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.isIntersecting) e.target.querySelectorAll(".reveal").forEach((el,i)=>setTimeout(()=>el.classList.add("visible"),i*120)); });
+    }, { threshold: 0.2 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
 
   return (
-    <section
-      ref={ref}
-      style={{
-        padding: '80px 24px 100px',
-        background: 'white',
-      }}
-    >
-      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-        <div
-          style={{
-            background: 'linear-gradient(135deg, #00C853 0%, #00A344 50%, #009138 100%)',
-            borderRadius: '28px',
-            padding: 'clamp(48px, 6vw, 80px) clamp(32px, 6vw, 80px)',
-            textAlign: 'center',
-            position: 'relative',
-            overflow: 'hidden',
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0) scale(1)' : 'translateY(32px) scale(0.97)',
-            transition: 'all 0.8s cubic-bezier(0.4,0,0.2,1)',
-            boxShadow: '0 32px 80px rgba(0,200,83,0.3)',
-          }}
-        >
-          {/* Decorative orbs */}
-          <div style={{
-            position: 'absolute',
-            top: '-60px', right: '-60px',
-            width: '280px', height: '280px',
-            borderRadius: '50%',
-            background: 'rgba(255,255,255,0.08)',
-            pointerEvents: 'none',
-          }} />
-          <div style={{
-            position: 'absolute',
-            bottom: '-80px', left: '-40px',
-            width: '300px', height: '300px',
-            borderRadius: '50%',
-            background: 'rgba(255,255,255,0.05)',
-            pointerEvents: 'none',
-          }} />
+    <section ref={ref} className="cta-section relative">
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: "0 2rem", textAlign: "center", position: "relative", zIndex: 1 }}>
+        {/* Badge */}
+        <div className="reveal" style={{ transitionDelay: "0ms", marginBottom: "1.25rem" }}>
+          <span style={{
+            fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.12em",
+            textTransform: "uppercase", color: "rgba(255,255,255,0.6)",
+            border: "1px solid rgba(255,255,255,0.2)", borderRadius: 999,
+            padding: "6px 16px", display: "inline-block"
+          }}>Smart. Simple. Seamless.</span>
+        </div>
 
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <h2
-              style={{
-                fontSize: 'clamp(24px, 4vw, 42px)',
-                fontWeight: 800,
-                color: 'white',
-                letterSpacing: '-0.02em',
-                marginBottom: '14px',
-                lineHeight: 1.15,
-                opacity: visible ? 1 : 0,
-                transform: visible ? 'translateY(0)' : 'translateY(20px)',
-                transition: 'all 0.7s cubic-bezier(0.4,0,0.2,1) 0.2s',
-              }}
-            >
-              Start Verifying Your Food Today
-            </h2>
-            <p
-              style={{
-                fontSize: '15px',
-                color: 'rgba(255,255,255,0.8)',
-                marginBottom: '36px',
-                opacity: visible ? 1 : 0,
-                transform: visible ? 'translateY(0)' : 'translateY(16px)',
-                transition: 'all 0.7s cubic-bezier(0.4,0,0.2,1) 0.35s',
-              }}
-            >
-              Join thousands of users making informed halal choices every day
-            </p>
-            <div
-              style={{
-                display: 'flex',
-                gap: '12px',
-                justifyContent: 'center',
-                flexWrap: 'wrap',
-                opacity: visible ? 1 : 0,
-                transform: visible ? 'translateY(0)' : 'translateY(16px)',
-                transition: 'all 0.7s cubic-bezier(0.4,0,0.2,1) 0.5s',
-              }}
-            >
-              <button
-                style={{
-                  background: 'white',
-                  color: '#00A344',
-                  padding: '14px 32px',
-                  borderRadius: '10px',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.16)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.12)'
-                }}
-              >
-                Get Started Free
-              </button>
-              <button
-                style={{
-                  background: 'rgba(255,255,255,0.15)',
-                  color: 'white',
-                  padding: '14px 32px',
-                  borderRadius: '10px',
-                  fontWeight: 600,
-                  fontSize: '14px',
-                  border: '1.5px solid rgba(255,255,255,0.3)',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  backdropFilter: 'blur(8px)',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.25)'
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.15)'
-                  e.currentTarget.style.transform = 'translateY(0)'
-                }}
-              >
-                Learn More
-              </button>
-            </div>
-          </div>
+        {/* Headline */}
+        <div className="reveal" style={{ transitionDelay: "100ms", marginBottom: "1rem" }}>
+          <h2 style={{ fontSize: "clamp(2.2rem, 5vw, 2.5rem)", fontWeight: 900, color: "#fff", lineHeight: 1.1, letterSpacing: "-0.025em" }}>
+            Start Verifying Your Food Today
+          </h2>
+        </div>
+
+        {/* Sub */}
+        <div className="reveal" style={{ transitionDelay: "200ms", marginBottom: "2.5rem" }}>
+          <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.95rem" }}>
+            Join thousands of users making informed halal choices every day
+          </p>
+        </div>
+
+        {/* App store buttons */}
+        <div className="reveal" style={{ transitionDelay: "300ms", display: "flex", justifyContent: "center", gap: "1rem", flexWrap: "wrap", marginBottom: "4rem" }}>
+          {[
+            { icon: "🍎", top: "Download on the", bottom: "App Store" },
+            { icon: "▶", top: "GET IT ON", bottom: "Google Play" },
+          ].map(btn => (
+            <a key={btn.bottom} href="#" className="store-btn">
+              <span style={{ fontSize: btn.icon === "🍎" ? 22 : 18 }}>{btn.icon}</span>
+              <div style={{ textAlign: "left" }}>
+                <div className="store-btn-small">{btn.top}</div>
+                <div className="store-btn-big">{btn.bottom}</div>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        {/* Phone mockups */}
+        <div className="reveal  " style={{ transitionDelay: "400ms", display: "flex", justifyContent: "center", alignItems: "flex-end", gap: "1.5rem",  }}>
+          <Image
+  src={hero}
+  alt="Halalify UI"
+  priority
+  className="hero-img "
+/>
         </div>
       </div>
     </section>
-  )
-}
-
-export function Footer() {
-  return (
-    <footer style={{
-      background: '#0D1F17',
-      color: 'rgba(255,255,255,0.5)',
-      textAlign: 'center',
-      padding: '24px',
-      fontSize: '13px',
-    }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        © 2024 Halalify. All rights reserved.
-      </div>
-    </footer>
-  )
+  );
 }
