@@ -143,12 +143,16 @@ async def extract_image_schema(base64_image: str) -> dict:
         "max_tokens": 512,
         "messages": [
             {
+                "role": "system",
+                "content": "Output only valid JSON. No reasoning, no explanation, no markdown fences.",
+            },
+            {
                 "role": "user",
                 "content": [
                     {"type": "text", "text": _SCHEMA_PROMPT},
                     {"type": "image_url", "image_url": {"url": base64_image}},
                 ],
-            }
+            },
         ],
     }
 
@@ -166,9 +170,15 @@ async def extract_image_schema(base64_image: str) -> dict:
             response.raise_for_status()
             raw = response.json()["choices"][0]["message"]["content"].strip()
             print(f"[VISION] Schema raw: {raw[:300]}")
-            # Strip markdown code fences if model wraps the JSON
+
+            # Strip markdown fences, then extract the first JSON object
+            # — handles models that think out loud before outputting JSON
             clean = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw, flags=re.DOTALL).strip()
-            schema = json.loads(clean)
+            json_match = re.search(r"\{.*\}", clean, re.DOTALL)
+            if not json_match:
+                raise json.JSONDecodeError("No JSON object found in response", clean, 0)
+            schema = json.loads(json_match.group())
+
             print(f"[VISION] Schema parsed: relevant={schema.get('is_relevant')}, "
                   f"product={schema.get('product_name')!r}, brand={schema.get('brand')!r}")
             return {**_SCHEMA_FALLBACK, **schema}

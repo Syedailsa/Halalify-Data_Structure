@@ -8,10 +8,10 @@ BACKEND_DIR = Path(__file__).resolve().parent
 # ── Constants (not env-driven) ──────────────────────────────────────────────
 EMBED_MODEL = "accounts/fireworks/models/qwen3-embedding-8b"
 VECTOR_SIZE = 4096
-SCORE_THRESHOLD = 0.82
+SCORE_THRESHOLD = 0.65
 TOP_K = 8
 FUZZY_THRESHOLD = 0.38
-COLLECTION_PRODUCTS = "halal_products"
+COLLECTION_PRODUCTS = "halal_products_test"
 COLLECTION_ENUMBERS = "halal_enumbers"
 
 
