@@ -12,12 +12,15 @@ PLACEHOLDER_VALUES = {
 }
 
 def sanitize_tool_args(args: dict) -> dict:
-    """Remove optional fields that the LLM filled with placeholder values."""
+    """Remove optional fields that the LLM filled with placeholder or null values."""
     required_fields = {"product", "company", "e_code", "category", "query"}
     clean = {}
     for k, v in args.items():
-        if isinstance(v, str) and v.lower().strip() in PLACEHOLDER_VALUES and k not in required_fields:
-            continue
+        if k not in required_fields:
+            if v is None:
+                continue  # Groq rejects null for string-typed optional fields
+            if isinstance(v, str) and v.lower().strip() in PLACEHOLDER_VALUES:
+                continue
         clean[k] = v
     return clean
 
@@ -59,8 +62,17 @@ WHEN NOT TO USE TOOLS:
 - Help requests (what can you do, how does this work) → explain your capabilities directly
 - General conversation → respond directly
 
+BARCODE / QR CODE SCANS:
+- Queries phrased as "is <code> halal?" (e.g. "is CQR00001 halal?", "is 8901234567890 halal?") come from a barcode or QR code scan.
+- Before calling any tool, assess whether the scanned value could plausibly be a food, beverage, cosmetic, or pharmaceutical product name or brand. If it is clearly not — e.g. it looks like an internal system code, document reference, ticket ID, or a URL unrelated to a consumer product — do NOT call any tool. Respond warmly that this scan doesn't appear to be a consumer product and is outside the scope of halal verification. Suggest the user try scanning a product barcode printed on the packaging, or search by the product's printed name instead.
+- If the scanned value could plausibly be a product or brand (e.g. "kitkat", "nestle water", "loreal shampoo"), proceed normally with search_product.
+- If the database returns no match for a barcode scan, tell the user clearly and kindly that the code wasn't found. Never map a barcode to a random unrelated product — only report confirmed matches.
+- Never guess or assume what product a code represents.
+
 CRITICAL RULES:
-- ALWAYS split brand from product: "lays chips" → company="lays", product="chips"
+- Split brand from product ONLY when the brand is clearly a manufacturer/parent company: "lays chips" → company="lays", product="chips". "nestle kitkat" → company="nestle", product="kitkat".
+- Do NOT split if the first word is a product line name, not a company: "Ensure Surgery Vanilla" → product="ensure surgery vanilla" (no company). "PediaSure Chocolate" → product="pediasure chocolate" (no company). "Maggi noodles" → product="maggi noodles" (no company, maggi is a product line not the parent company Nestle).
+- Use company field ONLY when you are confident it is the manufacturer (e.g. Abbott, Nestle, Unilever, P&G). When in doubt, put the full product name in product and leave company empty.
 - For company-only queries use search_company, for product queries use search_product
 - If you're unsure whether something is a product or company, use search_product
 - NEVER make up halal statuses or certifications — only report what the tools return
@@ -69,7 +81,8 @@ CRITICAL RULES:
   ALWAYS pass it as the `location` parameter in search_category or search_company.
   If the database results don't match that location, fall back to web_search.
 - If a tool says "NOT found in the verified database" or "Web search unavailable", be honest — tell the user the product wasn't found in your database and web search couldn't help. Suggest they check with the manufacturer or a halal certification body.
-- NEVER call web_search as your first tool. You MUST always call a database tool (search_product, search_company, search_category, or search_enumber) first. Only call web_search if the database tool's response explicitly says the product was NOT FOUND in the database.
+- NEVER call web_search as your first tool. You MUST always call a database tool (search_product, search_company, search_category, or search_enumber) first. Only call web_search if the database tool's response says the product was NOT FOUND AND the response does NOT already contain web search results. If the tool response already includes web search results, summarize them directly — do NOT call web_search again.
+- NEVER return results of barcode scans that are not related to halal domain (e.g. random codes, words like "I love you", "Big Sale", "win" , URLs, document references). Always respond warmly that the scan appears unrelated to consumer products and suggest scanning a product barcode or searching by product name instead.
 
 RESPONSE GUIDELINES:
 - Be warm, conversational, and helpful
@@ -175,7 +188,11 @@ def _filter_products(
     tool_args: dict | None = None,
     location: str | None = None,
 ) -> list[dict]:
-    """Apply adaptive threshold, name-relevance gate, and location gate."""
+    """
+    Apply adaptive threshold, location gate, company gate, and product keyword gate.
+    Returns full result dicts {"score": ..., "payload": ...} so callers can build
+    a filtered ToolResult — ensuring LLM context and product cards share the same data.
+    """
     if not tool_result.results:
         return []
     threshold = get_adaptive_threshold(tool_result.results)
@@ -186,28 +203,20 @@ def _filter_products(
             continue
         if (p.get("norm_name") or "").lower() == "n/a":
             continue
-        filtered.append(p)
+        filtered.append(r)  # full result dict, not just payload
 
     # Location gate
     if location and filtered:
         location_lower = location.lower().strip()
         location_filtered = [
-            p for p in filtered
-            if _product_matches_location(p, location_lower)
+            r for r in filtered
+            if _product_matches_location(r["payload"], location_lower)
         ]
         if not location_filtered:
-            return []  # caller will fallback to web search
+            return []
         filtered = location_filtered
 
-    # Name-relevance gate — for search_product and search_company.
-    # When a company/brand is specified, require at least one company keyword to appear
-    # in each result's name or companies field. This catches cases where Qdrant returns
-    # semantically similar but wrong-brand results (e.g. searching "bisconni novita"
-    # returning unrelated biscuit brands).
-    # When NO company is specified, skip this gate entirely — product keyword terms
-    # like "chocolate" or "bars" rarely appear verbatim in norm_names (e.g. "Twix Caramel"
-    # doesn't contain "chocolate"), so the gate causes false web-search fallbacks.
-    # Vector similarity already ranks results; trust it for generic product queries.
+    # Company gate — require company keywords in norm_name or companies field
     if tool_name in ("search_product", "search_company") and tool_args and filtered:
         company_val = tool_args.get("company") or ""
         company_kws = {
@@ -216,18 +225,43 @@ def _filter_products(
         }
 
         if company_kws:
-            def _matches(p: dict) -> bool:
+            def _company_matches(p: dict) -> bool:
                 name = re.sub(r"[^a-z0-9\s]", "", (p.get("norm_name") or "").lower())
                 comps = " ".join(c.lower() for c in (p.get("companies") or []))
                 comps = re.sub(r"[^a-z0-9\s]", "", comps)
                 text = f"{name} {comps}"
                 return any(w in text for w in company_kws)
 
-            relevant = [p for p in filtered if _matches(p)]
-            if relevant:
-                filtered = relevant
+            company_filtered = [r for r in filtered if _company_matches(r["payload"])]
+            if company_filtered:
+                filtered = company_filtered
             else:
-                return []  # brand not found in database → caller falls back to web search
+                return []  # company not found → caller falls back to web search
+
+    # Product keyword gate — search_product only.
+    # Require product name keywords to appear in norm_name.
+    # Gracefully falls back to company-filtered results if no verbatim match,
+    # so generic terms (e.g. "chocolate") never silently zero out results.
+    if tool_name == "search_product" and tool_args and filtered:
+        product_val = tool_args.get("product") or ""
+        product_kws = {
+            w for w in re.sub(r"[^a-z0-9\s]", "", product_val.lower()).split()
+            if len(w) > 2
+        }
+        if product_kws:
+            def _product_matches(p: dict) -> bool:
+                name = re.sub(r"[^a-z0-9\s]", "", (p.get("norm_name") or "").lower())
+                name_nospace = re.sub(r"\s+", "", name)
+                # Check with and without spaces so "kitkat" matches "kit kat"
+                return all(kw in name or kw in name_nospace for kw in product_kws)
+
+            product_filtered = [r for r in filtered if _product_matches(r["payload"])]
+            if product_filtered:
+                filtered = product_filtered
+            elif company_kws:
+                pass  # graceful fallback: known company but generic product term — keep company results
+            else:
+                return []  # no company context + no name match → genuinely not found
 
     return filtered
 
@@ -303,6 +337,7 @@ def _format_tool_result(tool_result: ToolResult) -> str:
 
     if tool_result.web_results:
         parts.append(f"\nWeb search results (unverified):\n{tool_result.web_results}")
+        parts.append("[Web search already done. Do NOT call the web_search tool again.]")
 
     if tool_result.fuzzy_warning:
         parts.append(f"Note: {tool_result.fuzzy_warning}")
@@ -347,10 +382,32 @@ async def _execute_tool(
         if fuzzy_warning:
             result.fuzzy_warning = fuzzy_warning
 
-        # Name-relevance check: if no results actually match the queried brand/product,
-        # skip junk results and fall back to web search immediately
+        # Filter results
         relevant = _filter_products(result, tool_name="search_product", tool_args=tool_args, location=location)
-        if not relevant and result.results:
+
+        # Retry: LLM may have treated a product-line name (e.g. "Ensure") as company.
+        # Re-search with the full combined name as product, no company filter.
+        # Use original product keywords (not company+product) so the gate doesn't
+        # look for the company name inside norm_name where it won't appear.
+        if not relevant and company_name:
+            full_product = f"{company_name} {product}".strip()
+            print(f"[AGENT] Retrying as full product name: '{full_product}'")
+            retry_schema = ProductQuerySchema(product=full_product, company=None, category=category)
+            retry_result = await tool.execute(
+                retry_schema,
+                embed_svc=embed_svc,
+                qdrant_svc=qdrant_svc,
+                resolved_company=None,
+                classified_company=None,
+                original_query=full_product,
+            )
+            # Keep original product arg so gate only checks product keywords, not company
+            retry_args = {**tool_args, "company": None}
+            relevant = _filter_products(retry_result, tool_name="search_product", tool_args=retry_args, location=location)
+            if relevant:
+                result = retry_result
+
+        if not relevant:
             original_query = f"{company_name or ''} {product}".strip()
             if location:
                 original_query += f" in {location}"
@@ -358,7 +415,9 @@ async def _execute_tool(
             fallback = ToolResult(not_in_database=True, web_results=web_results)
             return _format_tool_result(fallback), fallback
 
-        return _format_tool_result(result), result
+        # Return filtered result — LLM context and cards both see the same data
+        filtered_result = ToolResult(results=relevant, fuzzy_warning=result.fuzzy_warning)
+        return _format_tool_result(filtered_result), filtered_result
 
     elif tool_name == "search_company":
         company_name = tool_args.get("company", "")
@@ -384,7 +443,14 @@ async def _execute_tool(
             fallback = ToolResult(not_in_database=True, web_results=web_results)
             return _format_tool_result(fallback), fallback
 
-        return _format_tool_result(result), result
+        relevant = _filter_products(result, tool_name="search_company", tool_args=tool_args)
+        if not relevant:
+            web_results = await _web_search(f"{company_name} halal products")
+            fallback = ToolResult(not_in_database=True, web_results=web_results)
+            return _format_tool_result(fallback), fallback
+
+        filtered_result = ToolResult(results=relevant, summary=result.summary)
+        return _format_tool_result(filtered_result), filtered_result
 
     elif tool_name == "search_enumber":
         e_code = tool_args.get("e_code", "")
@@ -398,19 +464,20 @@ async def _execute_tool(
             fallback = ToolResult(not_in_database=True, web_results=web_results)
             return _format_tool_result(fallback), fallback
 
-        return _format_tool_result(result), result
+        relevant = _filter_products(result)
+        filtered_result = ToolResult(results=relevant) if relevant else result
+        return _format_tool_result(filtered_result), filtered_result
 
     elif tool_name == "search_category":
         category = tool_args.get("category", "")
         hint = tool_args.get("hint", category)
-        location = tool_args.get("location") 
+        location = tool_args.get("location")
         schema = CategoryBrowseSchema(category=category, hint=hint)
         tool = CategoryTool()
         result = await tool.execute(schema, embed_svc=embed_svc, qdrant_svc=qdrant_svc)
 
-        # Fallback: no results → web search
-        filtered = _filter_products(result, location=location)
-        if not filtered:
+        relevant = _filter_products(result, location=location)
+        if not relevant:
             query = f"halal {category} products"
             if location:
                 query += f" in {location}"
@@ -418,7 +485,8 @@ async def _execute_tool(
             fallback = ToolResult(not_in_database=True, web_results=web_results)
             return _format_tool_result(fallback), fallback
 
-        return _format_tool_result(result), result
+        filtered_result = ToolResult(results=relevant)
+        return _format_tool_result(filtered_result), filtered_result
 
     elif tool_name == "web_search":
         query = tool_args.get("query", "")
@@ -484,9 +552,9 @@ async def run_agent(
         if not raw_result:
             return
         location = (tool_args or {}).get("location")
-        products = _filter_products(raw_result, tool_name=tool_name, tool_args=tool_args, location=location)
-        if products:
-            collected_products = products[:8]
+        result_dicts = _filter_products(raw_result, tool_name=tool_name, tool_args=tool_args, location=location)
+        if result_dicts:
+            collected_products = [r["payload"] for r in result_dicts[:8]]
         if raw_result.summary:
             collected_summary = raw_result.summary
         if raw_result.web_results:
@@ -495,6 +563,7 @@ async def run_agent(
     # E-number regex pre-check — force tool call
     e_code = _detect_enumber(user_query)
     if e_code:
+        print(f"[AGENT] E-number detected: {e_code}")
         yield {"type": "thinking", "content": "Looking up E-number..."}
         yield {"type": "tool_call", "tool": "search_enumber", "args": {"e_code": e_code}}
 
@@ -546,6 +615,7 @@ async def run_agent(
                 timeout=60.0,
             )
         except asyncio.TimeoutError:
+            print(f"[AGENT] LLM call timed out for query: {user_query!r}")
             yield {"type": "token", "content": "Sorry, the request timed out. Please try again."}
             yield {"type": "done"}
             return
@@ -606,11 +676,16 @@ async def run_agent(
             tool_args = sanitize_tool_args(tc["args"])
             tool_id = tc["id"]
 
+            print(f"[AGENT] Tool call: {tool_name}({tool_args})")
             yield {"type": "tool_call", "tool": tool_name, "args": tool_args}
 
             formatted, raw_result = await _execute_tool(
                 tool_name, tool_args, embed_svc, qdrant_svc, company_store
             )
+            hit_count = len(raw_result.results) if raw_result else 0
+            # hit = raw_result.results
+            web_hit = bool(raw_result and raw_result.web_results)
+            print(f"[AGENT] Tool result: {hit_count} DB hits, web_fallback={web_hit}")
             _collect(raw_result, tool_name=tool_name, tool_args=tool_args)
 
             messages.append(ToolMessage(content=formatted, tool_call_id=tool_id))

@@ -9,3 +9,4 @@ python-Levenshtein
 langchain-groq
 langchain-core
 python-dotenv
+langchain-fireworks

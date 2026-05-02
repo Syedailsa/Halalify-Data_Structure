@@ -10,6 +10,7 @@ async def web_search(q: str) -> str:
     if not settings.GOOGLE_API_KEY or not settings.GOOGLE_CX_ID:
         return "Web search not configured. Unable to search the web for this query."
 
+    print(f"[SEARCH] Google search: {q!r}")
     try:
         async with httpx.AsyncClient(timeout=15.0) as client:
             res = await client.get(
@@ -31,7 +32,9 @@ async def web_search(q: str) -> str:
 
         items = data.get("items") or []
         if not items:
+            print(f"[SEARCH] No results for: {q!r}")
             return "No web results found for this query."
+        print(f"[SEARCH] Got {len(items)} results for: {q!r}")
 
         lines = []
         for i, item in enumerate(items, 1):
