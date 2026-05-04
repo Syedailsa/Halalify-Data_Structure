@@ -72,7 +72,7 @@ async def handle_ws_message(
             # Step 3: Build a search query from the extracted fields
             product_name = (schema.get("product_name") or "").strip()
             brand        = (schema.get("brand") or "").strip()
-            
+
             filtered_dict = {k: v for k, v in [("product", product_name), ("brand", brand)] if v}
             agent_query = " ".join(f"{k} {v}" for k, v in filtered_dict.items()).strip() or "this product"
             search_query = (
@@ -201,7 +201,7 @@ async def handle_ws_message(
     if not content:
         await _send(ws, {"type": "error", "content": "Query cannot be empty", "code": "EMPTY_QUERY"})
         return
-
+        
     print(f"[CHAT] Query: {content!r}")
     try:
         async for event in run_agent(
