@@ -13,6 +13,7 @@ from agent.tools.websearch_tool import web_search as _web_search
 from config import COLLECTION_PRODUCTS, SCORE_THRESHOLD, get_settings
 from services.embed_service import EmbedService
 from services.qdrant_client import QdrantService
+from utils.category import get_cert_bodies as _get_cert_bodies
 
 SEMANTIC_POOL = 10
 VECTOR_NAME   = "halal_product_dense_vector"
@@ -24,20 +25,23 @@ You have access to tools to search a verified halal product database with thousa
 ## MANDATORY FLOW FOR PRODUCT QUERIES
 
 Step 1 → call semantic_search(text=user_query)
-         Returns a JSON pool of real products from the verified database.
+Returns a JSON pool of real products from the verified database.
 
 Step 2 → SCAN the pool carefully, then call filter_semantic_results with:
 
-         ALWAYS include:
-           - pool: the exact JSON string returned by semantic_search
-           - user_query: the original user query
+ALWAYS include:
+- pool: the exact JSON string returned by semantic_search
+- user_query: the original user query
 
-         DERIVE all other filter values from ACTUAL VALUES seen in the pool —
-         never copy raw user text directly into filters.
+DERIVE all other filter values from ACTUAL VALUES seen in the pool —
+never copy raw user text directly into filters.
 
 Step 3 → If filter_semantic_results returns fallback=True or count=0:
-         call web_search(query=user_query) as a last resort.
-         NEVER call web_search before completing Steps 1 and 2.
+call web_search(query=user_query) as a last resort.
+NEVER call web_search before completing Steps 1 and 2.
+
+CRITICAL: NEVER stop after Step 1 without completing Step 2 or going to web_search.
+NEVER tell the user the product was not found without first trying web_search.
 
 ---
 
@@ -48,78 +52,78 @@ Apply these rules IN ORDER to decide which filters to pass:
 ### RULE 1 — norm_name (specific product filter)
 Does the user name or imply a SPECIFIC product?
 
-  YES → norm_name is REQUIRED.
-        Pick the norm_name from the pool entry that best matches the product
-        the user asked about. Use the root word seen in the pool, not raw user text.
-        Examples:
-          "is eclairs halal?"     + pool has "Eclair Gold"       → norm_name="Eclair"
-          "is kat kit halal?"     + pool has "Kit Kat"           → norm_name="Kit Kat"
-          "oreo status?"          + pool has "Oreo"              → norm_name="Oreo"
+YES → norm_name is REQUIRED.
+Pick the norm_name from the pool entry that best matches the product
+the user asked about. Use the root word seen in the pool, not raw user text.
+Examples:
+"is eclairs halal?" + pool has "Eclair Gold" → norm_name="Eclair"
+"is kat kit halal?" + pool has "Kit Kat" → norm_name="Kit Kat"
+"oreo status?" + pool has "Oreo" → norm_name="Oreo"
 
-  NO  → OMIT norm_name entirely.
-        Examples:
-          "show me all Nestle products"       → no specific product → omit norm_name
-          "what Mondelez products are halal?" → no specific product → omit norm_name
-          "halal snacks in Singapore"         → no specific product → omit norm_name
+NO → OMIT norm_name entirely.
+Examples:
+"show me all Nestle products" → no specific product → omit norm_name
+"what Mondelez products are halal?" → no specific product → omit norm_name
+"halal snacks in Singapore" → no specific product → omit norm_name
 
 ### RULE 2 — companies (brand/company filter)
 Does the user name a COMPANY or BRAND?
 
-  YES → companies is REQUIRED.
-        Pick the exact company name string as it appears in the pool.
-        Examples:
-          "nestle products"               + pool has "Nestle S.A."                → companies=["Nestle S.A."]
-          "is eclair by mondelez halal?"  + pool has "Mondelez Pakistan Limited"  → companies=["Mondelez Pakistan Limited"]
+YES → companies is REQUIRED.
+Pick the exact company name string as it appears in the pool.
+Examples:
+"nestle products" + pool has "Nestle S.A." → companies=["Nestle S.A."]
+"is eclair by mondelez halal?" + pool has "Mondelez Pakistan Limited" → companies=["Mondelez Pakistan Limited"]
 
-  NO  → OMIT companies entirely.
+NO → OMIT companies entirely.
 
 ### RULE 3 — halal_status (intent filter)
 Does the user express a clear halal/haram intent?
 
-  "is X halal?" / "halal products" / "show halal only"  → halal_status="Halal"
-  "is X haram?" / "haram products" / "show haram only"  → halal_status="Haraam"
-  "what is the status of X?" / "tell me about X"        → OMIT halal_status
+"is X halal?" / "halal products" / "show halal only" → halal_status="Halal"
+"is X haram?" / "haram products" / "show haram only" → halal_status="Haraam"
+"what is the status of X?" / "tell me about X" → OMIT halal_status
 
 ### RULE 4 — category_l1 / category_l2 (disambiguation only)
 Use category filters ONLY when norm_name alone would still match unrelated
 products across different categories in the pool.
 NEVER use category as a substitute for norm_name or companies.
 Examples:
-  "halal snacks in Singapore"  → category_l2="Snacks & Confectionery" (no product/company named)
-  "is eclairs halal?"          → DO NOT add category — norm_name already narrows it
+"halal snacks in Singapore" → category_l2="Snacks & Confectionery" (no product/company named)
+"is eclairs halal?" → DO NOT add category — norm_name already narrows it
 
 ### RULE 5 — sold_in / marketplace / cert_bodies (optional context filters)
 Use these only when the user explicitly mentions a region, store, or
 certification body AND you can confirm the value exists in the pool.
-  "is kit kat halal in Singapore?"  + pool has sold_in=["Singapore"] → sold_in=["Singapore"]
+"is kit kat halal in Singapore?" + pool has sold_in=["Singapore"] → sold_in=["Singapore"]
 
 ---
 
 ## FILTER DERIVATION DECISION TABLE
 
-| User query pattern                          | norm_name        | halal_status | companies                        | other                        |
+| User query pattern | norm_name | halal_status | companies | other |
 |---------------------------------------------|------------------|--------------|----------------------------------|------------------------------|
-| "is eclairs halal?"                         | "Eclair" (pool)  | "Halal"      | omit                             | omit                         |
-| "is kit kat haram?"                         | "Kit Kat" (pool) | "Haraam"     | omit                             | omit                         |
-| "is eclair by mondelez halal?"              | "Eclair" (pool)  | "Halal"      | ["Mondelez Pakistan Limited"]    | omit                         |
-| "what is the status of Oreo?"              | "Oreo" (pool)    | omit         | omit                             | omit                         |
-| "show me all Nestle products"               | omit             | omit         | ["Nestle S.A."] (pool)           | omit                         |
-| "what Mondelez products are halal?"         | omit             | "Halal"      | ["Mondelez Pakistan Limited"]    | omit                         |
-| "halal snacks in Singapore"                 | omit             | "Halal"      | omit                             | category_l2, sold_in (pool)  |
-| "list haram products by Unilever"           | omit             | "Haraam"     | ["Unilever ..."] (pool)          | omit                         |
+| "is eclairs halal?" | "Eclair" (pool) | "Halal" | omit | omit |
+| "is kit kat haram?" | "Kit Kat" (pool) | "Haraam" | omit | omit |
+| "is eclair by mondelez halal?" | "Eclair" (pool) | "Halal" | ["Mondelez Pakistan Limited"] | omit |
+| "what is the status of Oreo?" | "Oreo" (pool) | omit | omit | omit |
+| "show me all Nestle products" | omit | omit | ["Nestle S.A."] (pool) | omit |
+| "what Mondelez products are halal?" | omit | "Halal" | ["Mondelez Pakistan Limited"] | omit |
+| "halal snacks in Singapore" | omit | "Halal" | omit | category_l2, sold_in (pool) |
+| "list haram products by Unilever" | omit | "Haraam" | ["Unilever ..."] (pool) | omit |
 
 ---
 
 ## WHEN NOT TO USE TOOLS
-- Greetings (hi, hello, thanks, bye)      → respond directly
-- Help requests (what can you do?)        → explain capabilities directly
-- General conversation                    → respond directly
+- Greetings (hi, hello, thanks, bye) → respond directly
+- Help requests (what can you do?) → explain capabilities directly
+- General conversation → respond directly
 
 ## BARCODE / QR CODE SCANS
 - Queries phrased as "is <code> halal?" come from barcode or QR code scans
 - If the value is clearly not a consumer product (system code, URL, ticket ID, document ref)
-  → respond warmly that it is outside the scope of halal verification and suggest
-    scanning a product barcode printed on packaging instead
+→ respond warmly that it is outside the scope of halal verification and suggest
+scanning a product barcode printed on packaging instead
 - If it could plausibly be a product or brand → proceed with semantic_search normally
 - Never map a barcode to a random unrelated product — only report confirmed matches
 
@@ -132,7 +136,7 @@ certification body AND you can confirm the value exists in the pool.
 - NEVER fabricate product data — only use what tools return
 - If filter_semantic_results returns fallback=True → call the web_search tool to try to find any relevant information from the web, using the original user query as the search query
 - If web_search also returns nothing → tell the user honestly and suggest checking
-  with the manufacturer or a halal certification body directly
+with the manufacturer or a halal certification body directly
 """
 
 
@@ -140,6 +144,8 @@ async def run_agent(
     user_query: str,
     embed_svc: EmbedService,
     qdrant_svc: QdrantService,
+    country: str | None = None,
+    cert_bodies: List[str] | None = None,
     thread_id: str = "default"
 ) -> AsyncIterator[dict]:
     """
@@ -151,17 +157,60 @@ async def run_agent(
       {"type": "done"}
     """
     settings = get_settings()
+    _cert_bodies: List[str] = cert_bodies or []
+
+    # ── Build dynamic location context block ─────────────────────────────────
+    location_block = ""
+    if country and _cert_bodies:
+        bodies_str = ", ".join(f'"{b}"' for b in _cert_bodies)
+        location_block = f"""
+
+## USER LOCATION CONTEXT
+The user is located in **{country}**.
+Known halal certification authorities for {country}: {bodies_str}.
+
+LOCATION FILTERING RULES:
+- When you call semantic_search, the query is automatically enriched with the location cert bodies — so results will lean toward {country}-certified products.
+- After getting the pool from semantic_search, look at the actual `cert_bodies` values in the pool results.
+- Find pool values that match or correspond to any of: {bodies_str} (account for case differences, abbreviations, or slight name variations).
+- Use those EXACT strings from the pool when calling filter_semantic_results.
+- If the user ALSO explicitly mentions a specific cert authority in their query, add it to the cert_bodies list in filter_semantic_results — apply BOTH the location cert bodies and the user-mentioned one.
+- If NO products in the pool carry a matching cert body, tell the user honestly and present the closest available results.
+- Always acknowledge the user's country/location context in your response when it is relevant.
+
+DIFFERENT COUNTRY IN QUERY:
+- If the user's query references a country different from {country}:
+  1. Call get_cert_body_for_country(that_country) → returns a cert_bodies list
+  2. Re-call semantic_search with cert_body_hint set to the first cert body from that list
+     so the vector search is enriched for the correct country, not {country}
+  3. Use the new pool for filter_semantic_results with those cert bodies
+"""
+
+    effective_system_prompt = SYSTEM_PROMPT + location_block
 
     # ── Tool 1: Semantic search ───────────────────────────────────────────────
     @tool
-    async def semantic_search(text: str) -> str:
+    async def semantic_search(text: str, cert_body_hint: Optional[str] = None) -> str:
         """
         Embed the query and fetch the top matching products from the halal database.
         Returns a JSON string pool of products. ALWAYS call this first for any product query.
+
+        cert_body_hint: pass this when the user is asking about a country DIFFERENT from
+                        their detected location. Supply the cert body string returned by
+                        get_cert_body_for_country so the embedding is enriched correctly
+                        for that country instead of the user's home location.
+                        Leave empty for normal location-scoped searches.
         """
-        print(f"[SEMANTIC] Embedding: '{text}'")
+        # Use the hint when provided (different-country query), otherwise fall back
+        # to the session location cert bodies.
+        if cert_body_hint:
+            enrich_with = [cert_body_hint]
+        else:
+            enrich_with = _cert_bodies
+        search_text = f"{text} {' '.join(enrich_with)}" if enrich_with else text
+        print(f"[SEMANTIC] Embedding: '{search_text}'")
         try:
-            vector = await embed_svc.embed(text)
+            vector = await embed_svc.embed(search_text)
         except Exception as e:
             print(f"[SEMANTIC] Embedding failed: {e}")
             return json.dumps([])
@@ -215,7 +264,6 @@ async def run_agent(
     @tool
     def filter_semantic_results(
         pool:         str,
-        user_query:   str,
         norm_name:    Optional[str]       = None,
         category_l1:  Optional[str]       = None,
         category_l2:  Optional[str]       = None,
@@ -235,7 +283,6 @@ async def run_agent(
 
         Args:
             pool:         JSON string from semantic_search
-            user_query:   original user query for context
             norm_name:    product name EXACTLY as seen in pool e.g. 'Kit Kat'
             category_l1:  category EXACTLY as seen in pool e.g. 'Food'
             category_l2:  sub-category EXACTLY as seen in pool e.g. 'Snacks & Confectionery'
@@ -247,14 +294,11 @@ async def run_agent(
             health_info:  health tags EXACTLY as seen in pool
             barcodes:     barcodes EXACTLY as seen in pool
         """
-        print(f"[FILTER] query={user_query!r} norm_name={norm_name} "
-              f"halal_status={halal_status} companies={companies}")
-
         try:
             products = json.loads(pool) if pool else []
-        except Exception:
+        except Exception as e:
             return json.dumps({"results": [], "count": 0, "fallback": True,
-                               "message": "Pool data was missing or malformed — use web_search."})
+            "message": "Pool data was missing or malformed — use web_search."})
 
         filtered = []
         for p in products:
@@ -326,7 +370,21 @@ async def run_agent(
 
         return json.dumps({"results": filtered, "count": len(filtered), "fallback": False})
 
-    # ── Tool 3: Web search (last resort) ─────────────────────────────────────
+    # ── Tool 3: Cert body lookup by country ──────────────────────────────────
+    @tool
+    def get_cert_body_for_country(country: str) -> str:
+        """
+        Return the halal certification authorities for a given country as a JSON list.
+        Call this when the user mentions a specific country or region in their query
+        that differs from their detected location, so you can scope filtering correctly.
+        """
+        bodies = _get_cert_bodies(country.strip())
+        print(f"[CERT_LOOKUP] country={country!r} → {bodies}")
+        if not bodies:
+            return json.dumps({"country": country, "cert_bodies": [], "note": f"No known cert authority for {country}"})
+        return json.dumps({"country": country, "cert_bodies": bodies})
+
+    # ── Tool 4: Web search (last resort) ─────────────────────────────────────
     @tool
     async def web_search(query: str) -> str:
         """
@@ -346,9 +404,9 @@ async def run_agent(
     agent = create_agent(
         name="HalalifySearchAgent",
         model=llm,
-        tools=[semantic_search, filter_semantic_results, web_search],
-        system_prompt=SYSTEM_PROMPT,
-        checkpointer= Checkpointer,
+        tools=[semantic_search, filter_semantic_results, get_cert_body_for_country, web_search],
+        system_prompt=effective_system_prompt,
+        checkpointer=Checkpointer,
     )
 
     run_config = {"configurable": {"thread_id": thread_id}}

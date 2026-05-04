@@ -826,9 +826,35 @@ export default function ChatLayout() {
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(false)
   const [thinkingText, setThinkingText] = useState<string | null>(null)
+  const [locationCountry, setLocationCountry] = useState<string | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const currentAiId = useRef<number | null>(null)
   const { connected, sendMessage, sendJson, setOnMessage, setOnDisconnect } = useWebSocket()
+
+  // Request geolocation once on mount; reverse-geocode to country and send to backend
+  useEffect(() => {
+    if (!navigator.geolocation) return
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+            { headers: { 'Accept-Language': 'en' } }
+          )
+          const data = await res.json()
+          const country: string | undefined = data?.address?.country
+          if (country) {
+            sendJson({ type: 'location', country })
+          }
+        } catch {
+          // silently ignore — searches will proceed without location context
+        }
+      },
+      () => { /* user denied — proceed without location */ }
+    )
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // async function handleBarcodeScan(scannedText: string) {
   //   const userMsg: Message = { 
@@ -914,6 +940,10 @@ export default function ChatLayout() {
 
   const handleMessage = useCallback((msg: WSIncoming) => {
     switch (msg.type) {
+      case 'location_ack':
+        if (msg.country) setLocationCountry(msg.country)
+        break
+
       case 'thinking':
         setThinkingText(msg.content || 'Thinking...')
         break
@@ -1100,6 +1130,14 @@ export default function ChatLayout() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4">
 
           {messages.length === 0 && <ChatIntro />}
+
+          {locationCountry && messages.length === 0 && (
+            <div className="flex justify-center">
+              <span className="text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
+                Searching with halal authorities for {locationCountry}
+              </span>
+            </div>
+          )}
 
           {messages.map(msg => (
             <div key={msg.id}>

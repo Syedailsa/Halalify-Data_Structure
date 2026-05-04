@@ -6,13 +6,15 @@ import type { ProductPayload, QuerySummary } from './api'
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8000/ws'
 
 export interface WSIncoming {
-  type: 'thinking' | 'tool_call' | 'products' | 'token' | 'done' | 'error'
+  type: 'thinking' | 'tool_call' | 'products' | 'token' | 'done' | 'error' | 'location_ack'
   content?: string
   tool?: string
   products?: ProductPayload[]
   summary?: QuerySummary | null
   web_results?: string | null
   code?: string
+  country?: string
+  cert_bodies?: string[]
 }
 
 export function useWebSocket() {
