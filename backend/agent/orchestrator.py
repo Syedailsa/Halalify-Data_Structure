@@ -40,6 +40,15 @@ Step 3 → If filter_semantic_results returns fallback=True or count=0:
 call web_search(query=user_query) as a last resort.
 NEVER call web_search before completing Steps 1 and 2.
 
+Step 4 → After web_search returns a JSON array of results, review each one carefully.
+Call surface_web_results(indices=[...]) with ONLY the indices of results that are
+genuinely relevant and informative for the user's halal question.
+- All 3 relevant → indices=[0, 1, 2]
+- Only index 0 and 2 are relevant → indices=[0, 2]
+- Only index 1 is relevant → indices=[1]
+- None are relevant → indices=[]
+Drop results that are vague, off-topic, promotional, or don't mention halal status.
+
 CRITICAL: NEVER stop after Step 1 without completing Step 2 or going to web_search.
 NEVER tell the user the product was not found without first trying web_search.
 
@@ -52,13 +61,18 @@ Apply these rules IN ORDER to decide which filters to pass:
 ### RULE 1 — norm_name (specific product filter)
 Does the user name or imply a SPECIFIC product?
 
-YES → norm_name is REQUIRED.
-Pick the norm_name from the pool entry that best matches the product
-the user asked about. Use the root word seen in the pool, not raw user text.
-Examples:
-"is eclairs halal?" + pool has "Eclair Gold" → norm_name="Eclair"
-"is kat kit halal?" + pool has "Kit Kat" → norm_name="Kit Kat"
-"oreo status?" + pool has "Oreo" → norm_name="Oreo"
+YES → norm_name is REQUIRED. Always set it. Two sub-cases:
+
+  CASE A — A pool entry closely matches the product the user asked about:
+  → use the root word from that pool entry (not the raw user text).
+  "is eclairs halal?" + pool has "Eclair Gold" → norm_name="Eclair"
+  "is kat kit halal?" + pool has "Kit Kat"     → norm_name="Kit Kat"
+  "oreo status?"      + pool has "Oreo"         → norm_name="Oreo"
+
+  CASE B — No pool entry matches the product the user asked about:
+  → set norm_name to the user's product name anyway (use the key word from the query).
+  "is Hajmola halal?" + pool has NO Hajmola entries → norm_name="Hajmola"
+  This will produce 0 filter matches → fallback=True → you MUST then call web_search.
 
 NO → OMIT norm_name entirely.
 Examples:
@@ -102,11 +116,12 @@ certification body AND you can confirm the value exists in the pool.
 ## FILTER DERIVATION DECISION TABLE
 
 | User query pattern | norm_name | halal_status | companies | other |
-|---------------------------------------------|------------------|--------------|----------------------------------|------------------------------|
+|---------------------------------------------|----------------------|--------------|----------------------------------|------------------------------|
 | "is eclairs halal?" | "Eclair" (pool) | "Halal" | omit | omit |
 | "is kit kat haram?" | "Kit Kat" (pool) | "Haraam" | omit | omit |
 | "is eclair by mondelez halal?" | "Eclair" (pool) | "Halal" | ["Mondelez Pakistan Limited"] | omit |
 | "what is the status of Oreo?" | "Oreo" (pool) | omit | omit | omit |
+| "is Hajmola halal?" (not in pool) | "Hajmola" (user) | "Halal" | omit | omit → 0 results → web_search |
 | "show me all Nestle products" | omit | omit | ["Nestle S.A."] (pool) | omit |
 | "what Mondelez products are halal?" | omit | "Halal" | ["Mondelez Pakistan Limited"] | omit |
 | "halal snacks in Singapore" | omit | "Halal" | omit | category_l2, sold_in (pool) |
@@ -391,10 +406,25 @@ DIFFERENT COUNTRY IN QUERY:
         Search the web for halal certification information.
         LAST RESORT ONLY — call this only after filter_semantic_results returns
         fallback=True or count=0. NEVER call this as your first tool.
+        Returns a JSON array of {index, title, url, snippet} objects.
+        After reviewing the results, call surface_web_results with the relevant indices.
         """
         return await _web_search(query)
 
-    # ── Build agent (same pattern as test_filters.py) ─────────────────────────
+    # ── Tool 5: Surface curated web results ───────────────────────────────────
+    _web_pool: list[dict] = []
+
+    @tool
+    def surface_web_results(indices: List[int]) -> str:
+        """
+        After reviewing web_search results, call this with the indices of results
+        that are genuinely relevant to the user's halal question.
+        Pass an empty list if none are relevant.
+        """
+        selected = [_web_pool[i] for i in indices if i < len(_web_pool)]
+        print(f"[SURFACE] {len(selected)}/{len(_web_pool)} results surfaced (indices={indices})")
+        return json.dumps(selected)
+
     llm = ChatGroq(
         model="openai/gpt-oss-120b",
         api_key=settings.GROQ_API_KEY,
@@ -404,7 +434,7 @@ DIFFERENT COUNTRY IN QUERY:
     agent = create_agent(
         name="HalalifySearchAgent",
         model=llm,
-        tools=[semantic_search, filter_semantic_results, get_cert_body_for_country, web_search],
+        tools=[semantic_search, filter_semantic_results, get_cert_body_for_country, web_search, surface_web_results],
         system_prompt=effective_system_prompt,
         checkpointer=Checkpointer,
     )
@@ -449,11 +479,22 @@ DIFFERENT COUNTRY IN QUERY:
                 if name == "filter_semantic_results":
                     try:
                         data = json.loads(output_str)
-                        collected_products = data.get("results", [])
+                        if data.get("fallback"):
+                            collected_products = []
+                        else:
+                            collected_products = data.get("results", [])
                         print(f"[FILTER_END] {len(collected_products)} products collected")
                     except Exception as e:
                         print(f"[FILTER_END] parse error: {e} — raw: {output_str[:120]}")
                 elif name == "web_search":
+                    try:
+                        pool = json.loads(output_str)
+                        if isinstance(pool, list):
+                            _web_pool.clear()
+                            _web_pool.extend(pool)
+                    except Exception:
+                        pass
+                elif name == "surface_web_results":
                     collected_web_results = output_str
 
             elif kind == "on_chat_model_stream":
