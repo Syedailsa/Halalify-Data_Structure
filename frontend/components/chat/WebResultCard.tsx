@@ -17,29 +17,18 @@ interface WebResultCardProps {
 function parseResults(raw: string): WebResult[] {
   if (!raw) return []
 
-  const blocks = raw.split(/\n(?=\s*\d+\.)/).filter(Boolean)
+  try {
+    const parsed = JSON.parse(raw)
+    if (Array.isArray(parsed)) {
+      return parsed.map(item => {
+        let domain = ''
+        try { domain = new URL(item.url || '').hostname.replace('www.', '') } catch {}
+        return { title: item.title || '', url: item.url || '', snippet: item.snippet || '', domain }
+      }).filter(r => r.title || r.snippet)
+    }
+  } catch {}
 
-  return blocks.map(block => {
-    const lines = block.split('\n').map(l => l.trim()).filter(Boolean)
-
-    const titleMatch = lines.find(l => /^\d+\./.test(l))
-    const title = titleMatch?.replace(/^\d+\.\s*/, '').trim() || ''
-
-    const urlLine = lines.find(l => l.startsWith('http'))
-    const url = urlLine?.trim() || ''
-
-    const snippet = lines
-      .filter(l => l !== titleMatch && l !== urlLine)
-      .join(' ')
-      .slice(0, 160)
-
-    let domain = ''
-    try {
-      domain = new URL(url).hostname.replace('www.', '')
-    } catch {}
-
-    return { title, url, snippet, domain }
-  }).filter(r => r.title && r.url)
+  return []
 }
 
 export default function WebResultCard({ text, delay = 0 }: WebResultCardProps) {

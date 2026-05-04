@@ -7,6 +7,7 @@ from langchain.agents import create_agent
 from langchain_core.messages import HumanMessage
 from langchain_core.tools import tool
 from langchain_groq import ChatGroq
+from langgraph.checkpoint.memory import MemorySaver
 
 from agent.tools.websearch_tool import web_search as _web_search
 from config import COLLECTION_PRODUCTS, SCORE_THRESHOLD, get_settings
@@ -19,6 +20,7 @@ SEMANTIC_POOL = 10
 settings = get_settings()
 
 VECTOR_NAME   = "halal_product_dense_vector"
+Checkpointer = MemorySaver()
 
 SYSTEM_PROMPT = """You are Halalify Assistant AI, a friendly and knowledgeable, conversational halal product verification assistant built over a Halal verification platform named HALALIFY. 
 
@@ -33,7 +35,7 @@ You have access to tools to search a verified halal product database with millio
 ## MANDATORY FLOW FOR PRODUCT QUERIES
 
 Step 1 → call semantic_search(text=user_query)
-         Returns a JSON pool of real products from the verified database.
+Returns a JSON pool of real products from the verified database.
 
 Step 2 → READ the pool carefully, then call filter_semantic_results with:
         - pool: the exact JSON string returned by semantic_search
@@ -98,14 +100,14 @@ For ANY filter parameter (`norm_name`, `companies`, `category_l1`, `category_l2`
 > For any filter parameter: if user asks for it → find closest match in pool and use that EXACT value; if no match exists but user explicitly specified it → use user's term as-is; otherwise leave `None`.
 ## WHEN NOT TO USE TOOLS
 - Greetings (hi, hello, thanks, bye) → respond directly
-- Help requests (what can you do) → explain capabilities directly
+- Help requests (what can you do?) → explain capabilities directly
 - General conversation → respond directly
 
 ## BARCODE / QR CODE SCANS
 - Queries phrased as "is <code> halal?" come from barcode or QR code scans
 - If the value is clearly not a consumer product (system code, URL, ticket ID, document ref)
-  → respond warmly that it is outside the scope of halal verification, suggest scanning
-    a product barcode printed on packaging instead
+→ respond warmly that it is outside the scope of halal verification and suggest
+scanning a product barcode printed on packaging instead
 - If it could plausibly be a product or brand → proceed with semantic_search normally
 - Never map a barcode to a random unrelated product — only report confirmed matches
 
@@ -116,7 +118,7 @@ For ANY filter parameter (`norm_name`, `companies`, `category_l1`, `category_l2`
 - Flag expired certifications gently
 - Keep responses concise but complete and comprehensive
 - NEVER fabricate, hallucinate, modify or alter product data — only use what tools return
-- If filter_semantic_results returns fallback=True → notify the user that exact product wasn't found but show similar results from the database
+- If filter_semantic_results returns fallback=True → call the web_search tool to try to find any relevant information from the web, using the original user query as the search query
 - If web_search also returns nothing → tell the user honestly and suggest checking the product with the manufacturer or a halal certification body directly
 """
 
@@ -127,6 +129,7 @@ async def run_agent(
     qdrant_svc: QdrantService,
     country: str | None = None,
     cert_bodies: List[str] | None = None,
+    thread_id: str = "default"
 ) -> AsyncIterator[dict]:
     """
     Runs the Halalify agent. Yields dicts:
@@ -288,10 +291,11 @@ async def run_agent(
         """
         print("Filter tool called")
         try:
-            products = json.loads(pool)
+            products = json.loads(pool) if pool else []
         except Exception as e:
-            return json.dumps({"error": f"Failed to parse pool: {e}"})
-        print("Cert bodies", cert_bodies)
+            return json.dumps({"results": [], "count": 0, "fallback": True,
+            "message": "Pool data was missing or malformed."})
+
         filtered = []
         for p in products:
             match = True
@@ -354,8 +358,8 @@ async def run_agent(
         if not filtered:
             print("[FILTER] No matches — fallback to full pool")
             return json.dumps({
-                "results": products,
-                "count":   len(products),
+                "results": [],
+                "count": 0,
                 "fallback": True,
                 "message": "Filters returned no results, showing semantic results instead.",
             })
@@ -383,10 +387,25 @@ async def run_agent(
         Search the web for halal certification information.
         LAST RESORT ONLY — call this only after filter_semantic_results returns
         fallback=True or count=0. NEVER call this as your first tool.
+        Returns a JSON array of {index, title, url, snippet} objects.
+        After reviewing the results, call surface_web_results with the relevant indices.
         """
         return await _web_search(query)
 
-    # ── Build agent (same pattern as test_filters.py) ─────────────────────────
+    # ── Tool 5: Surface curated web results ───────────────────────────────────
+    _web_pool: list[dict] = []
+
+    @tool
+    def surface_web_results(indices: List[int]) -> str:
+        """
+        After reviewing web_search results, call this with the indices of results
+        that are genuinely relevant to the user's halal question.
+        Pass an empty list if none are relevant.
+        """
+        selected = [_web_pool[i] for i in indices if i < len(_web_pool)]
+        print(f"[SURFACE] {len(selected)}/{len(_web_pool)} results surfaced (indices={indices})")
+        return json.dumps(selected)
+
     llm = ChatGroq(
         model="openai/gpt-oss-120b",
         api_key=settings.GROQ_API_KEY,
@@ -396,9 +415,12 @@ async def run_agent(
     agent = create_agent(
         name="HalalifySearchAgent",
         model=llm,
-        tools=[semantic_search, filter_semantic_results, get_cert_body_for_country, web_search],
+        tools=[semantic_search, filter_semantic_results, get_cert_body_for_country, web_search, surface_web_results],
         system_prompt=effective_system_prompt,
+        checkpointer=Checkpointer,
     )
+
+    run_config = {"configurable": {"thread_id": thread_id}}
 
     # ── Stream events ─────────────────────────────────────────────────────────
     collected_products: list[dict] = []
@@ -410,6 +432,7 @@ async def run_agent(
         async for event in agent.astream_events(
             {"messages": [HumanMessage(content=user_query)]},
             version="v2",
+            config=run_config,
         ):
             kind = event["event"]
             name = event.get("name", "")
@@ -437,11 +460,22 @@ async def run_agent(
                 if name == "filter_semantic_results":
                     try:
                         data = json.loads(output_str)
-                        collected_products = data.get("results", [])
+                        if data.get("fallback"):
+                            collected_products = []
+                        else:
+                            collected_products = data.get("results", [])
                         print(f"[FILTER_END] {len(collected_products)} products collected")
                     except Exception as e:
                         print(f"[FILTER_END] parse error: {e} — raw: {output_str[:120]}")
                 elif name == "web_search":
+                    try:
+                        pool = json.loads(output_str)
+                        if isinstance(pool, list):
+                            _web_pool.clear()
+                            _web_pool.extend(pool)
+                    except Exception:
+                        pass
+                elif name == "surface_web_results":
                     collected_web_results = output_str
 
             elif kind == "on_chat_model_stream":
