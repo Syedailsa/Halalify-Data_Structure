@@ -140,7 +140,7 @@ async def extract_image_schema(base64_image: str) -> dict:
 
     payload = {
         "model": "accounts/fireworks/models/kimi-k2p5",
-        "max_tokens": 512,
+        "max_tokens": 2048,
         "messages": [
             {
                 "role": "system",
