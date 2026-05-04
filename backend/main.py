@@ -50,22 +50,25 @@ async def health():
 #
 # CLIENT → SERVER  (incoming message types)
 # ─────────────────────────────────────────────────────────────────────────────
-# { "type": "message", "content": "is kit kat halal?" }       — chat query
-# { "type": "barcode", "content": "8901234567890" }            — barcode / QR scan
-# { "type": "image",   "image": "<base64>", "prompt": "..." }  — product image (prompt optional)
+# { "type": "message",  "content": "is kit kat halal?" }                       — chat query
+# { "type": "barcode",  "content": "8901234567890" }                            — barcode / QR scan
+# { "type": "image",    "image": "<base64>", "prompt": "..." }                  — product image
+# { "type": "location", "country": "Pakistan" }                                 — user geolocation
 #
 # SERVER → CLIENT  (outgoing event types)
 # ─────────────────────────────────────────────────────────────────────────────
-# { "type": "thinking",  "content": "Searching database..." }
-# { "type": "tool_call", "tool": "semantic_search", "args": {...} }
-# { "type": "token",     "content": "Kit Kat is..." }           — streamed response chunks
-# { "type": "products",  "products": [...], "summary": {...}, "web_results": "..." }
+# { "type": "thinking",     "content": "Searching database..." }
+# { "type": "tool_call",    "tool": "semantic_search", "args": {...} }
+# { "type": "token",        "content": "Kit Kat is..." }                        — streamed chunks
+# { "type": "products",     "products": [...], "summary": {...}, "web_results": "..." }
+# { "type": "location_ack", "country": "Pakistan", "cert_bodies": ["PCSIR"] }  — location confirmed
 # { "type": "done" }
-# { "type": "error",     "content": "...", "code": "EMPTY_QUERY" }
+# { "type": "error",        "content": "...", "code": "EMPTY_QUERY" }
 #
 @app.websocket("/ws")
 async def websocket_endpoint(ws: WebSocket):
     await manager.connect(ws)
+    session: dict = {"country": None, "cert_bodies": []}
     try:
         while True:
             try:
@@ -83,6 +86,7 @@ async def websocket_endpoint(ws: WebSocket):
                 data,
                 app.state.qdrant_svc,
                 app.state.embed_svc,
+                session,
             )
     except WebSocketDisconnect:
         manager.disconnect(ws)

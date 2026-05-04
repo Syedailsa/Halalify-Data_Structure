@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-import json
-import re
+from typing import List
 
-import httpx
 from config import get_settings
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_fireworks import ChatFireworks
+from pydantic import BaseModel, Field
 
 SYSTEM_PROMPT = """You are a specialized Halal compliance AI.
 Your job is to analyze images for Halal/Haram status (Food, Ingredients, Cosmetics, Tourism, Cigarettes and any consumable item).
@@ -31,34 +32,62 @@ VISION_FALLBACK_PROMPT = (
     "Be honest about anything you cannot confirm from the image alone."
 )
 
-_SCHEMA_PROMPT = """Analyze this image and extract product information. Reply with ONLY a JSON object — no markdown, no explanation.
+_SCHEMA_ANALYSIS_PROMPT = (
+    "Analyze this image for halal compliance. "
+    "Determine if it shows a consumer product (food, beverage, cosmetic, pharmaceutical). "
+    "Extract all visible product information and assess its halal status. "
+    "Images that are NOT relevant: humans, furniture, vehicles, landscapes, generic documents."
+)
 
-Determine if this image is relevant to halal verification (food, beverage, cosmetic, pharmaceutical, or any packaged consumer product). Irrelevant means: person, furniture, vehicle, landscape, generic documents, or anything not a consumer product.
 
-Return exactly:
-{
-  "is_relevant": true,
-  "rejection_message": "",
-  "product_name": "",
-  "brand": "",
-  "category": "",
-  "ingredients": [],
-  "halal_tag": ""
-}
+class ProductSchema(BaseModel):
+    is_relevant: bool = Field(
+        description="False only if the image has no consumer product at all"
+    )
+    rejection_message: str = Field(
+        description="Warm one-sentence rejection and reminder when is_relevant is false; empty string otherwise"
+    )
+    product_name: str = Field(
+        description="Exact product name from packaging label; empty string if not visible"
+    )
+    brand: str = Field(
+        description="Brand or manufacturer name; empty string if not visible"
+    )
+    category: str = Field(
+        description='One of: "food", "beverage", "cosmetic", "pharma", or empty string'
+    )
+    ingredients: List[str] = Field(
+        description="Array of ingredient strings if an ingredient list is visible; empty array otherwise"
+    )
+    halal_tag: str = Field(
+        description="Any halal certificate, haram warning, or certification text visible; empty string if none"
+    )
 
-Field rules:
-- is_relevant: false only if the image has no consumer product at all
-- rejection_message: warm, one-sentence message and reminder that it is not relevant to halal topic, when is_relevant is false; empty string otherwise
-- product_name: exact product name from packaging label (empty string if not visible)
-- brand: brand or manufacturer name (empty string if not visible)
-- category: "food", "beverage", "cosmetic", "pharma", or empty string
-- ingredients: array of ingredient strings if an ingredient list is visible; empty array otherwise
-- halal_tag: any halal certificate, haram warning, or certification text visible; empty string if none"""
 
+# def _build_llm(api_key: str, max_tokens: int = None) -> ChatFireworks:
+#     return ChatFireworks(
+#         model="accounts/fireworks/models/kimi-k2p5",
+#         fireworks_api_key=api_key,
+#         max_tokens=max_tokens,
+#     )
+
+settings = get_settings()
+FIREWORKS_API_KEY = settings.FIREWORKS_API_KEY
+
+if not FIREWORKS_API_KEY:
+    raise ValueError("FIRWORKS API KEY not found!")
+
+llm = ChatFireworks(
+    model = "accounts/fireworks/models/kimi-k2p5",
+    api_key = FIREWORKS_API_KEY,
+)
+
+if not llm:
+    raise ValueError("Failed to initialize LLM")
 
 async def analyze_image(base64_image: str, user_prompt: str | None = None) -> str:
     """
-    Send a base64 image to Fireworks AI vision model and return the analysis.
+    Send a base64 image to the kimi-k2p5 vision model and return the analysis.
 
     Args:
         base64_image: Full data URI string, e.g. "data:image/jpeg;base64,/9j/..."
@@ -67,9 +96,7 @@ async def analyze_image(base64_image: str, user_prompt: str | None = None) -> st
     Returns:
         The model's text response.
     """
-    settings = get_settings()
-    api_key = settings.FIREWORKS_API_KEY
-
+    
     final_prompt = (
         f'User Question: "{user_prompt}". '
         "(Remember: Reject if image is not related to Food/Halal/Cosmetics)"
@@ -77,41 +104,20 @@ async def analyze_image(base64_image: str, user_prompt: str | None = None) -> st
         else DEFAULT_USER_PROMPT
     )
 
-    payload = {
-        "model": "accounts/fireworks/models/kimi-k2p5",
-        "max_tokens": 2048,
-        "messages": [
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": final_prompt},
-                    {"type": "image_url", "image_url": {"url": base64_image}},
-                ],
-            },
-        ],
-    }
+    messages = [
+        SystemMessage(content=SYSTEM_PROMPT),
+        HumanMessage(content=[
+            {"type": "text", "text": final_prompt},
+            {"type": "image_url", "image_url": {"url": base64_image}},
+        ]),
+    ]
 
     print(f"[VISION] Calling kimi-k2p5 model with user prompt: {final_prompt!r}")
     try:
-        async with httpx.AsyncClient(timeout=60.0) as client:
-            response = await client.post(
-                "https://api.fireworks.ai/inference/v1/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {api_key}",
-                    "Content-Type": "application/json",
-                },
-                json=payload,
-            )
-            response.raise_for_status()
-            data = response.json()
-            result = data["choices"][0]["message"]["content"]
-            print(f"[VISION] Response received ({len(result)} chars)")
-            return result
-
-    except httpx.HTTPStatusError as e:
-        print(f"[VisionService] HTTP error {e.response.status_code}: {e.response.text}")
-        return "I had trouble analyzing that image. Please try again."
+        response = llm.invoke(messages)
+        result = str(response.content)
+        print(f"[VISION] Response received ({len(result)} chars)")
+        return result
     except Exception as e:
         print(f"[VisionService] Unexpected error: {e}")
         return "I had trouble analyzing that image. Please try again."
@@ -130,64 +136,30 @@ _SCHEMA_FALLBACK = {
 
 async def extract_image_schema(base64_image: str) -> dict:
     """
-    Call the vision model to extract a structured product schema from an image.
+    Call the vision model with structured output to extract a product schema.
     Returns a dict with keys: is_relevant, rejection_message, product_name,
     brand, category, ingredients, halal_tag.
-    Falls back to _SCHEMA_FALLBACK (is_relevant=True, all fields empty) on any error.
+    Falls back to _SCHEMA_FALLBACK on any error.
     """
-    settings = get_settings()
-    api_key = settings.FIREWORKS_API_KEY
+    structured_llm = llm.with_structured_output(ProductSchema, method="json_schema")
 
-    payload = {
-        "model": "accounts/fireworks/models/kimi-k2p5",
-        "max_tokens": 512,
-        "messages": [
-            {
-                "role": "system",
-                "content": "Output only valid JSON. No reasoning, no explanation, no markdown fences.",
-            },
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": _SCHEMA_PROMPT},
-                    {"type": "image_url", "image_url": {"url": base64_image}},
-                ],
-            },
-        ],
-    }
+    messages = [
+        SystemMessage(content="You are a halal compliance analyzer. Extract product information from images accurately."),
+        HumanMessage(content=[
+            {"type": "text", "text": _SCHEMA_ANALYSIS_PROMPT},
+            {"type": "image_url", "image_url": {"url": base64_image}},
+        ]),
+    ]
 
     print("[VISION] Extracting product schema from image...")
     try:
-        async with httpx.AsyncClient(timeout=60.0) as client:
-            response = await client.post(
-                "https://api.fireworks.ai/inference/v1/chat/completions",
-                headers={
-                    "Authorization": f"Bearer {api_key}",
-                    "Content-Type": "application/json",
-                },
-                json=payload,
-            )
-            response.raise_for_status()
-            raw = response.json()["choices"][0]["message"]["content"].strip()
-            print(f"[VISION] Schema raw: {raw[:300]}")
-
-            # Strip markdown fences, then extract the first JSON object
-            # — handles models that think out loud before outputting JSON
-            clean = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw, flags=re.DOTALL).strip()
-            json_match = re.search(r"\{.*\}", clean, re.DOTALL)
-            if not json_match:
-                raise json.JSONDecodeError("No JSON object found in response", clean, 0)
-            schema = json.loads(json_match.group())
-
-            print(f"[VISION] Schema parsed: relevant={schema.get('is_relevant')}, "
-                  f"product={schema.get('product_name')!r}, brand={schema.get('brand')!r}")
-            return {**_SCHEMA_FALLBACK, **schema}
-    except (json.JSONDecodeError, KeyError, IndexError) as e:
-        print(f"[VISION] Schema parse error: {e} — using fallback")
-        return dict(_SCHEMA_FALLBACK)
-    except httpx.HTTPStatusError as e:
-        print(f"[VISION] HTTP error {e.response.status_code}: {e.response.text}")
-        return dict(_SCHEMA_FALLBACK)
+        result: ProductSchema = structured_llm.invoke(messages)
+        schema = result.model_dump()
+        print(
+            f"[VISION] Schema parsed: relevant={schema['is_relevant']}, "
+            f"product={schema['product_name']!r}, brand={schema['brand']!r}"
+        )
+        return schema
     except Exception as e:
-        print(f"[VISION] Unexpected schema error: {e}")
+        print(f"[VISION] Schema error: {e} — using fallback")
         return dict(_SCHEMA_FALLBACK)

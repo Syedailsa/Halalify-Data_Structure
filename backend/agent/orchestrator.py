@@ -12,6 +12,7 @@ from agent.tools.websearch_tool import web_search as _web_search
 from config import COLLECTION_PRODUCTS, SCORE_THRESHOLD, get_settings
 from services.embed_service import EmbedService
 from services.qdrant_client import QdrantService
+from utils.category import get_cert_bodies as _get_cert_bodies
 
 SEMANTIC_POOL = 10
 VECTOR_NAME   = "halal_product_dense_vector"
@@ -28,6 +29,12 @@ Step 2 → READ the pool carefully, then call filter_semantic_results with:
          - pool: the exact JSON string returned by semantic_search
          - user_query: the original user query
          - filters derived ONLY from ACTUAL VALUES you see in the pool — not raw user text
+
+Step 2.5 → (optional) If the user mentions a country DIFFERENT from their detected location:
+           a. call get_cert_body_for_country(country) → get that country's cert bodies
+           b. Re-call semantic_search(text=original_query, cert_body_hint=<first cert body from result>)
+              so the embedding is enriched for the correct country, not the user's home location
+           c. Use this new pool (not the first one) for filter_semantic_results
 
 Step 3 → If filter_semantic_results returns fallback=True or count=0:
          call web_search(query=user_query) as a last resort.
@@ -71,6 +78,8 @@ async def run_agent(
     user_query: str,
     embed_svc: EmbedService,
     qdrant_svc: QdrantService,
+    country: str | None = None,
+    cert_bodies: List[str] | None = None,
 ) -> AsyncIterator[dict]:
     """
     Runs the Halalify agent. Yields dicts:
@@ -81,17 +90,60 @@ async def run_agent(
       {"type": "done"}
     """
     settings = get_settings()
+    _cert_bodies: List[str] = cert_bodies or []
+
+    # ── Build dynamic location context block ─────────────────────────────────
+    location_block = ""
+    if country and _cert_bodies:
+        bodies_str = ", ".join(f'"{b}"' for b in _cert_bodies)
+        location_block = f"""
+
+## USER LOCATION CONTEXT
+The user is located in **{country}**.
+Known halal certification authorities for {country}: {bodies_str}.
+
+LOCATION FILTERING RULES:
+- When you call semantic_search, the query is automatically enriched with the location cert bodies — so results will lean toward {country}-certified products.
+- After getting the pool from semantic_search, look at the actual `cert_bodies` values in the pool results.
+- Find pool values that match or correspond to any of: {bodies_str} (account for case differences, abbreviations, or slight name variations).
+- Use those EXACT strings from the pool when calling filter_semantic_results.
+- If the user ALSO explicitly mentions a specific cert authority in their query, add it to the cert_bodies list in filter_semantic_results — apply BOTH the location cert bodies and the user-mentioned one.
+- If NO products in the pool carry a matching cert body, tell the user honestly and present the closest available results.
+- Always acknowledge the user's country/location context in your response when it is relevant.
+
+DIFFERENT COUNTRY IN QUERY:
+- If the user's query references a country different from {country}:
+  1. Call get_cert_body_for_country(that_country) → returns a cert_bodies list
+  2. Re-call semantic_search with cert_body_hint set to the first cert body from that list
+     so the vector search is enriched for the correct country, not {country}
+  3. Use the new pool for filter_semantic_results with those cert bodies
+"""
+
+    effective_system_prompt = SYSTEM_PROMPT + location_block
 
     # ── Tool 1: Semantic search ───────────────────────────────────────────────
     @tool
-    async def semantic_search(text: str) -> str:
+    async def semantic_search(text: str, cert_body_hint: Optional[str] = None) -> str:
         """
         Embed the query and fetch the top matching products from the halal database.
         Returns a JSON string pool of products. ALWAYS call this first for any product query.
+
+        cert_body_hint: pass this when the user is asking about a country DIFFERENT from
+                        their detected location. Supply the cert body string returned by
+                        get_cert_body_for_country so the embedding is enriched correctly
+                        for that country instead of the user's home location.
+                        Leave empty for normal location-scoped searches.
         """
-        print(f"[SEMANTIC] Embedding: '{text}'")
+        # Use the hint when provided (different-country query), otherwise fall back
+        # to the session location cert bodies.
+        if cert_body_hint:
+            enrich_with = [cert_body_hint]
+        else:
+            enrich_with = _cert_bodies
+        search_text = f"{text} {' '.join(enrich_with)}" if enrich_with else text
+        print(f"[SEMANTIC] Embedding: '{search_text}'")
         try:
-            vector = await embed_svc.embed(text)
+            vector = await embed_svc.embed(search_text)
         except Exception as e:
             print(f"[SEMANTIC] Embedding failed: {e}")
             return json.dumps([])
@@ -145,7 +197,6 @@ async def run_agent(
     @tool
     def filter_semantic_results(
         pool:         str,
-        user_query:   str,
         norm_name:    Optional[str]       = None,
         category_l1:  Optional[str]       = None,
         category_l2:  Optional[str]       = None,
@@ -165,7 +216,6 @@ async def run_agent(
 
         Args:
             pool:         JSON string from semantic_search
-            user_query:   original user query for context
             norm_name:    product name EXACTLY as seen in pool e.g. 'Kit Kat'
             category_l1:  category EXACTLY as seen in pool e.g. 'Food'
             category_l2:  sub-category EXACTLY as seen in pool e.g. 'Snacks & Confectionery'
@@ -177,9 +227,6 @@ async def run_agent(
             health_info:  health tags EXACTLY as seen in pool
             barcodes:     barcodes EXACTLY as seen in pool
         """
-        print(f"[FILTER] query={user_query!r} norm_name={norm_name} "
-              f"halal_status={halal_status} companies={companies}")
-
         try:
             products = json.loads(pool)
         except Exception as e:
@@ -255,7 +302,21 @@ async def run_agent(
 
         return json.dumps({"results": filtered, "count": len(filtered), "fallback": False})
 
-    # ── Tool 3: Web search (last resort) ─────────────────────────────────────
+    # ── Tool 3: Cert body lookup by country ──────────────────────────────────
+    @tool
+    def get_cert_body_for_country(country: str) -> str:
+        """
+        Return the halal certification authorities for a given country as a JSON list.
+        Call this when the user mentions a specific country or region in their query
+        that differs from their detected location, so you can scope filtering correctly.
+        """
+        bodies = _get_cert_bodies(country.strip())
+        print(f"[CERT_LOOKUP] country={country!r} → {bodies}")
+        if not bodies:
+            return json.dumps({"country": country, "cert_bodies": [], "note": f"No known cert authority for {country}"})
+        return json.dumps({"country": country, "cert_bodies": bodies})
+
+    # ── Tool 4: Web search (last resort) ─────────────────────────────────────
     @tool
     async def web_search(query: str) -> str:
         """
@@ -275,8 +336,8 @@ async def run_agent(
     agent = create_agent(
         name="HalalifySearchAgent",
         model=llm,
-        tools=[semantic_search, filter_semantic_results, web_search],
-        system_prompt=SYSTEM_PROMPT,
+        tools=[semantic_search, filter_semantic_results, get_cert_body_for_country, web_search],
+        system_prompt=effective_system_prompt,
     )
 
     # ── Stream events ─────────────────────────────────────────────────────────

@@ -6,6 +6,7 @@ from services.embed_service import EmbedService
 from services.qdrant_client import QdrantService
 from services.barcodeService import extract_barcode_schema
 from services.visionService import extract_image_schema
+from utils.category import get_cert_bodies
 
 
 async def _send(ws: WebSocket, msg: dict) -> None:
@@ -23,12 +24,25 @@ async def handle_ws_message(
     message: dict,
     qdrant_svc: QdrantService,
     embed_svc: EmbedService,
+    session: dict,
 ) -> None:
     if not isinstance(message, dict):
         await _send(ws, {"type": "error", "content": "Malformed message", "code": "INVALID_MESSAGE"})
         return
 
     msg_type = message.get("type")
+
+    # ── Location ──────────────────────────────────────────────────────────────
+    if msg_type == "location":
+        country: str = (message.get("country") or "").strip()
+        if not country:
+            return
+        bodies = get_cert_bodies(country)
+        session["country"] = country
+        session["cert_bodies"] = bodies
+        print(f"[LOCATION] country={country!r} cert_bodies={bodies}")
+        await _send(ws, {"type": "location_ack", "country": country, "cert_bodies": bodies})
+        return
 
     # ── Vision image ──────────────────────────────────────────────────────────
     if msg_type == "image":
@@ -58,7 +72,9 @@ async def handle_ws_message(
             # Step 3: Build a search query from the extracted fields
             product_name = (schema.get("product_name") or "").strip()
             brand        = (schema.get("brand") or "").strip()
-            agent_query  = " ".join(p for p in [brand, product_name] if p).strip() or "this product"
+            
+            filtered_dict = {k: v for k, v in [("product", product_name), ("brand", brand)] if v}
+            agent_query = " ".join(f"{k} {v}" for k, v in filtered_dict.items()).strip() or "this product"
             search_query = (
                 f"{user_prompt.strip()} — product: {agent_query}"
                 if user_prompt
@@ -74,6 +90,8 @@ async def handle_ws_message(
                 user_query=search_query,
                 embed_svc=embed_svc,
                 qdrant_svc=qdrant_svc,
+                country=session.get("country"),
+                cert_bodies=session.get("cert_bodies") or [],
             ):
                 etype = event.get("type")
                 if etype == "thinking":
@@ -146,6 +164,8 @@ async def handle_ws_message(
                 user_query=search_query,
                 embed_svc=embed_svc,
                 qdrant_svc=qdrant_svc,
+                country=session.get("country"),
+                cert_bodies=session.get("cert_bodies") or [],
             ):
                 etype = event.get("type")
                 if etype == "thinking":
@@ -188,6 +208,8 @@ async def handle_ws_message(
             user_query=content,
             embed_svc=embed_svc,
             qdrant_svc=qdrant_svc,
+            country=session.get("country"),
+            cert_bodies=session.get("cert_bodies") or [],
         ):
             event_type = event.get("type")
 
