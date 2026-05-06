@@ -69,20 +69,74 @@ async def handle_ws_message(
                 )
                 return
 
-            # Step 3: Build a search query from the extracted fields
-            product_name = (schema.get("product_name") or "").strip()
-            brand        = (schema.get("brand") or "").strip()
-            
-            filtered_dict = {k: v for k, v in [("product", product_name), ("brand", brand)] if v}
-            agent_query = " ".join(f"{k} {v}" for k, v in filtered_dict.items()).strip() or "this product"
-            search_query = (
-                f"{user_prompt.strip()} — product: {agent_query}"
-                if user_prompt
-                else f"is {agent_query} halal?"
-            )
+            # Step 3: Extract all schema fields
+            product_name    = (schema.get("product_name") or "").strip()
+            brand           = (schema.get("brand") or "").strip()
+            ingredients     = schema.get("ingredients") or []
+            barcodes        = schema.get("barcodes") or []
+            qr_codes        = schema.get("qr_codes") or []
+            fda_numbers     = schema.get("fda_numbers") or []
+            sold_in         = schema.get("sold_in") or []
+            health_info     = schema.get("health_info") or []
+            typical_uses    = schema.get("typical_uses") or []
+            img_cert_bodies = schema.get("cert_bodies") or []
+            company_contact = schema.get("company_contact") or []
 
-            print(f"[IMAGE] Query built: {search_query!r}")
-            await _send(ws, {"type": "thinking", "content": f'Searching "{agent_query}" in halal database...'})
+            # Merge cert bodies seen on the image with session location cert bodies
+            merged_cert_bodies = list(dict.fromkeys(
+                (session.get("cert_bodies") or []) + img_cert_bodies
+            ))
+
+            # Build primary identity part of the query
+            id_parts = []
+            if product_name:
+                id_parts.append(f"product {product_name}")
+            if brand:
+                id_parts.append(f"brand {brand}")
+            if barcodes:
+                id_parts.append(f"barcode {' '.join(barcodes)}")
+            if fda_numbers:
+                id_parts.append(f"FDA number {' '.join(fda_numbers)}")
+
+            # Nothing identifiable extracted — don't run a meaningless search
+            if not id_parts and not ingredients and not qr_codes:
+                await _stream_text(
+                    ws,
+                    "I couldn't extract any identifiable information from this image — "
+                    "no product name, brand, barcode, or ingredient list was visible. "
+                    "Please try a clearer or closer photo of the packaging label.",
+                )
+                return
+
+            identity = " ".join(id_parts).strip() or "scanned product"
+            display_name = f"{brand} {product_name}".strip() or (barcodes[0] if barcodes else identity)
+
+            if user_prompt:
+                search_query = f"{user_prompt.strip()} — product: {identity}"
+            else:
+                search_query = f"is {identity} halal?"
+
+            if qr_codes:
+                search_query += f" QR code content: {'; '.join(qr_codes)}."
+            if ingredients:
+                search_query += f" Ingredients on packaging: {', '.join(ingredients)}."
+            if sold_in:
+                search_query += f" Sold in: {', '.join(sold_in)}."
+            if health_info:
+                search_query += f" Health claims: {', '.join(health_info)}."
+            if typical_uses:
+                search_query += f" Typical uses: {', '.join(typical_uses)}."
+            if img_cert_bodies:
+                search_query += f" Certification visible: {', '.join(img_cert_bodies)}."
+            if company_contact:
+                search_query += f" Company contact: {', '.join(company_contact)}."
+
+            print(
+                f"[IMAGE] Query built: {search_query!r} | "
+                f"barcodes={barcodes} qr={qr_codes} ingredients={len(ingredients)} items "
+                f"sold_in={sold_in} cert_bodies={img_cert_bodies}"
+            )
+            await _send(ws, {"type": "thinking", "content": f'Searching "{display_name}" in halal database...'})
 
             # Step 4: Hand off to the main agent — it handles everything from here
             # (semantic_search → filter_semantic_results → web_search if needed)
@@ -91,7 +145,8 @@ async def handle_ws_message(
                 embed_svc=embed_svc,
                 qdrant_svc=qdrant_svc,
                 country=session.get("country"),
-                cert_bodies=session.get("cert_bodies") or [],
+                cert_bodies=merged_cert_bodies,
+                thread_id=session["thread_id"],
             ):
                 etype = event.get("type")
                 if etype == "thinking":
@@ -108,7 +163,7 @@ async def handle_ws_message(
                 elif etype == "token":
                     await _send(ws, {"type": "token", "content": event.get("content", "")})
                 elif etype == "done":
-                    print(f"[IMAGE] Done responding to: {agent_query!r}")
+                    print(f"[IMAGE] Done responding to: {display_name!r}")
                     await _send(ws, {"type": "done"})
                 elif etype == "error":
                     await _send(ws, {"type": "error", "content": event.get("content", "Unknown error"), "code": event.get("code", "AGENT_ERROR")})
@@ -166,6 +221,7 @@ async def handle_ws_message(
                 qdrant_svc=qdrant_svc,
                 country=session.get("country"),
                 cert_bodies=session.get("cert_bodies") or [],
+                thread_id=session["thread_id"],
             ):
                 etype = event.get("type")
                 if etype == "thinking":
@@ -210,6 +266,7 @@ async def handle_ws_message(
             qdrant_svc=qdrant_svc,
             country=session.get("country"),
             cert_bodies=session.get("cert_bodies") or [],
+            thread_id=session["thread_id"],
         ):
             event_type = event.get("type")
 
