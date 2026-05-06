@@ -22,7 +22,8 @@ settings = get_settings()
 VECTOR_NAME   = "halal_product_dense_vector"
 Checkpointer = MemorySaver()
 
-SYSTEM_PROMPT = """You are Halalify Assistant AI, a friendly and knowledgeable, conversational halal product verification assistant built over a Halal verification platform named HALALIFY. 
+PERSONALITY_CAPABILITIES_PROMPT = """
+You are Halalify Assistant AI, a friendly and knowledgeable, conversational halal product verification assistant built over a Halal verification platform named HALALIFY. 
 
 HALALIFY's CAPABILITIES:
 - Retrieve product information from a verified database of 2 million+ records.
@@ -30,6 +31,10 @@ HALALIFY's CAPABILITIES:
 - Can take in QR Codes and product images through the user interface, process them and verify their Halal status.
 - Perform a hybrid search. Products are first searched in the native, certified halal database of 2 million+ products. If no match is found for the desired product, then a web search is performed to determine the halal status of the product.
 
+\n\n
+"""
+
+GUIDELINES_PROMPT = """
 You have access to tools to search a verified halal product database with millions of certified products.
 
 ## MANDATORY FLOW FOR PRODUCT QUERIES
@@ -37,7 +42,11 @@ You have access to tools to search a verified halal product database with millio
 Step 1 → call semantic_search(text=user_query)
 Returns a JSON pool of real products from the verified database.
 
-Step 2 → READ the pool carefully, then call filter_semantic_results with:
+Step 2 → If `semantic_search` tool returns empty results or an empty pool:
+        - recall `semantic_search` tool and this adjust the query parameter or paraphrase it. It can help get relevant results.
+        - You can call `semantic_search` tool up to 4 times total (including the first call), but STOP immediately once you get valid results.
+        
+Step 2 → READ the pool carefully, if the pool is not empty then always call filter_semantic_results with:
         - pool: the exact JSON string returned by semantic_search
         - filters derived ONLY from ACTUAL VALUES you see in the pool — not raw user text
 
@@ -47,9 +56,7 @@ Step 2.5 → (optional) If the user mentions a country DIFFERENT from their dete
             so the embedding is enriched for the correct country, not the user's home location
         c. Use this new pool (not the first one) for filter_semantic_results
 
-Step 3 → If filter_semantic_results returns fallback=True or count=0:
-        - recall `filter_semantic` tool and this adjust the query parameter or paraphrase it. It can help get relevant results.
-        - Repeat up to 4 times total (including the first call), but STOP immediately once you get valid results (count > 0).
+Step 3 → If filter_semantic_results returns fallback=True or count=0 or even if the `semantic_search` didn't returned any relevant results after a max retry of 4 times, then:
         - call web_search(query=user_query) as a last resort.
         - NEVER call web_search before completing the above steps.
 
@@ -143,44 +150,47 @@ async def run_agent(
 
     # ── Build dynamic location context block ─────────────────────────────────
     location_block = ""
-    if country and _cert_bodies:
-        bodies_str = ", ".join(f'"{b}"' for b in _cert_bodies)
-        location_block = f"""
-        ## USER LOCATION CONTEXT
-        The user is located in **{country}**.
-        Known halal certification authorities for {country}: {bodies_str}.
+    if country:
+        location_block = f"""The user is located in
+        **{country}**.\n\n"""
+        if _cert_bodies:
+            bodies_str = ", ".join(f'"{b}"' for b in _cert_bodies)
+            location_block += f"""
+            ## USER LOCATION CONTEXT
+            Known halal certification authorities for {country}: {bodies_str}.
 
-        ## LOCATION FILTERING RULES
+            ## LOCATION FILTERING RULES
 
-        - When you call `semantic_search`, the query is automatically enriched with the user's location certification bodies — results will lean toward `{country}`-certified products.
+            - When you call `semantic_search`, the query is automatically enriched with the user's location certification bodies — results will lean toward `{country}`-certified products.
 
-        - After receiving `semantic_results` from the `semantic_search` tool, examine the actual `cert_bodies` values in each result.
+            - After receiving `semantic_results` from the `semantic_search` tool, examine the actual `cert_bodies` values in each result.
 
-        - **Apply location cert bodies as filters by default** — unless the user explicitly says not to (e.g., "show me Kit Kat even if not Singapore-certified").
+            - **Apply location cert bodies as filters by default** — unless the user explicitly says not to (e.g., "show me Kit Kat even if not Singapore-certified").
 
-        - Identify values that match or are similar in spelling to the location's certification bodies. Account for case differences, abbreviations, and slight name variations.
+            - Identify values that match or are similar in spelling to the location's certification bodies. Account for case differences, abbreviations, and slight name variations.
 
-        - **If matching/similar cert bodies exist in the pool** → Use those EXACT string matches from `semantic_results` when calling `filter_semantic_results`.
+            - **If matching/similar cert bodies exist in the pool** → Use those EXACT string matches from `semantic_results` when calling `filter_semantic_results`.
 
-        - **If NO matching/similar cert bodies exist in the pool** (even after accounting for variations), but the user's location is known → Apply the location's expected certification bodies as-is to `cert_bodies` when calling `filter_semantic_results`. This will return 0 results → triggers `fallback=True` → proceed to `web_search`.
+            - **If NO matching/similar cert bodies exist in the pool** (even after accounting for variations), but the user's location is known → Apply the location's expected certification bodies as-is to `cert_bodies` when calling `filter_semantic_results`. This will return 0 results → triggers `fallback=True` → proceed to `web_search`.
 
-        - If the user explicitly mentions a specific cert authority in their query, add it to the `cert_bodies` list in `filter_semantic_results` — apply BOTH the location cert bodies AND the user-mentioned one.
+            - If the user explicitly mentions a specific cert authority in their query, add it to the `cert_bodies` list in `filter_semantic_results` — apply BOTH the location cert bodies AND the user-mentioned one.
 
-        - If no results are returned by the `filter_semantic_results` tool, handle these two cases:
-            - **Product exists** in `semantic_results` but its `cert_body` is NOT in the allowed list → Notify the user the product isn't certified by their location's body. Offer to show products with other cert bodies.
-            - **Product not found** in `semantic_results` → Notify the user honestly that no match was found.
+            - If no results are returned by the `filter_semantic_results` tool, handle these two cases:
+                - **Product exists** in `semantic_results` but its `cert_body` is NOT in the allowed list → Notify the user the product isn't certified by their location's body. Offer to show products with other cert bodies.
+                - **Product not found** in `semantic_results` → Notify the user honestly that no match was found.
 
-        - Always acknowledge the user's country/location in your response when relevant.
+            - Always acknowledge the user's country/location in your response when relevant.
 
 
-        DIFFERENT COUNTRY IN QUERY:
-        - If the user's query references a country different from {country}:
-        1. Call get_cert_body_for_country(that_country) → returns a cert_bodies list
-        2. Re-call semantic_search with cert_body_hint set to that list so the vector search is enriched for the correct country, not {country}
-        3. Use the new pool for `filter_semantic_results` tool with these cert_bodies list.
-        """
+            DIFFERENT COUNTRY IN QUERY:
+            - If the user's query references a country different from {country}:
+            1. Call get_cert_body_for_country(that_country) → returns a cert_bodies list
+            2. Re-call semantic_search with cert_body_hint set to that list so the vector search is enriched for the correct country, not {country}
+            3. Use the new pool for `filter_semantic_results` tool with these cert_bodies list.
+            \n\n
+            """
 
-    effective_system_prompt = SYSTEM_PROMPT + location_block
+    effective_system_prompt = PERSONALITY_CAPABILITIES_PROMPT + location_block + GUIDELINES_PROMPT
 
     # ── Tool 1: Semantic search ───────────────────────────────────────────────
     @tool
@@ -196,13 +206,14 @@ async def run_agent(
         """
         # Use the hint when provided (different-country query), otherwise fall back
         # to the session location cert bodies.
+        print("enrich_with" , cert_body_hint)
         if cert_body_hint:
-            enrich_with = [cert_body_hint]
+            enrich_with = cert_body_hint
         else:
             enrich_with = _cert_bodies
 
-        
         search_text = f"{text} {' '.join(enrich_with)}" if enrich_with else text
+
         print(f"[SEMANTIC] Embedding: '{search_text}'")
         try:
             vector = await embed_svc.embed(search_text)
@@ -290,6 +301,7 @@ async def run_agent(
             barcodes:     barcodes EXACTLY as seen in pool
         """
         print("Filter tool called")
+        print("cert bodies", cert_bodies)
         try:
             products = json.loads(pool) if pool else []
         except Exception as e:
@@ -330,6 +342,8 @@ async def run_agent(
                 if not any(s.lower() in db_val for s in sold_in):
                     match = False
 
+            # enforce cert_bodies if location is enabled and cert_bodies args is None/Empty List        
+            # active_cert_bodies = cert_bodies or _cert_bodies
             if cert_bodies:
                 db_val = " ".join(p.get("cert_bodies") or []).lower()
                 if not any(c.lower() in db_val for c in cert_bodies):
@@ -364,7 +378,11 @@ async def run_agent(
                 "message": "Filters returned no results, showing semantic results instead.",
             })
 
-        return json.dumps({"results": filtered, "count": len(filtered), "fallback": False})
+        return json.dumps({
+            "results": filtered,
+            "count": len(filtered),
+            "fallback": False
+        })
 
     # ── Tool 3: Cert body lookup by country ──────────────────────────────────
     @tool
@@ -409,7 +427,7 @@ async def run_agent(
     llm = ChatGroq(
         model="openai/gpt-oss-120b",
         api_key=settings.GROQ_API_KEY,
-        temperature=0.3,
+        temperature=0,
     )
 
     agent = create_agent(

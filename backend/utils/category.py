@@ -10,7 +10,7 @@ halal_dict = {
     'Malaysia': 'JAKIM',
     'Indonesia': ['BPJPH', 'MUI', 'MUI - Halal'],
     'Singapore': 'MUIS',
-    'Thailand': ['CICOT', 'HALAL CICOT', 'Halal Science Center - Chulalongkorn'],
+    'Thailand': ['Halal.co.th Thailand'],
     'Philippines': 'Philippine Halal Export Development and Promotion Board',
     'Pakistan': ['Halal Pakistan', 'Pakistan Halal Authority'],
     'India': ['Jamiat Ulama-i-Hind Halal Trust', 'Halal India Pvt. Ltd.', 'Halal Certification Services India Pvt. Ltd.'],
