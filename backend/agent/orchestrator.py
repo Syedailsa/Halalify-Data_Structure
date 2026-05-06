@@ -14,6 +14,7 @@ from config import COLLECTION_PRODUCTS, SCORE_THRESHOLD, get_settings
 from services.embed_service import EmbedService
 from services.qdrant_client import QdrantService
 from utils.category import get_cert_bodies as _get_cert_bodies
+from datetime import datetime
 
 # initialize variables at module level
 SEMANTIC_POOL = 10
@@ -280,6 +281,13 @@ async def run_agent(
         cert_bodies:  Optional[List[str]] = None,
         health_info:  Optional[List[str]] = None,
         barcodes:     Optional[List[str]] = None,
+        typical_uses:    Optional[List[str]] = None,
+        fda_numbers:     Optional[List[str]] = None,
+        company_contact: Optional[List[str]] = None,
+        cert_expiry:     Optional[str]       = None,   
+        cert_issue:      Optional[str]       = None,   
+        cert_expiry_after:  Optional[str]    = None,   
+        cert_expiry_before: Optional[str]    = None,
     ) -> str:
         """
         Filter the semantic search pool using values SEEN in the pool data.
@@ -299,9 +307,26 @@ async def run_agent(
             cert_bodies:  cert bodies EXACTLY as seen in pool e.g. ['IFANCA']
             health_info:  health tags EXACTLY as seen in pool
             barcodes:     barcodes EXACTLY as seen in pool
+            typical_uses:       use-case tags EXACTLY as seen in pool e.g. ['Moisturizer', 'Toner']
+            fda_numbers:        FDA registration numbers EXACTLY as seen in pool
+            company_contact:    contact strings EXACTLY as seen in pool e.g. ['info@nseproducts.com']
+            cert_expiry:        exact expiry date string to match e.g. '2025-12-31'
+            cert_issue:         exact issue date string to match e.g. '2023-01-01'
+            cert_expiry_after:  keep only products whose cert_expiry is after this date (still-valid filter)
+            cert_expiry_before: keep only products whose cert_expiry is before this date
+            
         """
         print("Filter tool called")
         print("cert bodies", cert_bodies)
+
+        def parse_date(s: str) -> datetime | None:
+            for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y", "%Y/%m/%d"):
+                try:
+                    return datetime.strptime(s, fmt)
+                except ValueError:
+                    continue
+            return None
+
         try:
             products = json.loads(pool) if pool else []
         except Exception as e:
@@ -363,6 +388,51 @@ async def run_agent(
                 db_val = " ".join(p.get("barcodes") or []).lower()
                 if not any(b.lower() in db_val for b in barcodes):
                     match = False
+
+            if typical_uses:
+                db_val = " ".join(p.get("typical_uses") or []).lower()
+                if not any(t.lower() in db_val for t in typical_uses):
+                    match = False
+
+            if fda_numbers:
+                db_val = " ".join(p.get("fda_numbers") or []).lower()
+                if not any(f.lower() in db_val for f in fda_numbers):
+                    match = False
+
+            if company_contact:
+                db_val = " ".join(p.get("company_contact") or []).lower()
+                if not any(c.lower() in db_val for c in company_contact):
+                    match = False
+
+            # ── New date filters ──────────────────────────────────────────────────
+            if cert_expiry:
+                if (p.get("cert_expiry") or "") != cert_expiry:
+                    match = False
+
+            if cert_issue:
+                if (p.get("cert_issue") or "") != cert_issue:
+                    match = False
+
+            if cert_expiry_after:
+                expiry_str = p.get("cert_expiry")
+                if not expiry_str:
+                    match = False  # no expiry date → exclude when filtering for validity
+                else:
+                    expiry_dt  = parse_date(expiry_str)
+                    cutoff_dt  = parse_date(cert_expiry_after)
+                    if not expiry_dt or not cutoff_dt or expiry_dt <= cutoff_dt:
+                        match = False
+
+            if cert_expiry_before:
+                expiry_str = p.get("cert_expiry")
+                if not expiry_str:
+                    match = False
+                else:
+                    expiry_dt  = parse_date(expiry_str)
+                    cutoff_dt  = parse_date(cert_expiry_before)
+                    if not expiry_dt or not cutoff_dt or expiry_dt >= cutoff_dt:
+                        match = False
+
 
             if match:
                 filtered.append(p)

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import uuid
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -68,7 +69,9 @@ async def health():
 @app.websocket("/ws")
 async def websocket_endpoint(ws: WebSocket):
     await manager.connect(ws)
-    session: dict = {"country": None, "cert_bodies": []}
+    thread_id = str(uuid.uuid4())
+    session: dict = {"country": None, "cert_bodies": [], "thread_id": thread_id}
+    print(f"[WS] New session: {thread_id}")
     try:
         while True:
             try:

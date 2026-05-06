@@ -11,7 +11,19 @@ from pydantic import BaseModel, Field
 _SCHEMA_ANALYSIS_PROMPT = (
     "Analyze this image for halal compliance. "
     "Determine if it shows a consumer product (food, beverage, cosmetic, pharmaceutical). "
-    "Extract all visible product information including but not limited to halal status, product name and company/brand name. "
+    "Extract EVERY piece of visible information from the packaging label:\n"
+    "- product name and brand\n"
+    "- full ingredients list\n"
+    "- numeric barcodes (EAN/UPC digits only, no spaces) → put in 'barcodes'\n"
+    "- QR code decoded content (URL or text string) → put in 'qr_codes'\n"
+    "- FDA or regulatory registration numbers → put in 'fda_numbers'\n"
+    "- countries or regions mentioned (e.g. 'Made in Pakistan') → put in 'sold_in'\n"
+    "- health claims or tags (e.g. 'Gluten Free', 'Organic') → put in 'health_info'\n"
+    "- typical uses (e.g. 'Moisturizer', 'Cooking Oil') → put in 'typical_uses'\n"
+    "- halal certification authority names or logos (e.g. 'JAKIM', 'IFANCA') → put in 'cert_bodies'\n"
+    "- any halal/haram certification text or warnings → put in 'halal_tag'\n"
+    "- company emails, phone numbers, or website → put in 'company_contact'\n"
+    "Extract ALL fields simultaneously — do not skip any just because another field was found. "
     "Images that are NOT relevant: humans, furniture, vehicles, landscapes, generic documents."
 )
 
@@ -33,10 +45,43 @@ class ProductSchema(BaseModel):
         description='One of: "food", "beverage", "cosmetic", "pharma", or empty string'
     )
     ingredients: List[str] = Field(
-        description="Array of ingredient strings if an ingredient list is visible; empty array otherwise"
+        default_factory=list,
+        description="Every ingredient string visible in the ingredients list; empty list if not visible"
     )
     halal_tag: str = Field(
         description="Any halal certificate, haram warning, or certification text visible; empty string if none"
+    )
+    barcodes: List[str] = Field(
+        default_factory=list,
+        description="Numeric EAN/UPC barcode digits visible on packaging e.g. ['8901234567890']; empty list if none"
+    )
+    qr_codes: List[str] = Field(
+        default_factory=list,
+        description="Decoded QR code content — URLs or text strings e.g. ['https://brand.com/verify']; empty list if none"
+    )
+    fda_numbers: List[str] = Field(
+        default_factory=list,
+        description="FDA or other regulatory registration numbers visible e.g. ['FDA-12345']; empty list if none"
+    )
+    sold_in: List[str] = Field(
+        default_factory=list,
+        description="Countries or regions mentioned on the packaging e.g. ['Pakistan', 'UAE']; empty list if none"
+    )
+    health_info: List[str] = Field(
+        default_factory=list,
+        description="Health claims or tags visible on packaging e.g. ['Gluten Free', 'Organic', 'Sugar Free']; empty list if none"
+    )
+    typical_uses: List[str] = Field(
+        default_factory=list,
+        description="Typical use cases mentioned on packaging e.g. ['Moisturizer', 'Shampoo', 'Cooking Oil']; empty list if none"
+    )
+    cert_bodies: List[str] = Field(
+        default_factory=list,
+        description="Halal certification authority names or logos visible e.g. ['JAKIM', 'IFANCA', 'PCSIR']; empty list if none"
+    )
+    company_contact: List[str] = Field(
+        default_factory=list,
+        description="Company contact info visible on packaging e.g. ['info@brand.com', '+92-21-1234567']; empty list if none"
     )
 
 
@@ -63,6 +108,14 @@ _SCHEMA_FALLBACK = {
     "category": "",
     "ingredients": [],
     "halal_tag": "",
+    "barcodes": [],
+    "qr_codes": [],
+    "fda_numbers": [],
+    "sold_in": [],
+    "health_info": [],
+    "typical_uses": [],
+    "cert_bodies": [],
+    "company_contact": [],
 }
 
 
@@ -89,7 +142,10 @@ async def extract_image_schema(base64_image: str) -> dict:
         schema = result.model_dump()
         print(
             f"[VISION] Schema parsed: relevant={schema['is_relevant']}, "
-            f"product={schema['product_name']!r}, brand={schema['brand']!r}"
+            f"product={schema['product_name']!r}, brand={schema['brand']!r}, "
+            f"barcodes={schema['barcodes']}, qr_codes={schema['qr_codes']}, "
+            f"fda={schema['fda_numbers']}, cert_bodies={schema['cert_bodies']}, "
+            f"ingredients={len(schema['ingredients'])} items, sold_in={schema['sold_in']}"
         )
         return schema
     except Exception as e:
