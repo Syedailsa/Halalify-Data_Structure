@@ -8,13 +8,25 @@ from langchain_core.messages import HumanMessage
 from langchain_core.tools import tool
 from langchain_groq import ChatGroq
 from langgraph.checkpoint.memory import MemorySaver
-
+from pydantic import BaseModel
 from agent.tools.websearch_tool import web_search as _web_search
 from config import COLLECTION_PRODUCTS, SCORE_THRESHOLD, get_settings
 from services.embed_service import EmbedService
 from services.qdrant_client import QdrantService
 from utils.category import get_cert_bodies as _get_cert_bodies
 from datetime import datetime
+import logging
+from prompts.general_guidelines_prompt import general_prompt
+
+# set up a logger
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
 
 # initialize variables at module level
 SEMANTIC_POOL = 10
@@ -22,6 +34,200 @@ settings = get_settings()
 
 VECTOR_NAME   = "halal_product_dense_vector"
 Checkpointer = MemorySaver()
+
+if not settings.FIREWORKS_API_KEY:
+    raise ValueError("Couldn't initialize FIREWORKS_API_KEY!")
+
+if not settings.QDRANT_API_KEY or not settings.QDRANT_URL:
+    raise ValueError("QDRANT credentials not defined!")
+
+embed_svc = EmbedService(settings.FIREWORKS_API_KEY)
+qdrant_svc = QdrantService(settings.QDRANT_URL, settings.QDRANT_API_KEY)
+
+if not embed_svc:
+    raise ValueError("Embedding model not configured")
+if not qdrant_svc:
+    raise ValueError("Qdrant collection not configured")
+
+
+# ── Tool 1: Semantic search ───────────────────────────────────────────────
+@tool
+async def semantic_search(text: str) -> str:
+    """
+    Embed the query and fetch the top matching products from the halal database.
+    Returns a JSON string pool of products. ALWAYS call this first for any product query.
+
+    cert_body_hint: pass this when the user is asking about a country DIFFERENT from their detected location. Supply the cert body string returned by
+    get_cert_body_for_country so the embedding is enriched correctly
+    for that country instead of the user's home location.
+    Leave empty for normal location-scoped searches.
+    """
+    # Use the hint when provided (different-country query), otherwise fall back
+    # to the session location cert bodies.
+
+    print(f"[SEMANTIC] Embedding: '{text}'")
+    try:
+        vector = await embed_svc.embed(text)
+    except Exception as e:
+        print(f"[SEMANTIC] Embedding failed: {e}")
+        return json.dumps([])
+
+    try:
+        response = await qdrant_svc.client.query_points(
+            collection_name=COLLECTION_PRODUCTS,
+            query=vector,
+            using=VECTOR_NAME,
+            with_vectors=False,
+            limit=SEMANTIC_POOL,
+            score_threshold=SCORE_THRESHOLD,
+        )
+        print(f"[SEMANTIC] {len(response.points)} results above threshold {SCORE_THRESHOLD}")
+    except Exception as e:
+        print(f"[SEMANTIC] Qdrant error: {e}")
+        return json.dumps([])
+
+    pool = []
+    points = response.points if response.points else []
+    for point in points:
+        payload = point.payload
+        pool.append(payload)
+
+        
+    [print(f"canonical_id: {payload.get('canonical_id')}, norm_name: {payload.get('norm_name')}") for payload in pool]
+    return pool
+
+
+class FilterArgs(BaseModel):
+    norm_name:    Optional[str] = None
+    category_l1:  Optional[str] = None
+    category_l2:  Optional[str] = None
+    halal_status: Optional[str] = None
+    sold_in:      Optional[List[str]] = None
+    marketplace:  Optional[List[str]] = None
+    companies:    Optional[List[str]] = None
+    cert_bodies:  Optional[List[str]] = None
+    health_info:  Optional[List[str]] = None
+    barcodes:     Optional[List[str]] = None
+    typical_uses:    Optional[List[str]] = None
+    fda_numbers:     Optional[List[str]] = None
+    company_contact: Optional[List[str]] = None
+    cert_expiry:     Optional[str]       = None   
+    cert_issue:      Optional[str]       = None   
+# ── Tool 2: Filter semantic results ──────────────────────────────────────
+@tool
+def filter_semantic_results(
+    pool: List[dict],
+    filter_args: FilterArgs,
+) -> dict:
+    """
+    Filter the semantic search pool using values SEEN in the pool data.
+    Derive all filter values from ACTUAL VALUES in the pool — not raw user text.
+    Returns JSON: {"success": bool, "filtered_products": [...], "error": string}
+    If filtered_products is empty, no exact matches found — call web_search as the next step.
+
+    Args:
+        pool:         JSON string from semantic_search
+        norm_name:    product name EXACTLY as seen in pool e.g. 'Kit Kat'
+        category_l1:  category EXACTLY as seen in pool e.g. 'Food'
+        category_l2:  sub-category EXACTLY as seen in pool e.g. 'Snacks & Confectionery'
+        halal_status: status EXACTLY as seen in pool e.g. 'Halal', 'Haraam', 'Mushbooh'
+        sold_in:      regions EXACTLY as seen in pool e.g. ['Singapore']
+        marketplace:  marketplace EXACTLY as seen in pool e.g. ['Retail']
+        companies:    company names EXACTLY as seen in pool e.g. ['Nestle S.A.']
+        cert_bodies:  cert bodies EXACTLY as seen in pool e.g. ['IFANCA']
+        health_info:  health tags EXACTLY as seen in pool
+        barcodes:     barcodes EXACTLY as seen in pool
+        typical_uses:       use-case tags EXACTLY as seen in pool e.g. ['Moisturizer', 'Toner']
+        fda_numbers:        FDA registration numbers EXACTLY as seen in pool
+        company_contact:    contact strings EXACTLY as seen in pool e.g. ['info@nseproducts.com']
+        cert_expiry:        exact expiry date string to match e.g. '2025-12-31'
+        cert_issue:         exact issue date string to match e.g. '2023-01-01'
+        
+    """
+    print("Filter tool called")
+    print("cert bodies", filter_args.cert_bodies)
+    if not pool:
+        logger.info("No points present, can't filter!")
+        return {
+            "success": False,
+            "filtered_products": [],
+            "error": "No products for filtering"
+        }
+    active_filters = {k:v for k,v in filter_args.model_dump().items() if v is not None}
+
+    filtered = []
+    for p in pool:
+
+        if p.get("cert_expiry"):
+            parsed_expiry_date = parse_date(p["cert_expiry"])
+            # get current date time
+            # filter out expired products
+            if parsed_expiry_date and parsed_expiry_date < datetime.now():
+                continue
+
+        match = True
+        for k,v in active_filters.items():
+            p_value = p.get(k)
+
+            if isinstance(v, list):
+                if not p_value or not set(v).issubset(set(p_value)):
+                    match = False
+                    break
+            else:
+                if p_value != v:
+                    match = False
+                    break
+        if match:
+            filtered.append(p)
+
+    logger.info(f"[FILTER] {len(filtered)}/{len(pool)} matched")
+
+    if not filtered:
+        logger.info("[FILTER] No matches found after filtering")
+        return {
+            "success": False,
+            "filtered_products": [],
+            "error": "No match found after filtering"
+        }
+    
+    # filtering successfull, return the results
+    return {
+        "success": True,
+        "filtered_products": filtered,
+        "error": ""
+    }
+
+# ── Tool 3: Cert body lookup by country ──────────────────────────────────
+@tool
+def get_cert_body_for_country(country: str) -> str:
+    """
+    Return the halal certification authorities for a given country as a JSON list.
+    Call this when the user mentions a specific country or region in their query
+    that differs from their detected location, so you can scope filtering correctly.
+    """
+    bodies = _get_cert_bodies(country.strip())
+    print(f"[CERT_LOOKUP] country={country!r} → {bodies}")
+    if not bodies:
+        return json.dumps({"country": country, "cert_bodies": [], "note": f"No known cert authority for {country}"})
+    return json.dumps({"country": country, "cert_bodies": bodies})
+
+# ── Tool 4: Web search (last resort) ─────────────────────────────────────
+@tool
+async def web_search(query: str) -> str:
+    """
+    Search the web for halal certification information.
+    LAST RESORT ONLY — call this only after filter_semantic_results returns
+    fallback=True or count=0. NEVER call this as your first tool.
+    Returns a JSON array of {index, title, url, snippet} objects.
+    After reviewing the results, call surface_web_results with the relevant indices.
+    """
+    results =  await _web_search(query)
+    return {
+        "success": True,
+        "web_results": results,
+        "error": ""
+    }
+
 
 PERSONALITY_CAPABILITIES_PROMPT = """
 You are Halalify Assistant AI, a friendly and knowledgeable, conversational halal product verification assistant built over a Halal verification platform named HALALIFY. 
@@ -35,106 +241,22 @@ HALALIFY's CAPABILITIES:
 \n\n
 """
 
-GUIDELINES_PROMPT = """
-You have access to tools to search a verified halal product database with millions of certified products.
+GUIDELINES_PROMPT = general_prompt
 
-## MANDATORY FLOW FOR PRODUCT QUERIES
 
-Step 1 → call semantic_search(text=user_query)
-Returns a JSON pool of real products from the verified database.
 
-Step 2 → If `semantic_search` tool returns empty results or an empty pool:
-        - recall `semantic_search` tool and this adjust the query parameter or paraphrase it. It can help get relevant results.
-        - You can call `semantic_search` tool up to 4 times total (including the first call), but STOP immediately once you get valid results.
-        
-Step 2 → READ the pool carefully, if the pool is not empty then always call filter_semantic_results with:
-        - pool: the exact JSON string returned by semantic_search
-        - filters derived ONLY from ACTUAL VALUES you see in the pool — not raw user text
+def parse_date(s: str) -> datetime | None:
+    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y", "%Y/%m/%d"):
+        try:
+            return datetime.strptime(s, fmt)
+        except ValueError:
+            continue
+    return None
 
-Step 2.5 → (optional) If the user mentions a country DIFFERENT from their detected location:
-        a. call get_cert_body_for_country(country) → get that country's cert bodies
-        b. Re-call semantic_search(text=original_query, cert_body_hint=<first cert body from result>)
-            so the embedding is enriched for the correct country, not the user's home location
-        c. Use this new pool (not the first one) for filter_semantic_results
-
-Step 3 → If filter_semantic_results returns fallback=True or count=0 or even if the `semantic_search` didn't returned any relevant results after a max retry of 4 times, then:
-        - call web_search(query=user_query) as a last resort.
-        - NEVER call web_search before completing the above steps.
-
-## FILTER DERIVATION RULES
-
-### The Single Rule (applies to ALL filter parameters)
-
-For ANY filter parameter (`norm_name`, `companies`, `category_l1`, `category_l2`, `halal_status`, `sold_in`, `marketplace`, `cert_bodies`, `health_info`, `barcodes`):
-
-**Step 1 — Does the user explicitly or implicitly ask for this filter?**
-
-- **Explicit:** "is Kit Kat halal?" → `norm_name`, `halal_status`
-- **Explicit:** "products by Nestle" → `companies`
-- **Implicit:** location context → `sold_in`, `cert_bodies`
-- **Implicit:** "halal snacks" → `halal_status`, `category_l2`
-
-**NO** → leave parameter as `None`
-
-**Step 2 — YES → Can you find a matching/similar value in the pool for this parameter?**
-
-| Scenario | Action | Example |
-|----------|--------|---------|
-| **YES, match exists in pool** | Use the EXACT string from the pool | `"kit kat"` + pool has `"Kit Kat"` → `norm_name="Kit Kat"`<br>`"nestle"` + pool has `"Nestle S.A."` → `companies=["Nestle S.A."]`<br>`"singapore"` + pool has `"Singapore"` → `sold_in=["Singapore"]`<br>`"ifanca"` + pool has `"IFANCA"` → `cert_bodies=["IFANCA"]` |
-| **NO match in pool, but user explicitly mentioned this parameter** | Use the user's term as-is | `"is Hajmola halal?"` + pool has NO `"Hajmola"` → `norm_name="Hajmola"`<br>`"certified by ABC Body"` + pool has NO `"ABC Body"` → `cert_bodies=["ABC Body"]`<br>`"sold in Mars"` + pool has NO `"Mars"` → `sold_in=["Mars"]` |
-
-**Why this matters:** Using user term when no pool match exists will return 0 results → triggers `fallback=True` → agent knows to call `web_search`
-
----
-
-### Decision Table
-
-| User says | Parameter | Match in pool? | Action |
-|-----------|-----------|----------------|--------|
-| `"Kit Kat"` | `norm_name` | YES → `"Kit Kat"` | Use pool value |
-| `"kit kat"` | `norm_name` | YES → `"Kit Kat"` | Use pool value |
-| `"Hajmola"` | `norm_name` | NO | Use `"Hajmola"` (user term) |
-| `"Nestle"` | `companies` | YES → `"Nestle S.A."` | Use pool value |
-| `"Unknown Brand"` | `companies` | NO | Use `"Unknown Brand"` (user term) |
-| `"Singapore"` | `sold_in` | YES → `"Singapore"` | Use pool value |
-| `"Mars planet"` | `sold_in` | NO | Use `"Mars planet"` (user term) |
-| `"halal"` | `halal_status` | YES → `"Halal"` | Use pool value |
-| `"haram"` | `halal_status` | YES → `"Haraam"` | Use pool value |
-
----
-
-### One-line Summary
-
-> For any filter parameter: if user asks for it → find closest match in pool and use that EXACT value; if no match exists but user explicitly specified it → use user's term as-is; otherwise leave `None`.
-## WHEN NOT TO USE TOOLS
-- Greetings (hi, hello, thanks, bye) → respond directly
-- Help requests (what can you do?) → explain capabilities directly
-- General conversation → respond directly
-
-## BARCODE / QR CODE SCANS
-- Queries phrased as "is <code> halal?" come from barcode or QR code scans
-- If the value is clearly not a consumer product (system code, URL, ticket ID, document ref)
-→ respond warmly that it is outside the scope of halal verification and suggest
-scanning a product barcode printed on packaging instead
-- If it could plausibly be a product or brand → proceed with semantic_search normally
-- Never map a barcode to a random unrelated product — only report confirmed matches
-
-## RESPONSE GUIDELINES
-- Be warm, conversational, and helpful
-- State halal / haram / mushbooh status clearly upfront
-- Explain Mushbooh (doubtful — depends on source) if relevant
-- Flag expired certifications gently
-- Keep responses concise but complete and comprehensive
-- NEVER fabricate, hallucinate, modify or alter product data — only use what tools return
-- If filter_semantic_results returns fallback=True → call the web_search tool to try to find any relevant information from the web, using the original user query as the search query
-- If web_search also returns nothing → tell the user honestly and suggest checking the product with the manufacturer or a halal certification body directly
-"""
 
 
 async def run_agent(
     user_query: str,
-    embed_svc: EmbedService,
-    qdrant_svc: QdrantService,
     country: str | None = None,
     cert_bodies: List[str] | None = None,
     thread_id: str = "default"
@@ -193,307 +315,6 @@ async def run_agent(
 
     effective_system_prompt = PERSONALITY_CAPABILITIES_PROMPT + location_block + GUIDELINES_PROMPT
 
-    # ── Tool 1: Semantic search ───────────────────────────────────────────────
-    @tool
-    async def semantic_search(text: str, cert_body_hint: Optional[List[str]] = None) -> str:
-        """
-        Embed the query and fetch the top matching products from the halal database.
-        Returns a JSON string pool of products. ALWAYS call this first for any product query.
-
-        cert_body_hint: pass this when the user is asking about a country DIFFERENT from their detected location. Supply the cert body string returned by
-        get_cert_body_for_country so the embedding is enriched correctly
-        for that country instead of the user's home location.
-        Leave empty for normal location-scoped searches.
-        """
-        # Use the hint when provided (different-country query), otherwise fall back
-        # to the session location cert bodies.
-        print("enrich_with" , cert_body_hint)
-        if cert_body_hint:
-            enrich_with = cert_body_hint
-        else:
-            enrich_with = _cert_bodies
-
-        search_text = f"{text} {' '.join(enrich_with)}" if enrich_with else text
-
-        print(f"[SEMANTIC] Embedding: '{search_text}'")
-        try:
-            vector = await embed_svc.embed(search_text)
-        except Exception as e:
-            print(f"[SEMANTIC] Embedding failed: {e}")
-            return json.dumps([])
-
-        try:
-            response = await qdrant_svc.client.query_points(
-                collection_name=COLLECTION_PRODUCTS,
-                query=vector,
-                using=VECTOR_NAME,
-                with_vectors=False,
-                limit=SEMANTIC_POOL,
-                score_threshold=SCORE_THRESHOLD,
-            )
-            print(f"[SEMANTIC] {len(response.points)} results above threshold {SCORE_THRESHOLD}")
-        except Exception as e:
-            print(f"[SEMANTIC] Qdrant error: {e}")
-            return json.dumps([])
-
-        pool = []
-        for point in response.points:
-            p = point.payload or {}
-            pool.append({
-                "score":           round(point.score, 4),
-                "canonical_id":    p.get("canonical_id"),
-                "norm_name":       p.get("norm_name"),
-                "halal_status":    p.get("halal_status"),
-                "companies":       p.get("companies"),
-                "category_l1":     p.get("category_l1"),
-                "category_l2":     p.get("category_l2"),
-                "sold_in":         p.get("sold_in"),
-                "marketplace":     p.get("marketplace"),
-                "cert_bodies":     p.get("cert_bodies"),
-                "cert_expiry":     p.get("cert_expiry"),
-                "cert_issue":      p.get("cert_issue"),
-                "source_count":    p.get("source_count"),
-                "health_info":     p.get("health_info"),
-                "typical_uses":    p.get("typical_uses"),
-                "source_ids":      p.get("source_ids"),
-                "source_files":    p.get("source_files"),
-                "fda_numbers":     p.get("fda_numbers"),
-                "barcodes":        p.get("barcodes"),
-                "company_contact": p.get("company_contact"),
-            })
-
-        for i, item in enumerate(pool, 1):
-            print(f"  {i}. [{item['score']}] {item['norm_name']} | {item['halal_status']}")
-
-        return json.dumps(pool)
-
-    # ── Tool 2: Filter semantic results ──────────────────────────────────────
-    @tool
-    def filter_semantic_results(
-        pool:         str,
-        norm_name:    Optional[str]       = None,
-        category_l1:  Optional[str]       = None,
-        category_l2:  Optional[str]       = None,
-        halal_status: Optional[str]       = None,
-        sold_in:      Optional[List[str]] = None,
-        marketplace:  Optional[List[str]] = None,
-        companies:    Optional[List[str]] = None,
-        cert_bodies:  Optional[List[str]] = None,
-        health_info:  Optional[List[str]] = None,
-        barcodes:     Optional[List[str]] = None,
-        typical_uses:    Optional[List[str]] = None,
-        fda_numbers:     Optional[List[str]] = None,
-        company_contact: Optional[List[str]] = None,
-        cert_expiry:     Optional[str]       = None,   
-        cert_issue:      Optional[str]       = None,   
-        cert_expiry_after:  Optional[str]    = None,   
-        cert_expiry_before: Optional[str]    = None,
-    ) -> str:
-        """
-        Filter the semantic search pool using values SEEN in the pool data.
-        Derive all filter values from ACTUAL VALUES in the pool — not raw user text.
-        Returns JSON: {"results": [...], "count": N, "fallback": bool}
-        If fallback=True, no exact matches found — call web_search as the next step.
-
-        Args:
-            pool:         JSON string from semantic_search
-            norm_name:    product name EXACTLY as seen in pool e.g. 'Kit Kat'
-            category_l1:  category EXACTLY as seen in pool e.g. 'Food'
-            category_l2:  sub-category EXACTLY as seen in pool e.g. 'Snacks & Confectionery'
-            halal_status: status EXACTLY as seen in pool e.g. 'Halal', 'Haraam', 'Mushbooh'
-            sold_in:      regions EXACTLY as seen in pool e.g. ['Singapore']
-            marketplace:  marketplace EXACTLY as seen in pool e.g. ['Retail']
-            companies:    company names EXACTLY as seen in pool e.g. ['Nestle S.A.']
-            cert_bodies:  cert bodies EXACTLY as seen in pool e.g. ['IFANCA']
-            health_info:  health tags EXACTLY as seen in pool
-            barcodes:     barcodes EXACTLY as seen in pool
-            typical_uses:       use-case tags EXACTLY as seen in pool e.g. ['Moisturizer', 'Toner']
-            fda_numbers:        FDA registration numbers EXACTLY as seen in pool
-            company_contact:    contact strings EXACTLY as seen in pool e.g. ['info@nseproducts.com']
-            cert_expiry:        exact expiry date string to match e.g. '2025-12-31'
-            cert_issue:         exact issue date string to match e.g. '2023-01-01'
-            cert_expiry_after:  keep only products whose cert_expiry is after this date (still-valid filter)
-            cert_expiry_before: keep only products whose cert_expiry is before this date
-            
-        """
-        print("Filter tool called")
-        print("cert bodies", cert_bodies)
-
-        def parse_date(s: str) -> datetime | None:
-            for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y", "%Y/%m/%d"):
-                try:
-                    return datetime.strptime(s, fmt)
-                except ValueError:
-                    continue
-            return None
-
-        try:
-            products = json.loads(pool) if pool else []
-        except Exception as e:
-            return json.dumps({"results": [], "count": 0, "fallback": True,
-            "message": "Pool data was missing or malformed."})
-
-        filtered = []
-        for p in products:
-            match = True
-
-            if norm_name:
-                db_val = (p.get("norm_name") or "").lower()
-                if norm_name.lower() not in db_val:
-                    match = False
-
-            if halal_status:
-                db_val = (p.get("halal_status") or "").lower()
-                if halal_status.lower() not in db_val:
-                    match = False
-
-            if category_l1:
-                db_val = (p.get("category_l1") or "").lower()
-                if category_l1.lower() not in db_val:
-                    match = False
-
-            if category_l2:
-                db_val = (p.get("category_l2") or "").lower()
-                if category_l2.lower() not in db_val:
-                    match = False
-
-            if companies:
-                db_val = " ".join(p.get("companies") or []).lower()
-                if not any(c.lower() in db_val for c in companies):
-                    match = False
-
-            if sold_in:
-                db_val = " ".join(p.get("sold_in") or []).lower()
-                if not any(s.lower() in db_val for s in sold_in):
-                    match = False
-
-            # enforce cert_bodies if location is enabled and cert_bodies args is None/Empty List        
-            # active_cert_bodies = cert_bodies or _cert_bodies
-            if cert_bodies:
-                db_val = " ".join(p.get("cert_bodies") or []).lower()
-                if not any(c.lower() in db_val for c in cert_bodies):
-                    match = False
-
-            if marketplace:
-                db_val = " ".join(p.get("marketplace") or []).lower()
-                if not any(m.lower() in db_val for m in marketplace):
-                    match = False
-
-            if health_info:
-                db_val = " ".join(p.get("health_info") or []).lower()
-                if not any(h.lower() in db_val for h in health_info):
-                    match = False
-
-            if barcodes:
-                db_val = " ".join(p.get("barcodes") or []).lower()
-                if not any(b.lower() in db_val for b in barcodes):
-                    match = False
-
-            if typical_uses:
-                db_val = " ".join(p.get("typical_uses") or []).lower()
-                if not any(t.lower() in db_val for t in typical_uses):
-                    match = False
-
-            if fda_numbers:
-                db_val = " ".join(p.get("fda_numbers") or []).lower()
-                if not any(f.lower() in db_val for f in fda_numbers):
-                    match = False
-
-            if company_contact:
-                db_val = " ".join(p.get("company_contact") or []).lower()
-                if not any(c.lower() in db_val for c in company_contact):
-                    match = False
-
-            # ── New date filters ──────────────────────────────────────────────────
-            if cert_expiry:
-                if (p.get("cert_expiry") or "") != cert_expiry:
-                    match = False
-
-            if cert_issue:
-                if (p.get("cert_issue") or "") != cert_issue:
-                    match = False
-
-            if cert_expiry_after:
-                expiry_str = p.get("cert_expiry")
-                if not expiry_str:
-                    match = False  # no expiry date → exclude when filtering for validity
-                else:
-                    expiry_dt  = parse_date(expiry_str)
-                    cutoff_dt  = parse_date(cert_expiry_after)
-                    if not expiry_dt or not cutoff_dt or expiry_dt <= cutoff_dt:
-                        match = False
-
-            if cert_expiry_before:
-                expiry_str = p.get("cert_expiry")
-                if not expiry_str:
-                    match = False
-                else:
-                    expiry_dt  = parse_date(expiry_str)
-                    cutoff_dt  = parse_date(cert_expiry_before)
-                    if not expiry_dt or not cutoff_dt or expiry_dt >= cutoff_dt:
-                        match = False
-
-
-            if match:
-                filtered.append(p)
-
-        print(f"[FILTER] {len(filtered)}/{len(products)} matched")
-
-        if not filtered:
-            print("[FILTER] No matches — fallback to full pool")
-            return json.dumps({
-                "results": [],
-                "count": 0,
-                "fallback": True,
-                "message": "Filters returned no results, showing semantic results instead.",
-            })
-
-        return json.dumps({
-            "results": filtered,
-            "count": len(filtered),
-            "fallback": False
-        })
-
-    # ── Tool 3: Cert body lookup by country ──────────────────────────────────
-    @tool
-    def get_cert_body_for_country(country: str) -> str:
-        """
-        Return the halal certification authorities for a given country as a JSON list.
-        Call this when the user mentions a specific country or region in their query
-        that differs from their detected location, so you can scope filtering correctly.
-        """
-        bodies = _get_cert_bodies(country.strip())
-        print(f"[CERT_LOOKUP] country={country!r} → {bodies}")
-        if not bodies:
-            return json.dumps({"country": country, "cert_bodies": [], "note": f"No known cert authority for {country}"})
-        return json.dumps({"country": country, "cert_bodies": bodies})
-
-    # ── Tool 4: Web search (last resort) ─────────────────────────────────────
-    @tool
-    async def web_search(query: str) -> str:
-        """
-        Search the web for halal certification information.
-        LAST RESORT ONLY — call this only after filter_semantic_results returns
-        fallback=True or count=0. NEVER call this as your first tool.
-        Returns a JSON array of {index, title, url, snippet} objects.
-        After reviewing the results, call surface_web_results with the relevant indices.
-        """
-        return await _web_search(query)
-
-    # ── Tool 5: Surface curated web results ───────────────────────────────────
-    _web_pool: list[dict] = []
-
-    @tool
-    def surface_web_results(indices: List[int]) -> str:
-        """
-        After reviewing web_search results, call this with the indices of results
-        that are genuinely relevant to the user's halal question.
-        Pass an empty list if none are relevant.
-        """
-        selected = [_web_pool[i] for i in indices if i < len(_web_pool)]
-        print(f"[SURFACE] {len(selected)}/{len(_web_pool)} results surfaced (indices={indices})")
-        return json.dumps(selected)
-
     llm = ChatGroq(
         model="openai/gpt-oss-120b",
         api_key=settings.GROQ_API_KEY,
@@ -503,7 +324,7 @@ async def run_agent(
     agent = create_agent(
         name="HalalifySearchAgent",
         model=llm,
-        tools=[semantic_search, filter_semantic_results, get_cert_body_for_country, web_search, surface_web_results],
+        tools=[semantic_search, filter_semantic_results, get_cert_body_for_country, web_search],
         system_prompt=effective_system_prompt,
         checkpointer=Checkpointer,
     )
@@ -548,24 +369,18 @@ async def run_agent(
                 if name == "filter_semantic_results":
                     try:
                         data = json.loads(output_str)
-                        if data.get("fallback"):
-                            collected_products = []
-                        else:
-                            collected_products = data.get("results", [])
+                        collected_products = data.get("filtered_products", [])
                         print(f"[FILTER_END] {len(collected_products)} products collected")
                     except Exception as e:
                         print(f"[FILTER_END] parse error: {e} — raw: {output_str[:120]}")
                 elif name == "web_search":
                     try:
-                        pool = json.loads(output_str)
-                        if isinstance(pool, list):
-                            _web_pool.clear()
-                            _web_pool.extend(pool)
-                    except Exception:
-                        pass
-                elif name == "surface_web_results":
-                    collected_web_results = output_str
+                        data = json.loads(output_str)
+                        collected_web_results = data.get("web_results", [])
+                        print(f"[WEB SEARCH END] {len(collected_web_results)} products collected")
 
+                    except Exception as e:
+                        print(f"[WEB SEARCH END] parse error: {e} - raw {output_str[:120]}")
             elif kind == "on_chat_model_stream":
                 chunk = event["data"].get("chunk")
                 # Only yield content tokens, not tool-routing chunks

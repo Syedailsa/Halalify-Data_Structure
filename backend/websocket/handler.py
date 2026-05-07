@@ -142,8 +142,6 @@ async def handle_ws_message(
             # (semantic_search → filter_semantic_results → web_search if needed)
             async for event in run_agent(
                 user_query=search_query,
-                embed_svc=embed_svc,
-                qdrant_svc=qdrant_svc,
                 country=session.get("country"),
                 cert_bodies=merged_cert_bodies,
                 thread_id=session["thread_id"],
@@ -217,8 +215,6 @@ async def handle_ws_message(
             # Step 4: Hand off to the main agent — same flow as chat/image
             async for event in run_agent(
                 user_query=search_query,
-                embed_svc=embed_svc,
-                qdrant_svc=qdrant_svc,
                 country=session.get("country"),
                 cert_bodies=session.get("cert_bodies") or [],
                 thread_id=session["thread_id"],
@@ -262,8 +258,6 @@ async def handle_ws_message(
     try:
         async for event in run_agent(
             user_query=content,
-            embed_svc=embed_svc,
-            qdrant_svc=qdrant_svc,
             country=session.get("country"),
             cert_bodies=session.get("cert_bodies") or [],
             thread_id=session["thread_id"],
