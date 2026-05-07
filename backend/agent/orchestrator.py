@@ -93,7 +93,7 @@ async def semantic_search(text: str) -> str:
         pool.append(payload)
 
         
-    [print(f"canonical_id: {payload.get('canonical_id')}, norm_name: {payload.get('norm_name')}") for payload in pool]
+    # [print(f"canonical_id: {payload.get('canonical_id')}, norm_name: {payload.get('norm_name')}") for payload in pool]
     return pool
 
 
@@ -144,8 +144,6 @@ def filter_semantic_results(
         cert_issue:         exact issue date string to match e.g. '2023-01-01'
         
     """
-    print("Filter tool called")
-    print("cert bodies", filter_args.cert_bodies)
     if not pool:
         logger.info("No points present, can't filter!")
         return {
@@ -157,13 +155,13 @@ def filter_semantic_results(
 
     filtered = []
     for p in pool:
-
-        if p.get("cert_expiry"):
-            parsed_expiry_date = parse_date(p["cert_expiry"])
-            # get current date time
-            # filter out expired products
-            if parsed_expiry_date and parsed_expiry_date < datetime.now():
-                continue
+        # if p.get("cert_expiry"):
+        #     parsed_expiry_date = parse_date(p["cert_expiry"])
+        #     # get current date time
+        #     # filter out expired products
+        #     if parsed_expiry_date and parsed_expiry_date < datetime.now():
+        #         print(f"Product expired, can't proceed. Expiry data: {parsed_expiry_date}, Current data: {datetime.now()}")
+        #         continue
 
         match = True
         for k,v in active_filters.items():
@@ -171,10 +169,12 @@ def filter_semantic_results(
 
             if isinstance(v, list):
                 if not p_value or not set(v).issubset(set(p_value)):
+                    print(f"{p_value} didn't match {v}")
                     match = False
                     break
             else:
                 if p_value != v:
+                    print(f"{p_value} didn't match {v}")
                     match = False
                     break
         if match:
