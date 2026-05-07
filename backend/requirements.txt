@@ -8,5 +8,7 @@ httpx
 python-Levenshtein
 langchain-groq
 langchain-core
+langchain
+langgraph
 python-dotenv
 langchain-fireworks

@@ -1,23 +1,12 @@
 from __future__ import annotations
-import re
 import traceback
 from fastapi import WebSocket
 from agent.orchestrator import run_agent
-from services.company_store import CompanyStore
 from services.embed_service import EmbedService
 from services.qdrant_client import QdrantService
-from services.visionService import analyze_image, extract_image_schema, VISION_FALLBACK_PROMPT
-
-def _barcode_filter_products(products: list[dict], product_name: str) -> list[dict]:
-    """Keep only products whose norm_name contains at least one keyword from the scan."""
-    kws = set(re.sub(r"[^a-z0-9]", " ", product_name.lower()).split())
-    kws.discard("")
-    if not kws:
-        return products
-    return [
-        p for p in products
-        if any(kw in re.sub(r"[^a-z0-9]", "", (p.get("norm_name") or "").lower()) for kw in kws)
-    ]
+from services.barcodeService import extract_barcode_schema
+from services.visionService import extract_image_schema
+from utils.category import get_cert_bodies
 
 
 async def _send(ws: WebSocket, msg: dict) -> None:
@@ -35,7 +24,7 @@ async def handle_ws_message(
     message: dict,
     qdrant_svc: QdrantService,
     embed_svc: EmbedService,
-    company_store: CompanyStore,
+    session: dict,
 ) -> None:
     if not isinstance(message, dict):
         await _send(ws, {"type": "error", "content": "Malformed message", "code": "INVALID_MESSAGE"})
@@ -43,111 +32,143 @@ async def handle_ws_message(
 
     msg_type = message.get("type")
 
+    # ── Location ──────────────────────────────────────────────────────────────
+    if msg_type == "location":
+        country: str = (message.get("country") or "").strip()
+        if not country:
+            return
+        bodies = get_cert_bodies(country)
+        session["country"] = country
+        session["cert_bodies"] = bodies
+        print(f"[LOCATION] country={country!r} cert_bodies={bodies}")
+        await _send(ws, {"type": "location_ack", "country": country, "cert_bodies": bodies})
+        return
+
     # ── Vision image ──────────────────────────────────────────────────────────
     if msg_type == "image":
         image_data: str = (message.get("image") or "").strip()
         user_prompt: str | None = (message.get("prompt") or "").strip() or None
-        image_kb = len(image_data) * 3 // 4 // 1024
 
         if not image_data:
             await _send(ws, {"type": "error", "content": "No image data provided", "code": "EMPTY_IMAGE"})
             return
 
-        print(f"[IMAGE] Received image (~{image_kb} KB), prompt={user_prompt!r}")
+        print(f"[IMAGE] Received image (~{len(image_data) * 3 // 4 // 1024} KB), prompt={user_prompt!r}")
         try:
-            # ── Step 1: Extract structured schema ─────────────────────────────
+            # Step 1: Vision extracts product name and brand from the image
             await _send(ws, {"type": "thinking", "content": "Analyzing image..."})
             schema = await extract_image_schema(image_data)
 
-            # ── Step 2: Reject irrelevant images ──────────────────────────────
+            # Step 2: Reject images that aren't halal-relevant products
             if not schema.get("is_relevant", True):
-                msg = (
+                await _stream_text(
+                    ws,
                     schema.get("rejection_message")
                     or "I can only assist with halal-related matters. "
-                       "This image doesn't appear to be a food, beverage, cosmetic, or pharmaceutical product."
+                       "This image doesn't appear to be a food, beverage, cosmetic, or pharmaceutical product.",
                 )
-                await _stream_text(ws, msg)
                 return
 
-            # ── Step 3: Build search query from extracted fields ───────────────
-            product_name = (schema.get("product_name") or "").strip()
-            brand = (schema.get("brand") or "").strip()
-            agent_query = " ".join(p for p in [brand, product_name] if p).strip()
+            # Step 3: Extract all schema fields
+            product_name    = (schema.get("product_name") or "").strip()
+            brand           = (schema.get("brand") or "").strip()
+            ingredients     = schema.get("ingredients") or []
+            barcodes        = schema.get("barcodes") or []
+            qr_codes        = schema.get("qr_codes") or []
+            fda_numbers     = schema.get("fda_numbers") or []
+            sold_in         = schema.get("sold_in") or []
+            health_info     = schema.get("health_info") or []
+            typical_uses    = schema.get("typical_uses") or []
+            img_cert_bodies = schema.get("cert_bodies") or []
+            company_contact = schema.get("company_contact") or []
 
-            # ── Step 4: Try DB search via agent if we have a product/brand ─────
-            agent_has_data = False
-            if agent_query:
-                search_query = (
-                    f"{user_prompt.strip()} — product: {agent_query}"
-                    if user_prompt
-                    else f"is {agent_query} halal?"
+            # Merge cert bodies seen on the image with session location cert bodies
+            merged_cert_bodies = list(dict.fromkeys(
+                (session.get("cert_bodies") or []) + img_cert_bodies
+            ))
+
+            # Build primary identity part of the query
+            id_parts = []
+            if product_name:
+                id_parts.append(f"product {product_name}")
+            if brand:
+                id_parts.append(f"brand {brand}")
+            if barcodes:
+                id_parts.append(f"barcode {' '.join(barcodes)}")
+            if fda_numbers:
+                id_parts.append(f"FDA number {' '.join(fda_numbers)}")
+
+            # Nothing identifiable extracted — don't run a meaningless search
+            if not id_parts and not ingredients and not qr_codes:
+                await _stream_text(
+                    ws,
+                    "I couldn't extract any identifiable information from this image — "
+                    "no product name, brand, barcode, or ingredient list was visible. "
+                    "Please try a clearer or closer photo of the packaging label.",
                 )
-                await _send(ws, {"type": "thinking", "content": f'Searching "{agent_query}" in halal database...'})
-                token_buffer: list[str] = []
+                return
 
-                async for event in run_agent(
-                    user_query=search_query,
-                    embed_svc=embed_svc,
-                    qdrant_svc=qdrant_svc,
-                    company_store=company_store,
-                ):
-                    etype = event.get("type")
+            identity = " ".join(id_parts).strip() or "scanned product"
+            display_name = f"{brand} {product_name}".strip() or (barcodes[0] if barcodes else identity)
 
-                    if etype in ("thinking", "tool_call"):
-                        await _send(ws, event)
+            if user_prompt:
+                search_query = f"{user_prompt.strip()} — product: {identity}"
+            else:
+                search_query = f"is {identity} halal?"
 
-                    elif etype == "token":
-                        token_buffer.append(event.get("content", ""))
+            if qr_codes:
+                search_query += f" QR code content: {'; '.join(qr_codes)}."
+            if ingredients:
+                search_query += f" Ingredients on packaging: {', '.join(ingredients)}."
+            if sold_in:
+                search_query += f" Sold in: {', '.join(sold_in)}."
+            if health_info:
+                search_query += f" Health claims: {', '.join(health_info)}."
+            if typical_uses:
+                search_query += f" Typical uses: {', '.join(typical_uses)}."
+            if img_cert_bodies:
+                search_query += f" Certification visible: {', '.join(img_cert_bodies)}."
+            if company_contact:
+                search_query += f" Company contact: {', '.join(company_contact)}."
 
-                    elif etype == "tool_result":
-                        products = event.get("products", [])
-                        web_results = event.get("web_results")
-                        if products or web_results:
-                            agent_has_data = True
-                            for t in token_buffer:
-                                await _send(ws, {"type": "token", "content": t})
-                            token_buffer.clear()
-                        if products:
-                            await _send(ws, {
-                                "type": "products",
-                                "products": products[:8],
-                                "summary": event.get("summary"),
-                            })
-                        if web_results:
-                            await _send(ws, {
-                                "type": "products",
-                                "products": [],
-                                "summary": None,
-                                "web_results": web_results,
-                            })
+            print(
+                f"[IMAGE] Query built: {search_query!r} | "
+                f"barcodes={barcodes} qr={qr_codes} ingredients={len(ingredients)} items "
+                f"sold_in={sold_in} cert_bodies={img_cert_bodies}"
+            )
+            await _send(ws, {"type": "thinking", "content": f'Searching "{display_name}" in halal database...'})
 
-                    elif etype == "done":
-                        if agent_has_data:
-                            for t in token_buffer:
-                                await _send(ws, {"type": "token", "content": t})
-                            token_buffer.clear()
-                            await _send(ws, {"type": "done"})
-
-                    elif etype == "error":
-                        await _send(ws, {
-                            "type": "error",
-                            "content": event.get("content", "Unknown error"),
-                            "code": event.get("code", "AGENT_ERROR"),
-                        })
-
-            # ── Step 5: Vision fallback if DB had no match ────────────────────
-            if not agent_has_data:
-                print(f"[IMAGE] No DB match for {agent_query!r} — running vision fallback")
-                await _send(ws, {"type": "thinking", "content": "Analyzing ingredients and halal status from image..."})
-                fallback_prompt = user_prompt or VISION_FALLBACK_PROMPT
-                vision_result = await analyze_image(image_data, fallback_prompt)
-                
-                print(f"[IMAGE] Vision fallback complete ({len(vision_result)} chars)")
-                await _stream_text(ws, vision_result)
+            # Step 4: Hand off to the main agent — it handles everything from here
+            # (semantic_search → filter_semantic_results → web_search if needed)
+            async for event in run_agent(
+                user_query=search_query,
+                country=session.get("country"),
+                cert_bodies=merged_cert_bodies,
+                thread_id=session["thread_id"],
+            ):
+                etype = event.get("type")
+                if etype == "thinking":
+                    await _send(ws, {"type": "thinking", "content": event.get("content", "Thinking...")})
+                elif etype == "tool_call":
+                    await _send(ws, {"type": "tool_call", "tool": event.get("tool", ""), "args": event.get("args", {})})
+                elif etype == "tool_result":
+                    products   = event.get("products", [])
+                    web_results = event.get("web_results")
+                    if products:
+                        await _send(ws, {"type": "products", "products": products[:8], "summary": event.get("summary")})
+                    if web_results:
+                        await _send(ws, {"type": "products", "products": [], "summary": None, "web_results": web_results})
+                elif etype == "token":
+                    await _send(ws, {"type": "token", "content": event.get("content", "")})
+                elif etype == "done":
+                    print(f"[IMAGE] Done responding to: {display_name!r}")
+                    await _send(ws, {"type": "done"})
+                elif etype == "error":
+                    await _send(ws, {"type": "error", "content": event.get("content", "Unknown error"), "code": event.get("code", "AGENT_ERROR")})
 
         except Exception:
             traceback.print_exc()
-            await _send(ws, {"type": "error", "content": "Vision analysis failed", "code": "VISION_ERROR"})
+            await _send(ws, {"type": "error", "content": "Image analysis failed", "code": "VISION_ERROR"})
         return
 
     # ── Barcode / QR ──────────────────────────────────────────────────────────
@@ -157,67 +178,66 @@ async def handle_ws_message(
             await _send(ws, {"type": "error", "content": "Empty barcode", "code": "EMPTY_BARCODE"})
             return
 
-        product_name = raw
-        if raw.startswith("http"):
-            try:
-                from urllib.parse import urlparse
-                domain = urlparse(raw).hostname or ""
-                product_name = domain.replace("wap.", "").replace("www.", "").split(".")[0]
-            except Exception:
-                pass
-
-        print(f"[BARCODE] Scanned: {raw!r} → searching as {product_name!r}")
-        barcode_query = f"is {product_name} halal?"
+        print(f"[BARCODE] Scanned: {raw!r}")
         try:
-            await _send(ws, {"type": "thinking", "content": f'Looking up "{product_name}" in halal database...'})
+            # Step 1: Classify and extract schema from raw scanned content
+            await _send(ws, {"type": "thinking", "content": "Reading scan..."})
+            schema = await extract_barcode_schema(raw)
+
+            # Step 2: Reject irrelevant scans
+            if not schema.get("is_relevant"):
+                await _stream_text(
+                    ws,
+                    schema.get("rejection_message")
+                    or "This scan doesn't appear to be a halal-relevant consumer product. "
+                       "Try scanning a barcode on food, beverage, or cosmetic packaging.",
+                )
+                return
+
+            # Step 3: Build query from schema
+            content_type = schema.get("content_type", "")
+            product_name = (schema.get("product_name") or "").strip()
+            brand        = (schema.get("brand") or "").strip()
+
+            if content_type == "numeric_barcode":
+                # Pass the number directly — the agent's filter_semantic_results
+                # can match it against the barcodes field in the DB
+                search_query = f"is barcode {raw} halal?"
+                display_name = raw
+            else:
+                agent_query  = " ".join(p for p in [brand, product_name] if p).strip() or raw
+                search_query = f"is {agent_query} halal?"
+                display_name = agent_query
+
+            print(f"[BARCODE] Query built: {search_query!r}")
+            await _send(ws, {"type": "thinking", "content": f'Looking up "{display_name}" in halal database...'})
+
+            # Step 4: Hand off to the main agent — same flow as chat/image
             async for event in run_agent(
-                user_query=barcode_query,
-                embed_svc=embed_svc,
-                qdrant_svc=qdrant_svc,
-                company_store=company_store,
+                user_query=search_query,
+                country=session.get("country"),
+                cert_bodies=session.get("cert_bodies") or [],
+                thread_id=session["thread_id"],
             ):
-                event_type = event.get("type")
-
-                if event_type == "thinking":
+                etype = event.get("type")
+                if etype == "thinking":
                     await _send(ws, {"type": "thinking", "content": event.get("content", "Thinking...")})
-
-                elif event_type == "tool_call":
+                elif etype == "tool_call":
                     await _send(ws, {"type": "tool_call", "tool": event.get("tool", ""), "args": event.get("args", {})})
-
-                elif event_type == "tool_result":
-                    products = event.get("products", [])
-                    summary = event.get("summary")
+                elif etype == "tool_result":
+                    products    = event.get("products", [])
                     web_results = event.get("web_results")
-
                     if products:
-                        matched = _barcode_filter_products(products, product_name)
-                        if matched:
-                            await _send(ws, {
-                                "type": "products",
-                                "products": matched[:8],
-                                "summary": summary,
-                            })
+                        await _send(ws, {"type": "products", "products": products[:8], "summary": event.get("summary")})
                     if web_results:
-                        await _send(ws, {
-                            "type": "products",
-                            "products": [],
-                            "summary": None,
-                            "web_results": web_results,
-                        })
-
-                elif event_type == "token":
+                        await _send(ws, {"type": "products", "products": [], "summary": None, "web_results": web_results})
+                elif etype == "token":
                     await _send(ws, {"type": "token", "content": event.get("content", "")})
-
-                elif event_type == "done":
-                    print(f"[BARCODE] Done responding to: {product_name!r}")
+                elif etype == "done":
+                    print(f"[BARCODE] Done responding to: {display_name!r}")
                     await _send(ws, {"type": "done"})
-
-                elif event_type == "error":
-                    await _send(ws, {
-                        "type": "error",
-                        "content": event.get("content", "Unknown error"),
-                        "code": event.get("code", "AGENT_ERROR"),
-                    })
+                elif etype == "error":
+                    await _send(ws, {"type": "error", "content": event.get("content", "Unknown error"), "code": event.get("code", "AGENT_ERROR")})
 
         except Exception:
             traceback.print_exc()
@@ -233,14 +253,14 @@ async def handle_ws_message(
     if not content:
         await _send(ws, {"type": "error", "content": "Query cannot be empty", "code": "EMPTY_QUERY"})
         return
-
+        
     print(f"[CHAT] Query: {content!r}")
     try:
         async for event in run_agent(
             user_query=content,
-            embed_svc=embed_svc,
-            qdrant_svc=qdrant_svc,
-            company_store=company_store,
+            country=session.get("country"),
+            cert_bodies=session.get("cert_bodies") or [],
+            thread_id=session["thread_id"],
         ):
             event_type = event.get("type")
 

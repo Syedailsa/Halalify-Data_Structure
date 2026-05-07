@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import httpx
 
 from config import get_settings
@@ -18,7 +19,7 @@ async def web_search(q: str) -> str:
                 params={
                     "key": settings.GOOGLE_API_KEY,
                     "cx": settings.GOOGLE_CX_ID,
-                    "q": f"{q} can muslims have it?",
+                    "q": f"{q}, tell me its Halal status?",
                     "num": "3",
                 },
             )
@@ -33,17 +34,19 @@ async def web_search(q: str) -> str:
         items = data.get("items") or []
         if not items:
             print(f"[SEARCH] No results for: {q!r}")
-            return "No web results found for this query."
+            return json.dumps([])
         print(f"[SEARCH] Got {len(items)} results for: {q!r}")
 
-        lines = []
-        for i, item in enumerate(items, 1):
-            lines.append(
-                f"  {i}. {item.get('title', '')}\n"
-                f"     {item.get('link', '')}\n"
-                f"     {item.get('snippet', '')}"
-            )
-        return "\n\n".join(lines)
+        results = [
+            {
+                "index": i,
+                "title": item.get("title", ""),
+                "url":   item.get("link", ""),
+                "snippet": item.get("snippet", ""),
+            }
+            for i, item in enumerate(items)
+        ]
+        return json.dumps(results)
 
     except httpx.TimeoutException:
         return "Web search timed out. Please try again."
