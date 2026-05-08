@@ -311,20 +311,53 @@ export default function Hero() {
       {/* <div className="absolute top-[-20%] right-[-10%] w-[70%] h-[120%] bg-gradient-to-br from-white to-gray-200 skew-y-[-8deg]" /> */}
 
       {/* IMAGE RIGHT SIDE */}
-      <div className="absolute right-3 bottom-0 w-[1200px] z-10 top-[227px]">
+      {/* <div className="absolute right-3 bottom-0 w-[1200px] z-10 top-[227px]">
         <Image
           src={heroImg}
           alt="UI"
           className="w-full h-auto object-contain"
           priority
         />
-      </div>
+      </div> */}
+
+      {/* <div className="absolute inset-0 z-10 pointer-events-none">
+  <div className="relative w-full max-w-[1400px] h-full mx-auto">
+
+    <div className="absolute right-0 top-[227px] w-[1200px]">
+      <Image
+        src={heroImg}
+        alt="UI"
+        className="w-full h-auto object-contain"
+        priority
+      />
+    </div>
+
+  </div>
+</div> */}
+
+
+{/* <div className="absolute inset-0 z-10 pointer-events-none"> */}
+<div className="absolute inset-0 z-10 pointer-events-none hero-image-wrapper">
+  <div className="relative w-full max-w-[1280px] h-full mx-auto px-6">
+
+    <div className="absolute right-0 top-[227px] w-[1050px]">
+      <Image
+        src={heroImg}
+        alt="UI"
+        className="w-full h-auto object-contain"
+        priority
+      />
+    </div>
+
+  </div>
+</div>
 
       {/* FADE OVERLAY LEFT */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#eef2f8] via-[#eef2f8]/80 to-transparent z-10" />
 
       {/* CONTENT */}
-      <div className="relative z-20 max-w-6xl mx-auto px-6 flex items-center min-h-screen">
+      {/* <div className="relative z-20 max-w-6xl mx-auto px-6 flex items-center min-h-screen"> */}
+      <div className="relative z-20 max-w-[1280px] mx-auto px-6 lg:px-10 flex items-center min-h-screen">
 
         <div className="max-w-xl">
 
@@ -364,10 +397,20 @@ export default function Hero() {
             </Link>
 
           </div>
-
+     
         </div>
       </div>
 
     </section>
   );
 }
+
+
+
+
+
+
+
+
+
+

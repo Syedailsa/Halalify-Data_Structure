@@ -891,14 +891,7 @@ footer [style*="padding: 24px"] {
 }
 
 
-
-
-
-
-
-
-
-
+     
         /* ============================================
            HERO BUTTONS — ALL BREAKPOINTS RESPONSIVE
            ============================================ */
@@ -1024,4 +1017,12 @@ footer [style*="padding: 24px"] {
           }
         }
 
- 
+         @media (max-width: 768px) {
+    .hero-image-wrapper {
+      display: none;
+    }
+  }
+
+   
+
+
