@@ -889,3 +889,139 @@ footer [style*="padding: 24px"] {
 @media (max-width: 480px) {
   #scroll-top { bottom: 16px; right: 16px; width: 36px; height: 36px; }
 }
+
+
+
+
+
+
+
+
+
+
+        /* ============================================
+           HERO BUTTONS — ALL BREAKPOINTS RESPONSIVE
+           ============================================ */
+
+        /* BASE — Desktop default (769px+): side by side */
+        .hero-btn-group {
+          margin-top: 24px;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          gap: 12px;
+          align-items: center;
+        }
+
+        .hero-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          padding: 13px 24px;
+          border-radius: 999px;
+          font-size: 0.95rem;
+          font-weight: 600;
+          text-decoration: none;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          white-space: nowrap;
+          cursor: pointer;
+          flex-shrink: 0;
+          width: auto;
+        }
+
+        .hero-btn:hover {
+          transform: translateY(-2px);
+        }
+
+        /* Outline variant */
+        .hero-btn--outline {
+          background: #fff;
+          border: 1.5px solid #d1d5db;
+          color: #111827;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .hero-btn--outline:hover {
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Filled variant */
+        .hero-btn--filled {
+          background: #22c55e;
+          border: 1.5px solid #22c55e;
+          color: #fff;
+          box-shadow: 0 4px 14px rgba(34,197,94,0.35);
+        }
+        .hero-btn--filled:hover {
+          background: #16a34a;
+          border-color: #16a34a;
+          box-shadow: 0 6px 20px rgba(34,197,94,0.45);
+        }
+
+        /* Arrow icon circle */
+        .hero-btn__icon {
+          width: 26px;
+          height: 26px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 13px;
+          flex-shrink: 0;
+          line-height: 1;
+        }
+        .hero-btn__icon--green {
+          background: #22c55e;
+          color: #fff;
+        }
+        .hero-btn__icon--white {
+          background: #fff;
+          color: #111827;
+        }
+
+        /* ── TABLET: 481px – 768px ──
+           Stacked full-width, max 340px so they don't stretch too wide */
+        @media (min-width: 481px) and (max-width: 768px) {
+          .hero-btn-group {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+          }
+          .hero-btn {
+            width: 100%;
+            max-width: 320px;
+            justify-content: space-between;
+            padding: 14px 20px;
+          }
+        }
+
+        /* ── MOBILE: 0px – 480px ──
+           Full width stacked */
+        @media (max-width: 480px) {
+          .hero-btn-group {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+          }
+          .hero-btn {
+            width: 100%;
+            justify-content: space-between;
+            padding: 13px 18px;
+            font-size: 0.9rem;
+          }
+        }
+
+        /* ── DESKTOP: 769px+ ──
+           Side by side, auto width */
+        @media (min-width: 769px) {
+          .hero-btn-group {
+            flex-direction: row;
+            align-items: center;
+          }
+          .hero-btn {
+            width: auto;
+            justify-content: center;
+          }
+        }
+
+ 
