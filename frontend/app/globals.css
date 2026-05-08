@@ -310,7 +310,7 @@ body.chat-page .animated-cursor {
 
 
 /* CUSTOM CURSOR */
-#cursor-dot {
+/* #cursor-dot {
   width: 8px; height: 8px; background: #22c55e; border-radius: 50%;
   position: fixed; pointer-events: none; z-index: 9999;
   transform: translate(-50%,-50%); transition: transform 0.08s ease;
@@ -324,7 +324,7 @@ body.chat-page .animated-cursor {
 body.cursor-hover #cursor-ring {
   width: 54px; height: 54px;
   background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.7);
-}
+} */
 
 /* NAV */
 .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 20px 0; transition: padding 0.3s ease; }
@@ -608,4 +608,284 @@ a, button { cursor: none; }
 
 .submit-btn:hover::before {
   left: 130%;
+}
+
+
+
+
+
+/* ============================================================
+   HALALIFY — FULLY RESPONSIVE CSS
+   Add this at the END of your globals.css
+   ============================================================ */
+
+/* ── BASE RESPONSIVE UTILITIES ── */
+img { max-width: 100%; height: auto; }
+
+/* ============================================================
+   NAVBAR — Mobile hamburger menu
+   ============================================================ */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  z-index: 200;
+}
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #111;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.98);
+  backdrop-filter: blur(20px);
+  z-index: 150;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111;
+  text-decoration: none;
+}
+
+/* ============================================================
+   HERO — Responsive
+   ============================================================ */
+@media (max-width: 1024px) {
+  .hero-phone-img {
+    width: 900px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Hide diagonal bg image on mobile */
+  section.relative.min-h-screen .absolute.right-3 {
+    display: none;
+  }
+  /* Remove gradient overlay */
+  section.relative.min-h-screen .absolute.inset-0 {
+    background: none !important;
+  }
+  section.relative.min-h-screen {
+    background: #eef2f8 !important;
+    padding-top: 80px;
+    padding-bottom: 40px;
+    min-height: auto;
+  }
+  section.relative.min-h-screen .relative.z-20 {
+    min-height: auto;
+    padding: 2rem 1.25rem;
+  }
+  section.relative.min-h-screen .max-w-xl {
+    max-width: 100%;
+  }
+  /* Hero heading */
+  section.relative.min-h-screen h1 {
+    font-size: clamp(2rem, 8vw, 2.8rem) !important;
+  }
+  /* Hero buttons */
+  section.relative.min-h-screen .mt-6 {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  section.relative.min-h-screen .mt-6 button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ============================================================
+   NAVBAR — Responsive
+   ============================================================ */
+.navbar-inner .nav-links-desktop {
+  display: flex;
+}
+.navbar-inner .nav-cta-desktop {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+  .navbar-inner .nav-links-desktop { display: none !important; }
+  .navbar-inner .nav-cta-desktop   { display: none !important; }
+
+  .navbar.scrolled .navbar-inner {
+    max-width: calc(100% - 32px);
+    margin: 0 16px;
+    padding: 10px 20px;
+  }
+}
+
+/* ============================================================
+   FEATURES — Responsive
+   ============================================================ */
+@media (max-width: 900px) {
+  /* Stack feature grid */
+  #features [style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+  #features [style*="order: 1"],
+  #features [style*="order: 2"] {
+    order: unset !important;
+  }
+  #features [style*="padding: 5rem 0"] {
+    padding: 3rem 0 !important;
+  }
+  #features [style*="padding: 0 2.5rem"] {
+    padding: 0 1.25rem !important;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Tabs scroll horizontally */
+  .tabs-sticky { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tabs-inner  { flex-wrap: nowrap; padding: 10px 1rem; gap: 6px; }
+  .tab-btn     { white-space: nowrap; font-size: 0.8rem; padding: 8px 14px; }
+
+  .feat-title { font-size: 1.5rem !important; }
+}
+
+/* ============================================================
+   HOW IT WORKS — Responsive
+   ============================================================ */
+@media (max-width: 900px) {
+  /* 4-col → 2-col */
+  #how-it-works [style*="repeat(4, 1fr)"],
+  section[id="how-it-works"] [style*="repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* 2-col → 1-col */
+  #how-it-works [style*="repeat(4, 1fr)"],
+  section[id="how-it-works"] [style*="repeat(4, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+  section[id="how-it-works"] [style*="padding: 0 2.5rem"] {
+    padding: 0 1.25rem !important;
+  }
+  section[id="how-it-works"] [style*="padding: 5rem 0"] {
+    padding: 3rem 0 4rem !important;
+  }
+}
+
+/* ============================================================
+   STATUS LABELS — Responsive
+   ============================================================ */
+@media (max-width: 900px) {
+  .status-section [style*="repeat(3, 1fr)"] {
+    grid-template-columns: 1fr !important;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .status-section [style*="padding: 0 2.5rem"] {
+    padding: 0 1.25rem !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .status-section { padding: 3rem 0 !important; }
+  .status-section h2 { font-size: 2rem !important; }
+}
+
+/* ============================================================
+   TRUST STATS — Responsive
+   ============================================================ */
+@media (max-width: 900px) {
+  /* 4-col → 2-col */
+  section[style*="background: #f5f5f5"] [style*="repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  section[style*="background: #f5f5f5"] [style*="repeat(4, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+  section[style*="background: #f5f5f5"] [style*="padding: 0 2.5rem"] {
+    padding: 0 1.25rem !important;
+  }
+  section[style*="background: #f5f5f5"] { padding: 3rem 0 !important; }
+}
+
+/* ============================================================
+   CTA SECTION — Responsive
+   ============================================================ */
+.cta-section [style*="padding: 0 2rem"] {
+  padding: 0 1.25rem !important;
+}
+
+.hero-img {
+  width: 100%;
+  max-width: 700px;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .cta-section { padding-top: 40px !important; }
+  .cta-section h2 { font-size: clamp(1.8rem, 6vw, 2.2rem) !important; }
+
+  /* Store buttons stack on very small screens */
+  .cta-section [style*="display: flex"][style*="gap: 1rem"] {
+    flex-direction: column;
+    align-items: center;
+  }
+  .store-btn { width: 100%; max-width: 240px; justify-content: center; }
+
+  .hero-img { max-width: 100%; }
+}
+
+/* ============================================================
+   FOOTER — Responsive
+   ============================================================ */
+footer [style*="padding: 24px"] {
+  padding: 20px 1.25rem !important;
+}
+
+/* ============================================================
+   GLOBAL PADDING HELPERS (mobile)
+   ============================================================ */
+@media (max-width: 480px) {
+  /* Any section with large top padding */
+  section { padding-left: 0 !important; padding-right: 0 !important; }
+}
+
+/* ============================================================
+   CURSOR — hide custom cursor on touch devices
+   ============================================================ */
+@media (hover: none) and (pointer: coarse) {
+  #cursor-dot, #cursor-ring { display: none !important; }
+  a, button { cursor: pointer !important; }
+  .nav-link, .tab-btn, .step-card,
+  .status-card, .stat-card, .store-btn { cursor: pointer !important; }
+}
+
+/* ============================================================
+   SCROLL TO TOP — position fix on mobile
+   ============================================================ */
+@media (max-width: 480px) {
+  #scroll-top { bottom: 16px; right: 16px; width: 36px; height: 36px; }
 }
